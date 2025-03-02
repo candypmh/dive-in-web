@@ -5,7 +5,7 @@ export type CommunitiesProps = {
   content: string;
   image: { repImage: boolean; imageUrl: string } | null;
   likesCnt: number;
-  cmmtCnt: number;
+  cmntCnt: number;
   viewCnt: number;
   writer: string;
   writerProfile: string | null;
@@ -21,9 +21,9 @@ export type CommunityProps = {
   content: string;
   images: { repImage: boolean; imageUrl: string }[];
   likesCnt: number;
-  viewsCnt: number;
-  cmmtCnt: number;
-  // cmmtCnt: string;
+  viewCnt: number;
+  cmntCnt: number;
+  // cmntCnt: string;
   writer: string;
   writerProfile: string | null;
   createdAt: string;
@@ -35,7 +35,7 @@ export type CommunityProps = {
 };
 
 export type CommentProps = {
-  cmmtId: number;
+  cmntId: number;
   content: string;
   groupName: number;
   orderNumber: number;

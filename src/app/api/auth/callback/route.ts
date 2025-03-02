@@ -21,6 +21,11 @@ export async function GET(request: Request) {
     url.searchParams.append("code", code);
     url.searchParams.append("redirect_uri", `${origin}/api/auth/callback`);
 
+    //추가
+    // console.log("code:", code);
+    // console.log("Request URL:", url.toString());
+
+
     const res = await fetch(url);
 
     if (!res.ok) {

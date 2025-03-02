@@ -169,7 +169,7 @@ export default function EditPost({params}: EditPostProps) {
     // <div className="flex flex-col pb-10 relative h-full">
     <div className="flex flex-col min-h-screen pb-[4.5rem]">
       <div className="flex items-center justify-between py-1 px-1">
-        <Link href="/community/posts/list/none/0" className="flex p-3">
+        <Link href={`/community/posts/${postId}`} className="flex p-3">
           <ArrowLeftIcon className="w-6 h-6 text-gray-900" />
         </Link>
 

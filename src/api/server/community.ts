@@ -13,13 +13,13 @@ export const getCommunities = async (category: string = "none", page: string = "
     }
 
     const body = await response.json();
-    console.log("::::::::::Fetched Data:", body);
+    // console.log("::::::::::Fetched Data:", body);
 
     const validateData = communityResponseSchema.parse(body);
-    console.log("::::::::::zod후 Data:", JSON.stringify(validateData, null, 2));
+    // console.log("::::::::::zod후 Data:", JSON.stringify(validateData, null, 2));
     // const validateData = communitySchema.array().parse(body.data);
     
-    console.log("::::::::::validateData.data는?:", validateData.data);
+    // console.log("::::::::::validateData.data는?:", validateData.data);
     return validateData.data;
 
   } catch (error) {
@@ -177,7 +177,7 @@ export const getOG = async(link: string) => {
 //   }
 // };
 
-export const getComments = async(postId: string) => {
+export const getComments = async(postId: number) => {
   try {
     const response = await fetch(`https://api.dive-in.co.kr/community/comments/${postId}`);
     const body = await response.json();
@@ -190,24 +190,27 @@ export const getComments = async(postId: string) => {
   }
 };
 
-// export const createComment = async(formData: FormData) => {
-//   try {
-//     const response = await fetch("https://api.dive-in.co.kr/community/comments", {
-//       method: "POST",
-//       body: formData,
-//     });
+export const createComment = async(formData: FormData) => {
+  try {
+    const response = await fetch("https://api.dive-in.co.kr/community/comments", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
 
-//     if(!response){
-//       throw new Error("게시글 작성 실패!");
-//     }
+    if(!response){
+      throw new Error("게시글 작성 실패!");
+    }
 
-//     const result = await response.json();
-//     console.log("댓글 작성 성공:", result);
-//   } catch (error) {
-//     console.log("댓글 작성 실패:", error);
-//     return [];
-//   }
-// };
+    const result = await response.json();
+    console.log("댓글 작성 성공:", result);
+  } catch (error) {
+    console.log("댓글 작성 실패:", error);
+    return [];
+  }
+};
 
 // export const updateComments = async() => {
 //   try {

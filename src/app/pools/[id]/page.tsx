@@ -1,4 +1,4 @@
-import { getPool } from "@/api/pools";
+import { getPool } from "@/api/server/pools";
 import DetailPagePhotoSlider from "@/app/_components/PhotoSlider";
 import ShareButton from "@/app/_components/ShareButton";
 import ArrowLeftIcon from "@/components/icons/ArrowLeftIcon";

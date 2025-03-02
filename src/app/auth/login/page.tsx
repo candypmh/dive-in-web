@@ -24,7 +24,7 @@ const LoginPage = ({ searchParams }: Props) => {
       scope: "openid",
     });
   };
-
+  
   return (
     <div className="flex-1 h-full flex flex-col bg-primary">
       <div className="flex-1 flex items-center justify-center">

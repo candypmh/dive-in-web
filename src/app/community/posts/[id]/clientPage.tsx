@@ -14,6 +14,7 @@ import { CommunityProps } from "@/types/community";
 import CustomModal from "@/app/_components/CustomModal";
 import {
   addLikePost,
+  createComment,
   deleteCommunity,
   deleteLikePost,
   getCommunity,
@@ -48,8 +49,12 @@ export default function ClientCommunity({
     }
   };
 
-  const handleMenuOpen = () => {
+  const handleMenuToggle = () => {
     setIsMenuOpen((prev) => !prev);
+  };
+
+  const handleMenuClose = () => {
+    setIsMenuOpen(false);
   };
 
   const handleDeleteModalOpen = () => {
@@ -101,6 +106,33 @@ export default function ClientCommunity({
     }
   };
 
+  const handleCommentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("postId", String(community.postId));
+    formData.append("content", comment);
+    formData.append("memberId", "1");
+
+    console.warn("입력된 댓글내용?::::", comment);
+    
+    try {
+      const result = await createComment(formData);
+      console.log("댓글 등록 결과는::::", result);
+
+      // {
+      //   "content": "9482308953개요",
+      //   "postId": 13,
+      //   "memberId": 1
+      // }
+
+      setComment(""); //댓글필드 초기화
+
+    } catch (error) {
+      console.error("댓글 등록 실패!", error);
+    }
+  };
+
+
   //최신데이터 가져오기
   useEffect(() => {
     const fetchPost = async() => {
@@ -128,7 +160,7 @@ export default function ClientCommunity({
           <ArrowLeftIcon className="w-6 h-6 text-gray-900" />
         </Link>
 
-        <button type="button" className="flex p-3" onClick={handleMenuOpen}>
+        <button type="button" className="flex p-3" onClick={handleMenuToggle}>
           <VscKebabVertical className="mt-1 w-6 h-6 text-gray-900" />
         </button>
       </div>
@@ -159,7 +191,7 @@ export default function ClientCommunity({
               {community.createdAt}
             </span>
             <span className="text-sm text-gray-500 ml-auto">
-              조회{community.viewsCnt}
+              조회{community.viewCnt}
             </span>
           </div>
         </div>
@@ -171,21 +203,21 @@ export default function ClientCommunity({
           {community.content}
         </p>
 
-        <div className="mt-4 grid grid-cols-2 gap-4">
+        <div className="mt-4 flex justify-center max-w-fit mx-auto gap-4">
+        {/* <div className="mt-4 flex justify-center"> */}
           {community.images.length > 0 ? (
               // <div key={index} className="overflow-hidden rounded-lg">
-              <div className="mt-4">
+              // <div className="mt-4 flex justify-center">
                 <DetailPagePhotoSlider
                   imageUrls={community.images.map((image) => image.imageUrl)}
                   alt="게시글 이미지"
-                  // alt={`이미지 ${index + 1}`}
-                  // className="w-full h-auto object-cover"
                 />
-              </div>
+              // </div>
           ) : (
             // 이미지가 없을시
             <p className="text-gray-500"></p>
           )}
+          
         </div>
       </div>
 
@@ -208,7 +240,7 @@ export default function ClientCommunity({
       </div>
 
       <div className="bg-gray-100 py-2 mt-4"></div>
-      <CommentList commentList={community.commentList} />
+      <CommentList commentList={community.commentList} postId={community.postId} />
 
       {/* 댓글 상자 */}
       <div className="relative px-4 pb-4">
@@ -226,7 +258,7 @@ export default function ClientCommunity({
             </button>
           </p>
         ) : (
-          <div className="flex flex-row px-4 py-5 items-center bg-gray-100 rounded">
+          <form className="flex flex-row px-4 py-5 items-center bg-gray-100 rounded" onSubmit={handleCommentSubmit}>
             <textarea
               ref={textareaRef}
               value={comment}
@@ -241,12 +273,20 @@ export default function ClientCommunity({
               }}
               className="w-full resize-none overflow-hidden border-none text-left text-sm text-gray-700 bg-gray-100 focus:outline-none"
             />
-            <button className="text-left text-sm font-semibold text-gray-500">
+            <button className="text-left text-sm font-semibold text-gray-500" type="submit">
               <LuSend size={18} />
             </button>
-          </div>
+          </form>
         )}
       </div>
+
+      
+      {/* 배경 */}
+        {isMenuOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300" 
+          style={{zIndex: 40}} 
+          onClick={handleMenuClose} />
+        )}
 
       {/* 글 메뉴 슬라이드 */}
       <div
@@ -257,6 +297,7 @@ export default function ClientCommunity({
           width: "100%",
           maxWidth: "48rem",
           boxShadow: "0 -1px 3px rgba(0, 0, 0, 0.05)",
+          zIndex: 80,
         }}
       >
         <ul>

@@ -213,7 +213,7 @@ export default function Home() {
                         </div>
                         <div className="flex items-center gap-1">
                           <FiMessageSquare className="w-5 h-5 text-gray-400" />
-                          <p className="text-gray-500">{community.cmmtCnt}</p>
+                          <p className="text-gray-500">{community.cmntCnt}</p>
                         </div>
                         <div className="flex items-center gap-1">
                           <TiHeartOutline className="w-5 h-5 text-gray-400" />
@@ -304,7 +304,7 @@ export default function Home() {
                         </div>
                         <div className="flex items-center gap-1">
                           <FiMessageSquare className="w-5 h-5 text-gray-400" />
-                          <p className="text-gray-500">{community.cmmtCnt}</p>
+                          <p className="text-gray-500">{community.cmntCnt}</p>
                         </div>
                         <div className="flex items-center gap-1">
                           <TiHeartOutline className="w-5 h-5 text-gray-400" />
@@ -395,7 +395,7 @@ export default function Home() {
                         </div>
                         <div className="flex items-center gap-1">
                           <FiMessageSquare className="w-5 h-5 text-gray-400" />
-                          <p className="text-gray-500">{community.cmmtCnt}</p>
+                          <p className="text-gray-500">{community.cmntCnt}</p>
                         </div>
                         <div className="flex items-center gap-1">
                           <TiHeartOutline className="w-5 h-5 text-gray-400" />
@@ -480,7 +480,7 @@ const popularCommunities = [
         "https://dive-in-bucket.kr.object.ncloudstorage.com/2ae3190a-97d6-4600-9e27-470920503c26.jpg",
     },
     likesCnt: 13,
-    cmmtCnt: 5,
+    cmntCnt: 5,
     viewCnt: 0,
   },
   {
@@ -490,7 +490,7 @@ const popularCommunities = [
     content: "수모수모수모",
     images: null,
     likesCnt: 13,
-    cmmtCnt: 5,
+    cmntCnt: 5,
     viewCnt: 0,
   },
 ];
@@ -508,7 +508,7 @@ const NewCommunities = [
         "https://dive-in-bucket.kr.object.ncloudstorage.com/2ae3190a-97d6-4600-9e27-470920503c26.jpg",
     },
     likesCnt: 13,
-    cmmtCnt: 5,
+    cmntCnt: 5,
     viewCnt: 0,
   },
   {
@@ -518,7 +518,7 @@ const NewCommunities = [
     content: "수모수모수모",
     images: null,
     likesCnt: 13,
-    cmmtCnt: 5,
+    cmntCnt: 5,
     viewCnt: 0,
   },
 ];

@@ -1,4 +1,4 @@
-import { getPools } from "@/api/pools";
+import { getPools } from "@/api/server/pools";
 import LessonChip from "@/components/ui/Chip";
 import Image from "next/image";
 import Link from "next/link";

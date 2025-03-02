@@ -2,8 +2,11 @@
 
 import usePhotoSlider from "@/hooks/usePhotoSlider";
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
+import { url } from "inspector";
 import { XIcon } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 
 type Props = {
   isOpen: boolean;
@@ -12,6 +15,7 @@ type Props = {
 };
 
 const PhotoViewerModal = ({ isOpen, onClose, urls }: Props) => {
+  
   return (
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
       <DialogBackdrop
@@ -43,12 +47,33 @@ const PhotoViewerModal = ({ isOpen, onClose, urls }: Props) => {
 };
 
 const ImageSlider = ({ urls }: { urls: string[] }) => {
-  const imageLength = urls.length;
+  // const imageLength = urls.length;
   const { sliderRef, imageRefs, visibleImageNumber } = usePhotoSlider(urls);
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isHover, setIsHover] = useState(false);
+
+  const handlePrev = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    } else {
+      setCurrentIndex(urls.length - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentIndex < urls.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+    } else {
+      setCurrentIndex(0);
+    }
+  };
 
   return (
     <>
-      <div className="flex-1 w-full relative">
+      <div className="flex-1 w-full relative"
+      onMouseEnter={() => setIsHover(true)}
+      onMouseLeave={() => setIsHover(false)}>
         <div
           className={`h-full w-full snap-x snap-mandatory flex overflow-x-auto no-scrollbar`}
           ref={sliderRef}
@@ -56,7 +81,7 @@ const ImageSlider = ({ urls }: { urls: string[] }) => {
           {urls.map((url, index) => (
             <div
               key={index}
-              className="relative snap-start snap-always shrink-0 w-full overflow-hidden"
+              className={`relative snap-start snap-always shrink-0 w-full overflow-hidden ${index === currentIndex ? "block" : "hidden"}`}
               ref={(el) => {
                 if (el) {
                   imageRefs.current[index] = el;
@@ -74,13 +99,32 @@ const ImageSlider = ({ urls }: { urls: string[] }) => {
             </div>
           ))}
         </div>
+
+        {/* 왼쪽 버튼 */}
+          { isHover && (
+            <button 
+              className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full"
+              onClick={handlePrev}>
+              <FaChevronLeft />
+            </button>
+          )}
+
+        {/* 오른쪽 버튼 */}
+          { isHover && (
+            <button
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full"
+              onClick={handleNext}
+            >
+              <FaChevronRight />
+            </button>
+          )}
       </div>
 
       <div className="flex-none w-full py-6 flex items-center justify-center">
         <div className="flex items-center gap-0.5 text-gray-500">
           <span>{visibleImageNumber}</span>
           <span>/</span>
-          <span>{imageLength}</span>
+          <span>{urls.length}</span>
         </div>
       </div>
     </>

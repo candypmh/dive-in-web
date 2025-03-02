@@ -12,8 +12,9 @@ export const communitySchema = z.object({
   content: z.string(),
   image: imageSchema.nullable(),
   likesCnt: z.number(),
-  cmmtCnt: z.number().default(0),
+  cmntCnt: z.number().default(0),
   // cmmtCnt: z.string(),
+  // viewsCnt: z.string(),
   viewCnt: z.number(),
   writer: z.string(),
   writerProfile: z.string().url().nullable(),
@@ -29,7 +30,7 @@ export const communitySchema = z.object({
 // });
 
 export const communityDetailCommentSchema = z.object({
-  cmmtId: z.number(),
+  cmntId: z.number(),
   content: z.string().max(500),
   groupName: z.number(),
   orderNumber: z.number(),
@@ -37,7 +38,7 @@ export const communityDetailCommentSchema = z.object({
   writer: z.string(),
   writerProfile: z.string().optional(),
   // writerProfile: z.string().url().optional(),
-  likesCnt: z.number(),
+  likeCnt: z.number(),
   createdAt: z.string(),
 });
 
@@ -56,8 +57,8 @@ export const communityDetailSchema = z.object({
   content: z.string(),
   images: z.array(imageSchema).max(5).default([]), //이미지가 최대 5장 들어감
   likesCnt: z.number(),
-  viewsCnt: z.number(),
-  cmmtCnt: z.number(),
+  viewCnt: z.number().default(0),
+  cmntCnt: z.number().default(0),
   writer: z.string(),
   writerProfile: z.string().url().nullable(),
   createdAt: z.string(),

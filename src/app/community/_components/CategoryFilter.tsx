@@ -86,7 +86,7 @@ export default function CategoryFilter({
               </div>
               <div className="flex items-center gap-1">
                 <FiMessageSquare className="w-5 h-5 text-gray-400" />
-                <p className="text-gray-500">{community.cmmtCnt}</p>
+                <p className="text-gray-500">{community.cmntCnt}</p>
               </div>
               <div className="flex items-center gap-1">
                 <TiHeartOutline className="w-5 h-5 text-gray-400" />

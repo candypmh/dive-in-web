@@ -5,17 +5,25 @@ import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import { url } from "inspector";
 import { XIcon } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
   urls: string[];
+  current: number; //현재 index
 };
 
-const PhotoViewerModal = ({ isOpen, onClose, urls }: Props) => {
+const PhotoViewerModal = ({ isOpen, onClose, urls, current }: Props) => {
+  const [currentIndex, setCurrentIndex] = useState(current); //초기화
   
+  useEffect(() => {
+    if(isOpen) {
+      setCurrentIndex(current); //모달 열릴 때, 클릭한 이미지부터 보이게 설정
+    }
+  },[isOpen, current]);
+
   return (
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
       <DialogBackdrop
@@ -39,16 +47,33 @@ const PhotoViewerModal = ({ isOpen, onClose, urls }: Props) => {
 
           {/* 내부 요소의 렌더링 시점에 따라, observer 구독이 되어야 함 */}
           {/* 컴포넌트를 분리하여, 요소와 로직은 함께 구성 */}
-          <ImageSlider urls={urls} />
+          <ImageSlider urls={urls} currentIndex={currentIndex} setCurrentIndex={setCurrentIndex} />
         </DialogPanel>
       </div>
     </Dialog>
   );
 };
 
-const ImageSlider = ({ urls }: { urls: string[] }) => {
+const ImageSlider = ({ urls, currentIndex, setCurrentIndex }: { urls: string[], currentIndex: number, setCurrentIndex: (index: number) => void; }) => {
   // const imageLength = urls.length;
   const { sliderRef, imageRefs, visibleImageNumber } = usePhotoSlider(urls);
+  const [isHover, setIsHover] = useState(false);
+
+  const handlePrev = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    } else {
+      setCurrentIndex(urls.length - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentIndex < urls.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+    } else {
+      setCurrentIndex(0);
+    }
+  };
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHover, setIsHover] = useState(false);

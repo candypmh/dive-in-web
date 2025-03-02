@@ -71,31 +71,23 @@ const DetailPagePhotoSlider = ({ imageUrls, alt }: Props) => {
       >
         <div
           className="relative w-full flex overflow-x-auto snap-x snap-mandatory no-scrollbar"
-          //   className="relative w-full inline-flex overflow-x-scroll scroll-smooth no-scrollbar"
           ref={sliderRef}
           //   style={{scrollSnapType: "x mandatody"}}
         >
-          {/* snap-mandatory를 활성화하여, 약간의 스크롤로 snap을 강제하여 쉽게 넘어갈 수 있도록 함 */}
-          {/* {urls.map((url, index) => (
+          {imageUrls.map((url, index) => (
             <div
               key={url}
-              ref={(el) => {
-                if (el) {
-                  imageRefs.current[index] = el;
-                }
-              }}
-              // className="snap-center snap-always relative shrink-0 w-full h-40 overflow-hidden"
-              className="snap-start shrink-0 w-full h-40 overflow-hidden"
+              className={`snap-start shrink-0 w-96 h-64 overflow-hidden ${
+                index === currentIndex ? "" : "hidden"
+              }`}
+              onClick={() => setShowImageViewerModal(true)}
             >
               <Image
                 src={url}
                 alt={alt}
                 width={400}
                 height={300}
-                priority={index === 0}
-                draggable={true}
                 className="w-full h-full object-cover"
-                // className="w-full h-full object-cover shadow-xl bg-white"
               />
             </div>
           ))} */}
@@ -152,6 +144,7 @@ const DetailPagePhotoSlider = ({ imageUrls, alt }: Props) => {
         isOpen={showImageViewerModal}
         onClose={() => setShowImageViewerModal(false)}
         urls={imageUrls}
+        current={currentIndex}
       />
     </>
   );

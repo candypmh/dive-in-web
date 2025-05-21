@@ -22,6 +22,9 @@ const DetailPagePhotoSlider = ({ imageUrls, alt, sliderType = "community" }: Pro
     setIsHover(true);
   },[]);
 
+
+
+
   // const urls = useMemo(() => {
   //   if (imageUrls.length === 0) {
   //     return ["/empty/image.png"];
@@ -31,6 +34,9 @@ const DetailPagePhotoSlider = ({ imageUrls, alt, sliderType = "community" }: Pro
   // }, [imageUrls]);
 
   const encodeUrls = useMemo(() => {
+
+
+
     if (imageUrls.length === 0) {
       return ["/empty/image.png"];
     }else{
@@ -102,8 +108,9 @@ const DetailPagePhotoSlider = ({ imageUrls, alt, sliderType = "community" }: Pro
           {imageUrls.map((url, index) => (
             <div
               key={url}
-
               className={`snap-start shrink-0 ${sliderTypeStyles[sliderType]} verflow-hidden ${
+
+
                 index === currentIndex ? "" : "hidden"
               }`}
               onClick={() => setShowImageViewerModal(true)}

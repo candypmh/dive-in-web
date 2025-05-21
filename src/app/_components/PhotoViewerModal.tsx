@@ -75,25 +75,6 @@ const ImageSlider = ({ urls, currentIndex, setCurrentIndex }: { urls: string[], 
     }
   };
 
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isHover, setIsHover] = useState(false);
-
-  const handlePrev = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
-    } else {
-      setCurrentIndex(urls.length - 1);
-    }
-  };
-
-  const handleNext = () => {
-    if (currentIndex < urls.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-    } else {
-      setCurrentIndex(0);
-    }
-  };
-
   return (
     <>
       <div className="flex-1 w-full relative"

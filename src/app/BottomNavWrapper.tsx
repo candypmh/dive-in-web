@@ -2,6 +2,7 @@
 
 import {usePathname} from "next/navigation";
 import BottomNav from "./_components/BottomNav";
+import { Suspense } from "react";
 
 export default function BottomNavWrapper() {
   const pathname = usePathname();
@@ -11,5 +12,10 @@ export default function BottomNavWrapper() {
     return null;
   }
 
-  return <BottomNav />;
+  // return <BottomNav />;
+  return (
+    <Suspense>
+      <BottomNav />
+    </Suspense>
+  )
 }

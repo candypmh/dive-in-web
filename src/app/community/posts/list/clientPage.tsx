@@ -8,6 +8,7 @@ import { getCommunities } from "@/api/server/community";
 import { useRouter } from "next/navigation";
 import { CommunitiesProps, communityResponseDetailProps, communityResponseProps } from "@/types/community";
 import { CATEGORIES } from "@/constants/categories";
+import { useInView } from "react-intersection-observer";
 
 // export const CATEGORIES = [
 //   {name: "전체", key: "none"},
@@ -28,6 +29,14 @@ export default function CommunitiesClient({ communityList, category, page }:{
   }) {
   const [selectedCategory, setSelectedCategory] = useState<string>(category); //기본 카테고리
   const [communities, setCommunities] = useState<CommunitiesProps[]>(communityList.posts); //초기 데이터
+  
+  //무한스크롤 추가
+  const [currentPage, setCurrentPage] = useState<number>(Number(page) || 0);
+  const [hasMore, setHasMore] = useState<boolean>(communityList.hasMore);
+  const {ref, inView} = useInView({
+    threshold: 0.5, // 요소가 50% 보일 때 inView가 true로 바뀜
+  });
+
   const router = useRouter();
 
   //카테고리 변경시 URL 업데이트
@@ -36,11 +45,34 @@ export default function CommunitiesClient({ communityList, category, page }:{
     const fetchData = async() => {
       const data: communityResponseDetailProps = await getCommunities(selectedCategory, page);
       setCommunities(data.posts);
+      setHasMore(data.hasMore);
+      setCurrentPage(0);
     };
 
     fetchData();
     router.push(`/community/posts/list?category=${selectedCategory}&page=${page}`);
   },[selectedCategory, page]);
+
+
+  //무한스크롤
+  useEffect(()=> {
+    if(inView && hasMore) {
+      const fetchMoreData = async() => {
+        const nextPage = currentPage + 1;
+        const data: communityResponseDetailProps = await getCommunities(selectedCategory, String(nextPage));
+
+        if(data.posts.length > 0) {
+          setCommunities((prev) => [...prev, ...data.posts]);
+          setHasMore(data.hasMore);
+          setCurrentPage(nextPage);
+        }else{
+          setHasMore(false);
+        }
+      };
+
+      fetchMoreData();
+    }
+  },[inView, hasMore, currentPage, selectedCategory]);
 
   return (
     <div>
@@ -76,6 +108,17 @@ export default function CommunitiesClient({ communityList, category, page }:{
         </ul>
         {/* )} */}
         <FloatingButton />
+
+        {/* 무한스크롤 감지 */}
+        {hasMore? (
+          <div className="flex justify-center pb-8 gap-2">
+            <div className="w-6 h-6 border-4 border-gray-300 border-t-gray-500 rounded-full animate-spin"></div>
+            <div ref={ref} className="text-gray-400">Loading more...</div>
+          </div>
+
+        ) : (
+          <p className="text-center text-gray-400 pb-8">더 이상 게시물이 없습니다.</p>
+        )}
     </div>
   );
 }

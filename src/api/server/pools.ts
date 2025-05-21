@@ -13,6 +13,7 @@ export const getPools = async () => {
     }
 
     const body = await response.json();
+    console.log("::::::::::Fetched Data:", body);
 
     return poolSchema.array().parse(body.data);
   } catch (error) {

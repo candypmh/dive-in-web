@@ -211,6 +211,7 @@ export default function ClientCommunity({
                 <DetailPagePhotoSlider
                   imageUrls={community.images.map((image) => image.imageUrl)}
                   alt="게시글 이미지"
+                  sliderType="community"
                 />
               // </div>
           ) : (

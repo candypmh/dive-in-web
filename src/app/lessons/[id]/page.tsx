@@ -20,20 +20,43 @@ const LessonPage = async ({ params }: { params: { id: string } }) => {
   const LessonId = Number(params.id);
   const lesson = await getLesson(LessonId);
 
+  
   if (!lesson) {
+    // console.log("lessonDetail::::::::::::::::::값이 없어"); 
     notFound();
   }
+  
+  console.log("lessonDetail::::::::::::::::::", lesson.lessonDetail); 
+
 
   const applyChannels = lesson.applyChannels.filter(
     ({ applyUrl }) => !!applyUrl
   );
 
+  console.log("lesson.lessonDetail::::::::::::::::왜에러남??", lesson.lessonDetail); 
+  console.log("lessonDetail::::::::::::::::::타입?", typeof lesson.lessonDetail); 
+  
   const lessonDetail = lessonDetailContentSchema.parse(
     JSON.parse(lesson.lessonDetail)
+    // lesson.lessonDetail
   );
+  
+  console.log("lessonDetail classTopic::::::::::::::::::", lessonDetail.classTopic); 
+  console.log("lessonDetail eligibilityRequirements::::::::::::::::::", lessonDetail.eligibilityRequirements); 
+  console.log("lessonDetail classIntroduction::::::::::::::::::", lessonDetail.classIntroduction); 
+  console.log("lessonDetail applicationMethod::::::::::::::::::", lessonDetail.applicationMethod); 
+  
 
   const imageUrls = lesson.images.map((image) => image.imageUrl);
   const levels = lesson.level.split(",").map((tag) => tag.trim());
+
+  // console.log("lessonDetail::::::::::::::::::", lesson.images); 
+
+  // "classTopic": "스타트 특강",
+  // "eligibilityRequirements": ["조건1", "조건2"],
+  // "classIntroduction": "신식 스타트대 사용",
+  // "applicationMethod": ["DM"],
+  // "refundPolicy": []
 
   return (
     <div className="flex flex-col pb-10">
@@ -57,7 +80,10 @@ const LessonPage = async ({ params }: { params: { id: string } }) => {
             {lesson.academy.academyName}
           </span>
         </div>
-        <DetailPagePhotoSlider imageUrls={imageUrls} alt="수업 사진" />
+        <DetailPagePhotoSlider 
+        imageUrls={imageUrls} 
+        alt="수업 사진"
+        sliderType="other" />
       </div>
 
       <section className="flex flex-col gap-3 px-4 mb-6">

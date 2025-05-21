@@ -11,18 +11,22 @@ export const lessonSchema = z.object({
   lessonName: z.string(),
   level: z.string(),
   keyword: z.string(),
-  price: z.string(),
+  // price: z.string(),
+  price: z.string().nullable(),
 });
 
 export const lessonDetailSchema = z.object({
   id: z.number(),
   lessonName: z.string().default(""),
   level: z.string().default(""),
-  capacity: z.string().default(""),
-  price: z.string().default(""),
+  // capacity: z.string().default(""),
+  capacity: z.string().nullable().default(""),
+  // price: z.string().default(""),
+  price: z.string().nullable().default(""),
   keyword: z.string().default(""),
   lessonDetail: z.string().default(""),
-  lessonSchedule: z.string().default(""),
+  // lessonSchedule: z.string().default(""),
+  lessonSchedule: z.string().nullable().default(""),
   lessonStatus: z.string().default(""),
   academy: z.object({
     id: z.number(),
@@ -65,6 +69,7 @@ export const lessonDetailSchema = z.object({
     .array(),
 });
 
+//이 부분이 문제
 export const lessonDetailContentSchema = z.object({
   classTopic: z.string().default(""),
   eligibilityRequirements: z.array(z.string()).default([]),

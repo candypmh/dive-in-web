@@ -64,6 +64,7 @@ const PoolPage = async ({ params }: Props) => {
       <DetailPagePhotoSlider
         imageUrls={pool.poolImages.map(({ imageUrl }) => imageUrl)}
         alt="수영장 사진"
+        sliderType="other"
       />
 
       <section className="flex flex-col gap-6 py-4 pb-10">

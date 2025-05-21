@@ -11,23 +11,39 @@ type Props = {
   imageUrls: string[];
   alt: string;
   className?: string;
+
+
+  sliderType?: "community" | "other"; //추가
 };
 
-const DetailPagePhotoSlider = ({ imageUrls, alt }: Props) => {
+const DetailPagePhotoSlider = ({ imageUrls, alt, sliderType = "community" }: Props) => {
+
   useEffect(()=> {
     setIsHover(true);
   },[]);
 
-  const urls = useMemo(() => {
+  // const urls = useMemo(() => {
+  //   if (imageUrls.length === 0) {
+  //     return ["/empty/image.png"];
+  //   }
+    
+  //   return imageUrls;
+  // }, [imageUrls]);
+
+  const encodeUrls = useMemo(() => {
     if (imageUrls.length === 0) {
       return ["/empty/image.png"];
+    }else{
+      return imageUrls.map((url) => encodeURIComponent(url));
     }
-
-    return imageUrls;
+    
   }, [imageUrls]);
 
+
+  
   // const { sliderRef, imageRefs, visibleImageNumber } = usePhotoSlider(urls);
-  const { imageRefs, visibleImageNumber } = usePhotoSlider(urls);
+  const { imageRefs, visibleImageNumber } = usePhotoSlider(encodeUrls);
+
   // 이미지 뷰어 모달을 통해 이미지를 크게 볼 수 있도록 하기
   // 1. slider 컨테이너를 클릭하여, 이미지 뷰어 모달을 열 수 있도록 함
   // 2. 이미지 뷰어 모달에서는 현재 보고 있는 이미지를 크게 보여주고, 다음 이미지로 넘어갈 수 있도록 함
@@ -58,6 +74,15 @@ const DetailPagePhotoSlider = ({ imageUrls, alt }: Props) => {
     }
   };
 
+
+  //이미지 슬라이드 크기 선택
+  const sliderTypeStyles = {
+    // community: "w-96 h-64",
+    // other: "w-full h-[300px] md:h-[500px]",
+    community: "w-[400px] h-[300px]",
+    other: "w-full h-[300px]",
+  };
+
   return (
     <>
       <div
@@ -77,35 +102,33 @@ const DetailPagePhotoSlider = ({ imageUrls, alt }: Props) => {
           {imageUrls.map((url, index) => (
             <div
               key={url}
-              className={`snap-start shrink-0 w-96 h-64 overflow-hidden ${
+
+              className={`snap-start shrink-0 ${sliderTypeStyles[sliderType]} verflow-hidden ${
                 index === currentIndex ? "" : "hidden"
               }`}
               onClick={() => setShowImageViewerModal(true)}
             >
-              <Image
-                src={url}
-                alt={alt}
-                width={400}
-                height={300}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          ))} */}
-          {imageUrls.map((url, index) => (
-            <div
-              key={url}
-              className={`snap-start shrink-0 w-96 h-64 overflow-hidden ${
-                index === currentIndex ? "" : "hidden"
-              }`}
-              onClick={() => setShowImageViewerModal(true)}
-            >
-              <Image
-                src={url}
-                alt={alt}
-                width={400}
-                height={300}
-                className="w-full h-full object-cover"
-              />
+
+
+              {sliderType === "community" ? (
+                <Image
+                  src={url}
+                  alt={alt}
+                  width={400}
+                  height={300}
+                  className="w-full h-full object-cover"
+                />
+                
+              ) : (
+                <Image
+                  src={url}
+                  alt={alt}
+                  width={800}
+                  height={500}
+                  className="w-full h-full object-cover"
+                />
+              )}
+
             </div>
           ))}
         </div>

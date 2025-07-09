@@ -12,7 +12,6 @@ type Props = {
   alt: string;
   className?: string;
 
-
   sliderType?: "community" | "other"; //추가
 };
 
@@ -21,8 +20,6 @@ const DetailPagePhotoSlider = ({ imageUrls, alt, sliderType = "community" }: Pro
   useEffect(()=> {
     setIsHover(true);
   },[]);
-
-
 
 
   // const urls = useMemo(() => {
@@ -35,8 +32,6 @@ const DetailPagePhotoSlider = ({ imageUrls, alt, sliderType = "community" }: Pro
 
   const encodeUrls = useMemo(() => {
 
-
-
     if (imageUrls.length === 0) {
       return ["/empty/image.png"];
     }else{
@@ -44,7 +39,6 @@ const DetailPagePhotoSlider = ({ imageUrls, alt, sliderType = "community" }: Pro
     }
     
   }, [imageUrls]);
-
 
   
   // const { sliderRef, imageRefs, visibleImageNumber } = usePhotoSlider(urls);
@@ -80,7 +74,6 @@ const DetailPagePhotoSlider = ({ imageUrls, alt, sliderType = "community" }: Pro
     }
   };
 
-
   //이미지 슬라이드 크기 선택
   const sliderTypeStyles = {
     // community: "w-96 h-64",
@@ -110,12 +103,10 @@ const DetailPagePhotoSlider = ({ imageUrls, alt, sliderType = "community" }: Pro
               key={url}
               className={`snap-start shrink-0 ${sliderTypeStyles[sliderType]} verflow-hidden ${
 
-
                 index === currentIndex ? "" : "hidden"
               }`}
               onClick={() => setShowImageViewerModal(true)}
             >
-
 
               {sliderType === "community" ? (
                 <Image

@@ -1,3 +1,6 @@
+import { openGraphSchema } from "@/schemas/communities";
+import { z } from "zod";
+
 export type CommunitiesProps = {
   postId: number;
   categoryName?: string;
@@ -59,3 +62,9 @@ export type communityResponseDetailProps = {
   totalPosts: number;
   hasMore: boolean;
 };
+
+//추가
+export type openGraphProps = z.infer<typeof openGraphSchema>;
+
+// export type HomeResponseProps = z.infer<typeof homeResponseScheme>;
+// export type HomeProps = HomeResponseProps["data"];

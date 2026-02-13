@@ -1,14 +1,21 @@
 "use server";
 
-import { communityDetailSchema, communityResponseSchema, communitySchema } from "@/schemas/communities";
+import {
+  communityDetailSchema,
+  communityResponseSchema,
+  communitySchema,
+} from "@/schemas/communities";
 import { CommunityProps } from "@/types/community";
 
-export const getCommunities = async (category: string = "none", page: string = "0") => {
+export const getCommunities = async (
+  category: string = "none",
+  page: string = "0"
+) => {
   try {
     const url = `https://api.dive-in.co.kr/community/posts/list/${category}/${page}`;
-    const response = await fetch(url); 
+    const response = await fetch(url);
 
-    if(!response.ok){
+    if (!response.ok) {
       throw new Error(`HTTP에러 상태 코드: ${response.status}`);
     }
 
@@ -18,10 +25,9 @@ export const getCommunities = async (category: string = "none", page: string = "
     const validateData = communityResponseSchema.parse(body);
     // console.log("::::::::::zod후 Data:", JSON.stringify(validateData, null, 2));
     // const validateData = communitySchema.array().parse(body.data);
-    
+
     // console.log("::::::::::validateData.data는?:", validateData.data);
     return validateData.data;
-
   } catch (error) {
     console.error(error);
     // return [];
@@ -30,23 +36,25 @@ export const getCommunities = async (category: string = "none", page: string = "
 };
 
 // export const getCommunity = async (postId: string): Promise<CommunityProps | null> => {
-export const getCommunity = async(postId: string) => {
-  
+export const getCommunity = async (postId: string) => {
   try {
-    const response = await fetch(`https://api.dive-in.co.kr/community/posts/${postId}`, {
-      method: "GET",
-      headers: {
-        "Cache-Control" : "no-cache", //캐싱 방지
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `https://api.dive-in.co.kr/community/posts/${postId}`,
+      {
+        method: "GET",
+        headers: {
+          "Cache-Control": "no-cache", //캐싱 방지
+          "Content-Type": "application/json",
+        },
       }
-    });
+    );
     // console.warn("API 요청 URL:", `https://api.dive-in.co.kr/community/posts/${postId}`);
     // console.warn("response:", response);
 
-    if(!response.ok){
+    if (!response.ok) {
       throw new Error(`HTTP에러 상태 코드: ${response.status}`);
     }
-    
+
     const body = await response.json();
     console.log("API 응답 데이터:", body);
     console.log("commentList 데이터:::", body.data?.commentList);
@@ -58,7 +66,6 @@ export const getCommunity = async(postId: string) => {
     } else {
       console.log("zod 검증 성공::::", validateData.data);
     }
-
 
     console.log("zod 검증된 데이터:::", validateData);
     // return validateData;
@@ -77,7 +84,7 @@ export const getCommunity = async(postId: string) => {
   }
 };
 
-export const createCommunity = async(formData: FormData) => {
+export const createCommunity = async (formData: FormData) => {
   try {
     const response = await fetch("https://api.dive-in.co.kr/community/posts", {
       method: "POST",
@@ -87,15 +94,15 @@ export const createCommunity = async(formData: FormData) => {
       },
     });
 
-    if(!response){
+    if (!response) {
       throw new Error("게시글 작성 실패!");
     }
-    
+
     const result = await response.json();
     console.log("글 작성 성공:", result);
-    if(result?.success && result?.data?.postId) {
-      return result.data.postId; 
-    }else{
+    if (result?.success && result?.data?.postId) {
+      return result.data.postId;
+    } else {
       throw new Error("postId를 반환하지 않았습니다.");
     }
   } catch (error) {
@@ -104,22 +111,25 @@ export const createCommunity = async(formData: FormData) => {
   }
 };
 
-export const updateCommunity = async(postId: string, formData: FormData) => {
+export const updateCommunity = async (postId: string, formData: FormData) => {
   try {
     console.warn("FormData 확인:", Array.from(formData.entries())); // 디버깅
-    const response = await fetch(`https://api.dive-in.co.kr/community/posts/${postId}`,{
-      method: "PUT",
-      body: formData,
-      headers: {
-        // Accept: "application/json",
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `https://api.dive-in.co.kr/community/posts/${postId}`,
+      {
+        method: "PUT",
+        body: formData,
+        headers: {
+          // Accept: "application/json",
+          "Content-Type": "application/json",
+        },
       }
-    });
+    );
 
-    if(!response){
+    if (!response) {
       throw new Error("게시글 수정 실패!");
     }
-    
+
     const result = await response.json();
     console.log("글 수정 성공:", result);
   } catch (error) {
@@ -128,36 +138,38 @@ export const updateCommunity = async(postId: string, formData: FormData) => {
   }
 };
 
-export const deleteCommunity = async(id: string, memberId: string) => {
+export const deleteCommunity = async (id: string, memberId: string) => {
   try {
-    const response = await fetch(`https://api.dive-in.co.kr/community/posts/${id}?memberId=${memberId}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `https://api.dive-in.co.kr/community/posts/${id}?memberId=${memberId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
-    if(!response){
+    if (!response) {
       throw new Error("게시글 삭제 실패!");
     }
     // console.warn("API 요청 URL:", `https://api.dive-in.co.kr/community/posts/${id}`);
     console.log("게시글이 삭제 성공!");
     return true;
-    
   } catch (error) {
     console.log(error);
     return false;
   }
 };
 
-export const getOG = async(link: string) => {
+export const getOG = async (link: string) => {
   try {
     const response = await fetch("/api/shorten-link", {
       method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({url: link}),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url: link }),
     });
-    
+
     const result = await response.json();
     return result;
   } catch (error) {
@@ -177,12 +189,13 @@ export const getOG = async(link: string) => {
 //   }
 // };
 
-export const getComments = async(postId: number) => {
+export const getComments = async (postId: number) => {
   try {
-    const response = await fetch(`https://api.dive-in.co.kr/community/comments/${postId}`);
+    const response = await fetch(
+      `https://api.dive-in.co.kr/community/comments/${postId}`
+    );
     const body = await response.json();
 
-    
     return body;
   } catch (error) {
     console.log(error);
@@ -190,17 +203,20 @@ export const getComments = async(postId: number) => {
   }
 };
 
-export const createComment = async(formData: FormData) => {
+export const createComment = async (formData: FormData) => {
   try {
-    const response = await fetch("https://api.dive-in.co.kr/community/comments", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
+    const response = await fetch(
+      "https://api.dive-in.co.kr/community/comments",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      }
+    );
 
-    if(!response){
+    if (!response) {
       throw new Error("게시글 작성 실패!");
     }
 
@@ -232,48 +248,53 @@ export const createComment = async(formData: FormData) => {
 //   }
 // };
 
-export const addLikePost = async(postId: string, memberId: string) => {
+export const addLikePost = async (postId: string, memberId: string) => {
   // const user = parseInt(memberId);
   try {
-    const response = await fetch(`https://api.dive-in.co.kr/community/posts/${postId}/like?memberId=${memberId}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Cache-Control" : "no-cache", //캐싱 방지
-      },
-    });
+    const response = await fetch(
+      `https://api.dive-in.co.kr/community/posts/${postId}/like?memberId=${memberId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Cache-Control": "no-cache", //캐싱 방지
+        },
+      }
+    );
 
     console.log("Response status:", response.status);
     // console.log("Response body:", await response.text());
 
-    if(!response.ok){
+    if (!response.ok) {
       throw new Error("좋아요 실패!");
     }
     const body = await response.json();
     console.log("좋아요 성공:", body);
     return body;
-
   } catch (error) {
     console.log(error);
     return [];
   }
 };
 
-export const deleteLikePost = async(postId: string, memberId: string) => {
+export const deleteLikePost = async (postId: string, memberId: string) => {
   // const user = parseInt(memberId);
   try {
-    const response = await fetch(`https://api.dive-in.co.kr/community/posts/${postId}/like?memberId=${memberId}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        "Cache-Control" : "no-cache", //캐싱 방지
-      },
-    });
-    
+    const response = await fetch(
+      `https://api.dive-in.co.kr/community/posts/${postId}/like?memberId=${memberId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "Cache-Control": "no-cache", //캐싱 방지
+        },
+      }
+    );
+
     console.log("Response status:", response.status);
     // console.log("Response body:", await response.text());
 
-    if(!response.ok){
+    if (!response.ok) {
       const errorMessage = `좋아요 취소 실패: HTTP ${response.status}`;
       console.error(errorMessage);
       throw new Error("좋아요 취소 실패!");
@@ -281,9 +302,22 @@ export const deleteLikePost = async(postId: string, memberId: string) => {
     const body = await response.json();
     console.log("좋아요 취소 성공:", body);
     return body;
-
   } catch (error) {
     console.log(error);
+    return [];
+  }
+};
+
+export const openGraph = async (url: string) => {
+  try {
+    console.log(":::url이 서버로 넘어가는중:", url);
+    
+    const response = await fetch(`https://api.dive-in.co.kr/api/openGraph/fetch?url=${url}`);
+    const body = await response.json();
+
+    return body;
+  } catch (error) {
+    console.error(error);
     return [];
   }
 };

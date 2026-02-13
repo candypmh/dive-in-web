@@ -54,3 +54,12 @@ body {
     --radius: 0.5rem;
   }
 }
+
+/* 스크롤바 숨기기 클래스 (Tailwind용 커스텀) */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

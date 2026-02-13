@@ -82,3 +82,12 @@ export const communityResponseSchema = z.object({
     }),
     // data: z.array(communitySchema),
 });
+
+//오픈그래프를 위한 추가
+export const openGraphSchema = z.object({
+  title: z.string(),
+  description: z.string().nullable(),
+  image: z.string().nullable(),
+  url: z.string(),
+  error: z.string().nullable(),
+});

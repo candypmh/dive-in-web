@@ -2,11 +2,9 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Script from "next/script";
-import BottomNav from "./_components/BottomNav";
 import KakaoSdkScript from "./_scripts/KakaoSdkScript";
 import { GoogleTagManager } from "@next/third-parties/google";
 import "./globals.css";
-import { usePathname } from "next/navigation";
 import BottomNavWrapper from "./BottomNavWrapper";
 
 const KAKAO_APP_KEY = process.env.NEXT_PUBLIC_KAKAO_APP_KEY!;
@@ -36,12 +34,12 @@ export default async function RootLayout({
       <body
         className={`${pretendard.variable} antialiased flex flex-col items-center h-dvh`}
       >
-        <div className="max-w-3xl w-full flex-1 flex flex-col overflow-hidden">
-          <main className="flex-1 overflow-y-auto no-scrollbar">
-            {children}
-          </main>
+          <div className="max-w-3xl w-full flex-1 flex flex-col overflow-hidden">
+            <main className="flex-1 overflow-y-auto no-scrollbar">
+              {children}
+            </main>
             <BottomNavWrapper />
-        </div>
+          </div>
 
         <Script
           type="text/javascript"

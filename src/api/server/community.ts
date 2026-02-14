@@ -12,7 +12,11 @@ export const getCommunities = async (
   page: string = "0"
 ) => {
   try {
-    const url = `https://api.dive-in.co.kr/community/posts/list/${category}/${page}`;
+    //Mock(route handler)
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    const url = `${baseUrl}/api/community/posts/list/${category}/${page}`;
+    //기존
+    // const url = `https://api.dive-in.co.kr/community/posts/list/${category}/${page}`;
     const response = await fetch(url);
 
     if (!response.ok) {
@@ -311,8 +315,10 @@ export const deleteLikePost = async (postId: string, memberId: string) => {
 export const openGraph = async (url: string) => {
   try {
     console.log(":::url이 서버로 넘어가는중:", url);
-    
-    const response = await fetch(`https://api.dive-in.co.kr/api/openGraph/fetch?url=${url}`);
+
+    const response = await fetch(
+      `https://api.dive-in.co.kr/api/openGraph/fetch?url=${url}`
+    );
     const body = await response.json();
 
     return body;

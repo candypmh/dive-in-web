@@ -1,12 +1,13 @@
 "use server";
 
-import { buildCommunityList } from "@/lib/community/mockCommunityList.ts";
+import { buildCommunityDetail } from "@/lib/community/mockCommunityDetail";
+import { buildCommunityList } from "@/lib/community/mockCommunityList";
 import {
   communityDetailSchema,
 } from "@/schemas/communities";
-import { CommunityProps } from "@/types/community";
+import { CommunityProps, communityResponseDetailProps } from "@/types/community";
 
-export const getCommunities = ( category: string = "none", page: string = "0" ) => {
+export const getCommunities = async( category: string = "none", page: string = "0" ): Promise<communityResponseDetailProps|null>  => {
   try {
     //Mock(route handler)
     // const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
@@ -40,50 +41,54 @@ export const getCommunities = ( category: string = "none", page: string = "0" ) 
 };
 
 // export const getCommunity = async (postId: string): Promise<CommunityProps | null> => {
-export const getCommunity = async (postId: string) => {
+export const getCommunity = async (postId: string): Promise<CommunityProps|null> => {
   try {
-    const response = await fetch(
-      `https://api.dive-in.co.kr/community/posts/${postId}`,
-      {
-        method: "GET",
-        headers: {
-          "Cache-Control": "no-cache", //캐싱 방지
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    // const response = await fetch(
+    //   `https://api.dive-in.co.kr/community/posts/${postId}`,
+    //   {
+    //     method: "GET",
+    //     headers: {
+    //       "Cache-Control": "no-cache", //캐싱 방지
+    //       "Content-Type": "application/json",
+    //     },
+    //   }
+    // );
+    const res = buildCommunityDetail(Number(postId));
     // console.warn("API 요청 URL:", `https://api.dive-in.co.kr/community/posts/${postId}`);
     // console.warn("response:", response);
+    // if (!response.ok) {
+    //   throw new Error(`HTTP에러 상태 코드: ${response.status}`);
+    // }
 
-    if (!response.ok) {
-      throw new Error(`HTTP에러 상태 코드: ${response.status}`);
-    }
-
-    const body = await response.json();
+    const body = res;
+    // const body = await response.json();
     console.log("API 응답 데이터:", body);
-    console.log("commentList 데이터:::", body.data?.commentList);
+    // console.log("commentList 데이터:::", body.data?.commentList);
 
-    const validateData = communityDetailSchema.safeParse(body.data);
-
-    if (!validateData.success) {
-      console.error("zod 검증 실패::::", validateData.error);
-    } else {
-      console.log("zod 검증 성공::::", validateData.data);
-    }
-
-    console.log("zod 검증된 데이터:::", validateData);
+    // const validateData = communityDetailSchema.safeParse(body.data);
+    // if (!validateData.success) {
+    //   console.error("zod 검증 실패::::", validateData.error);
+    // } else {
+    //   console.log("zod 검증 성공::::", validateData.data);
+    // }
+    // console.log("zod 검증된 데이터:::", validateData);
     // return validateData;
 
     // 이미지&댓글 처리
-    const transformedData: CommunityProps = {
-      ...body.data,
-      commentList: body.data.commentList || [],
-      images: body.data.images || [],
-    };
+    // const transformedData: CommunityProps = {
+    //   ...body.data,
+    //   commentList: body.data.commentList || [],
+    //   images: body.data.images || [],
+    // };
+    // return transformedData;
 
-    return transformedData;
+    return {
+      ...body,
+      commentList: body.commentList ?? [],
+      images: body.images ?? [],
+    };
   } catch (error) {
-    console.error(error);
+    console.error("[getCommunity] error::", error);
     return null;
   }
 };

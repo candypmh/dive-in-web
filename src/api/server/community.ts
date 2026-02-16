@@ -1,39 +1,39 @@
 "use server";
 
+import { buildCommunityList } from "@/lib/community/mockCommunityList.ts";
 import {
   communityDetailSchema,
-  communityResponseSchema,
-  communitySchema,
 } from "@/schemas/communities";
 import { CommunityProps } from "@/types/community";
 
-export const getCommunities = async (
-  category: string = "none",
-  page: string = "0"
-) => {
+export const getCommunities = ( category: string = "none", page: string = "0" ) => {
   try {
     //Mock(route handler)
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-    const url = `${baseUrl}/api/community/posts/list/${category}/${page}`;
+    // const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    // const url = `${baseUrl}/api/community/posts/list/${category}/${page}`;
+    const res =  buildCommunityList(category, Number(page));
+
+    // const res = await fetch(url, {cache: "no-store"}); //캐시끄기
     //기존
     // const url = `https://api.dive-in.co.kr/community/posts/list/${category}/${page}`;
-    const response = await fetch(url);
+    // const response = await fetch(url);
+    // if (!response.ok) {
+    //   throw new Error(`HTTP에러 상태 코드: ${response.status}`);
+    // }
+    // const body = await response.json();
 
-    if (!response.ok) {
-      throw new Error(`HTTP에러 상태 코드: ${response.status}`);
-    }
+    const body = res.data;
+      console.log("[getCommunities] body keys::", Object.keys(body));
 
-    const body = await response.json();
-    // console.log("::::::::::Fetched Data:", body);
-
-    const validateData = communityResponseSchema.parse(body);
+    // const validateData = communityResponseSchema.parse(body);
     // console.log("::::::::::zod후 Data:", JSON.stringify(validateData, null, 2));
     // const validateData = communitySchema.array().parse(body.data);
-
     // console.log("::::::::::validateData.data는?:", validateData.data);
-    return validateData.data;
+    // return validateData.data;
+    return body;
+
   } catch (error) {
-    console.error(error);
+    console.error("[getCommunities] error::", error);
     // return [];
     return { posts: [], totalPosts: 0, hasMore: false }; //아 여기 반환값 달라서 에러났던 거였음? 하...참나
   }

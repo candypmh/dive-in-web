@@ -12,7 +12,7 @@ export async function GET(
 
     const data = buildCommunityList(category, page);
 
-    return NextResponse.json({ success: true, message: null, data });
+    return NextResponse.json(data);
   } catch (error) {
     console.error("[list route] error::", error);
     return NextResponse.json(

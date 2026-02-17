@@ -7,7 +7,7 @@ import {
 } from "@/schemas/communities";
 import { CommunityProps, communityResponseDetailProps } from "@/types/community";
 
-export const getCommunities = async( category: string = "none", page: string = "0" ): Promise<communityResponseDetailProps|null>  => {
+export const getCommunities = async( category: string = "none", page: string = "0" ): Promise<communityResponseDetailProps>  => {
   try {
     //Mock(route handler)
     // const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";

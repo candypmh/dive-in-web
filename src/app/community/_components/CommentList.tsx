@@ -3,21 +3,7 @@
 import { useEffect, useState } from "react";
 import { Comment } from "../comments/Comment";
 import { getComments } from "@/api/server/community";
-
-// import { CommentProps } from "@/types/community";
-
-interface CommentProps {
-  postId?: number;
-  cmntId: number;
-  content: string;
-  groupName?: number;
-  orderNumber?: number;
-  cmntClass?: number;
-  writer: string;
-  writerProfile: string;
-  likeCnt?: number;
-  createdAt: string;
-}
+import { CommentProps } from "@/types/community";
 
 export default function CommentList({
   commentList,
@@ -82,7 +68,7 @@ export default function CommentList({
       {commentList.map((comment) => (
         <Comment
           key={comment.cmntId}
-          cmmtId={comment.cmntId}
+          cmntId={comment.cmntId}
           content={comment.content}
           groupName={comment.groupName}
           orderNumber={comment.orderNumber}

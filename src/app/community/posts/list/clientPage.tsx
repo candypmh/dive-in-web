@@ -58,20 +58,21 @@ export default function CommunitiesClient({
         // const page = "0";
         // router.replace(`/community/posts/list?category=${category}&page=${page}`);
         const data = await getCommunities(category, page);
-        if(isCancel) return;
+        if (isCancel) return;
 
         setCommunities(data.posts);
         setHasMore(data.hasMore);
         setCurrentPage(Number(page) || 0);
-
       } catch (error) {
-        console.error("[communityList error]::",error);
-          setHasMore(false);
+        console.error("[communityList error]::", error);
+        setHasMore(false);
       }
     };
 
     fetchData();
-    return () => {isCancel = true};
+    return () => {
+      isCancel = true;
+    };
   }, [category, page]);
 
   //무한스크롤
@@ -83,45 +84,51 @@ export default function CommunitiesClient({
         try {
           const nextPage = currentPage + 1;
           const data = await getCommunities(category, String(nextPage));
-          if(isCancel) return;
+          if (isCancel) return;
 
-        if (data.posts.length > 0) {
-          setCommunities((prev) => [...prev, ...data.posts]);
-          setHasMore(data.hasMore);
-          setCurrentPage(nextPage);
-        } else {
+          if (data.posts.length > 0) {
+            setCommunities((prev) => [...prev, ...data.posts]);
+            setHasMore(data.hasMore);
+            setCurrentPage(nextPage);
+          } else {
+            setHasMore(false);
+          }
+        } catch (error) {
+          if (isCancel) return;
+          console.error("[communityList error]::", error);
           setHasMore(false);
         }
-      } catch (error) {
-        if(isCancel) return;
-        console.error("[communityList error]::",error);
-        setHasMore(false);
-      }
-    };
-    
-    fetchMoreData();
-    return () => { isCancel = true; };
+      };
+
+      fetchMoreData();
+      return () => {
+        isCancel = true;
+      };
     }
   }, [inView, hasMore, currentPage, category]);
 
   return (
     <div>
-      <div className="flex gap-2 mb-4 px-4">
+      {/* <div className="flex gap-2 mb-4 px-4"> */}
+      <div className="mb-4 px-4 grid grid-cols-3 gap-2 md:flex md:flex-nowrap md:gap-2">
         {CATEGORIES.map((c) => (
           <button
             key={c.key}
-            onClick={() =>  router.replace(`/community/posts/list?category=${c.key}&page=0`)}
-            className={`px-4 py-2 rounded-full ${
-              category === c.key
-                ? "bg-gray-300 text-black font-bold"
-                : "bg-gray-100 text-gray-500 font-bold"
-            } 
+            onClick={() =>
+              router.replace(`/community/posts/list?category=${c.key}&page=0`)
+            }
+            className={`w-full md:w-auto px-2 py-1 text-xs md:px-4 md:py-2 md:text-base
+                        rounded-full whitespace-nowrap 
+           ${
+             category === c.key
+               ? "bg-gray-300 text-black font-bold"
+               : "bg-gray-100 text-gray-500 font-bold"
+           } 
               hover:bg-gray-300`}
           >
             {c.name}
           </button>
         ))}
-        
       </div>
 
       {/*로딩 중*/}
@@ -141,7 +148,6 @@ export default function CommunitiesClient({
           // <p className="text-gray-500">해당 커뮤니티가 존재하지 않습니다.</p>
           <p className="text-gray-500"></p>
         )}
-       
       </ul>
       {/* )} */}
       <FloatingButton />

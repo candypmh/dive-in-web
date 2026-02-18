@@ -4,7 +4,7 @@
 //   return <div>댓글 페이지</div>;
 // }
 
-import { getComments } from "@/api/server/community";
+import { getComments } from "@/api/server/community/mock";
 import { getUser } from "@/actions/user";
 import { RiShare2Line } from "react-icons/ri";
 import WriterProfile from "../_components/WriterProfile";

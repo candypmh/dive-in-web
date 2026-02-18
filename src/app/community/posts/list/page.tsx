@@ -1,4 +1,4 @@
-import { getCommunities } from "@/api/server/community";
+import { getCommunities } from "@/api/server/community/mock";
 import Link from "next/link";
 import Image from "next/image";
 import CommunitiesClient from "./clientPage";

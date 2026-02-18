@@ -1,4 +1,4 @@
-import { getCommunity } from "@/api/server/community";
+import { getCommunity } from "@/api/server/community/mock";
 import { notFound } from "next/navigation";
 import ClientCommunityPage from "./clientPage";
 

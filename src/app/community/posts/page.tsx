@@ -7,7 +7,7 @@ import { MdOutlineBrokenImage } from "react-icons/md";
 import { AiOutlineLink } from "react-icons/ai";
 import { IoIosArrowDown } from "react-icons/io";
 import { useEffect, useRef, useState } from "react";
-import { createCommunity, openGraph } from "@/api/server/community";
+import { createCommunity, openGraph } from "@/api/server/community/mock";
 import { useRouter } from "next/navigation";
 import OpenGraphPreview from "@/app/_components/OpenGraphLinkReview";
 

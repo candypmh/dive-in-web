@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import FloatingButton from "../../_components/FloatingButton";
 import CategoryFilter from "@/app/community/_components/CategoryFilter";
-import { getCommunities } from "@/api/server/community";
+import { getCommunities } from "@/api/server/community/mock";
 import { useRouter } from "next/navigation";
 import {
   CommunitiesProps,

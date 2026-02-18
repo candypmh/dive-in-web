@@ -12,7 +12,7 @@ import {
   getCommunity,
   openGraph,
   updateCommunity,
-} from "@/api/server/community";
+} from "@/api/server/community/mock";
 import { useRouter } from "next/navigation";
 import OpenGraphPreview from "@/app/_components/OpenGraphLinkReview";
 

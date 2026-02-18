@@ -38,6 +38,7 @@ export type CommunityProps = {
 };
 
 export type CommentProps = {
+  postId?: number;
   cmntId: number;
   content: string;
   groupName: number;
@@ -48,6 +49,22 @@ export type CommentProps = {
   likeCnt: number;
   createdAt: string;
 };
+
+
+// interface CommentProps {
+// writerId: number;
+// loggedUserId: number | null;
+//   postId?: number;
+//   cmntId: number;
+//   content: string;
+//   groupName?: number;
+//   orderNumber?: number;
+//   cmntClass?: number;
+//   writer: string;
+//   writerProfile: string;
+//   likeCnt?: number;
+//   createdAt: string;
+// }
 
 //추가
 export type communityResponseProps = {

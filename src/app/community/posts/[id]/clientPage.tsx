@@ -19,7 +19,7 @@ import {
   deleteLikePost,
   getCommunity,
   openGraph,
-} from "@/api/server/community";
+} from "@/api/server/community/mock";
 import DetailPagePhotoSlider from "@/app/_components/PhotoSlider";
 import CommentList from "../../_components/CommentList";
 

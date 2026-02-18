@@ -3,10 +3,10 @@ import { NextResponse } from "next/server";
 
 export async function GET(
   _req: Request,
-  { params }: { params: { postId: string } },
+  { params }: { params: { id: string } },
 ) {
   try {
-    const postId = Number(params.postId);
+    const postId = Number(params.id);
     const result = buildCommunityDetail(postId);
 
     return NextResponse.json({

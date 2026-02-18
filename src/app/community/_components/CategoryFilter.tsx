@@ -128,8 +128,8 @@ export default function CategoryFilter({
             } */}
 
             <span className="mt-3 text-b text-gray-500 ml-auto">
-              {/* {community.createdAt.split(" ")[0].slice(2)} */}
-              {community.createdAt.slice(2, 12)}
+              {community.createdAt.split(" ")[0]}
+              {/* {community.createdAt.slice(0, 11)} */}
             </span>
           </div>
         </div>

@@ -4,7 +4,7 @@
 //   return <div>댓글 페이지</div>;
 // }
 
-import { getComments } from "@/api/server/community";
+import { getComments } from "@/api/server/community/mock";
 import { getUser } from "@/actions/user";
 import { RiShare2Line } from "react-icons/ri";
 import WriterProfile from "../_components/WriterProfile";
@@ -12,28 +12,10 @@ import { VscKebabVertical } from "react-icons/vsc";
 import { useEffect, useState } from "react";
 import { GoPencil } from "react-icons/go";
 import { GoTrash } from "react-icons/go";
-// import { CommentProps } from "@/types/community";
-
-interface CommentProps {
-  // writerId: number;
-  // loggedUserId: number | null;
-  cmmtId: number;
-  content: string;
-  groupName?: number;
-  orderNumber?: number;
-  cmntClass?: number;
-  writer: string;
-  writerProfile: string;
-  likeCnt?: number;
-  createdAt: string;
-}
-
-// interface CommentsProps {
-//   commentList: CommentProps[];
-// }
+import { CommentProps } from "@/types/community";
 
 export const Comment = ({
-  cmmtId,
+  cmntId,
   content,
   groupName,
   orderNumber,
@@ -57,7 +39,7 @@ export const Comment = ({
   };
 
   return (
-    <div key={cmmtId} className="py-3">
+    <div key={cmntId} className="py-3">
       {/* 작성자 */}
       <div className="flex flex-row items-start px-4">
         <WriterProfile

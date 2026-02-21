@@ -7,9 +7,10 @@ import { MdOutlineBrokenImage } from "react-icons/md";
 import { AiOutlineLink } from "react-icons/ai";
 import { IoIosArrowDown } from "react-icons/io";
 import { useEffect, useRef, useState } from "react";
-import { createCommunity, openGraph } from "@/api/server/community/mock";
+import { openGraph } from "@/api/server/community/mock.server";
 import { useRouter } from "next/navigation";
 import OpenGraphPreview from "@/app/_components/OpenGraphLinkReview";
+import { createCommunity } from "@/api/server/community/mock.client";
 
 // const CATEGORIES = ["소통해요", "수영장", "수영물품", "수영대회"];
 const CATEGORIES = [
@@ -75,6 +76,7 @@ export default function CreatePost() {
 
     formData.append("content", content);
 
+    //임시
     const userId = "1";
     formData.append("memberId", userId); //마이페이지 보고 가져오기
 

@@ -1,5 +1,3 @@
-"use server";
-
 import { buildCommunityDetail } from "@/lib/community/mockCommunityDetail";
 import { buildCommunityList } from "@/lib/community/mockCommunityList";
 import { CommunityProps, communityResponseDetailProps } from "@/types/community";
@@ -37,33 +35,6 @@ export const getCommunity = async (postId: string): Promise<CommunityProps|null>
   } catch (error) {
     console.error("[getCommunity] error::", error);
     return null;
-  }
-};
-
-export const createCommunity = async (formData: FormData) => {
-  try {
-    const response = await fetch("https://api.dive-in.co.kr/community/posts", {
-      method: "POST",
-      body: formData,
-      headers: {
-        Accept: "application/json",
-      },
-    });
-
-    if (!response) {
-      throw new Error("게시글 작성 실패!");
-    }
-
-    const result = await response.json();
-    console.log("글 작성 성공:", result);
-    if (result?.success && result?.data?.postId) {
-      return result.data.postId;
-    } else {
-      throw new Error("postId를 반환하지 않았습니다.");
-    }
-  } catch (error) {
-    console.log("글 작성 실패:", error);
-    throw error;
   }
 };
 

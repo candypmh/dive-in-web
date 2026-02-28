@@ -1,12 +1,13 @@
-import * as mock from "./mock.server";
+import * as mockServer from "./mock.server";
+import * as mockClient from "./mock.client";
 import * as real from "./real";
 
 const useMock = process.env.USE_MOCK === "true";
 
-export const getCommunities = useMock? mock.getCommunities : real.getCommunities;
-export const getCommunity = useMock? mock.getCommunity : real.getCommunity;
-export const getComments = useMock? mock.getComments : real.getComments;
-export const createCommunity = useMock ? mock.createCommunity : real.createCommunity;
+export const getCommunities = useMock? mockServer.getCommunities : real.getCommunities;
+export const getCommunity = useMock? mockServer.getCommunity : real.getCommunity;
+export const getComments = useMock? mockServer.getComments : real.getComments;
+export const createCommunity = useMock ? mockClient.createCommunity : real.createCommunity;
 
 
 // export const updateCommunity = useMock ? mock.updateCommunity : real.updateCommunity;

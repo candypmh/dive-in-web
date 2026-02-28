@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import FloatingButton from "../../_components/FloatingButton";
 import CategoryFilter from "@/app/community/_components/CategoryFilter";
-import { getCommunities } from "@/api/server/community/mock.server";
+import { getCommunities } from "@/api/server/community";
 import { useRouter } from "next/navigation";
 import {
   CommunitiesProps,
@@ -79,21 +79,30 @@ export default function CommunitiesClient({
 
   //Mock
   useEffect(() => {
-  ensureSeeded();
+  let cancelled = true;
+  const makeMockList = async () => {
 
-  const posts = listPosts();
-  let filtered = posts;
-  if(category === "popular") {
-    filtered = posts.filter(p => p.isPopular);
-  }else{
-    const categoryValue = KEY_TO_CATEGORYNAME[category];
-    if(categoryValue) filtered = posts.filter(p => p.categoryName === categoryValue);
-  }
+    await ensureSeeded();
+    
+    const posts = await listPosts();
+    let filtered = posts;
 
-  // const listItems = posts.map(toListItem);
-  setCommunities(filtered.map(toListItem));
-  setHasMore(false);
-  setCurrentPage(0);
+    if(category === "popular") {
+      filtered = posts.filter(p => p.isPopular);
+    }else{
+      const categoryValue = KEY_TO_CATEGORYNAME[category];
+      if(categoryValue) filtered = posts.filter(p => p.categoryName === categoryValue);
+    }
+
+    if(!cancelled) return;
+    // const listItems = posts.map(toListItem);
+    setCommunities(filtered.map(toListItem));
+    setHasMore(false);
+    setCurrentPage(0);
+  };
+  makeMockList();
+
+  return () => { cancelled = false; }
 }, [category]);
 
   //무한스크롤

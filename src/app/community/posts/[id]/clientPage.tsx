@@ -17,9 +17,9 @@ import {
   createComment,
   deleteCommunity,
   deleteLikePost,
-  getCommunity,
   openGraph,
-} from "@/api/server/community/mock.server";
+} from "@/api/server/community/real";
+import { getCommunity } from "@/api/server/community";
 import DetailPagePhotoSlider from "@/app/_components/PhotoSlider";
 import CommentList from "../../_components/CommentList";
 
@@ -38,34 +38,31 @@ export default function ClientCommunity({
   const [changeLikesCnt, setChangeLikesCnt] = useState(community.likesCnt);
   const router = useRouter();
   // console.warn("코멘트 안오냐?:::::::::::", community.commentList);
-  
+
   //og관련
   const [preview, setPreview] = useState<any>(null);
   const urlRegex = /(https?:\/\/[^\s]+)/g; //OG추출을 위한 정규표현식
   useEffect(() => {
-    if(!community?.content) return;
+    if (!community?.content) return;
 
     const matchUrls = community.content.match(urlRegex);
     const lastUrl = matchUrls?.[matchUrls?.length - 1]; //마지막링크
-    if(!lastUrl) return;
+    if (!lastUrl) return;
 
     const fetchOG = async () => {
       try {
         const og = await openGraph(lastUrl);
-        if(og) {
+        if (og) {
           setPreview(og);
         }
-
       } catch (error) {
         console.log("OG미리보기 불러오기 실패", error);
       }
-    }
+    };
 
     fetchOG();
+  }, [community?.content]);
 
-  },[community?.content]);
-
-  
   const handleTextareaHeight = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const textarea = textareaRef.current;
 
@@ -165,11 +162,10 @@ export default function ClientCommunity({
       await navigator.clipboard.writeText(window.location.href);
       alert("링크가 복사되었습니다!");
     } catch (error) {
-       alert("링크 복사에 실패하였습니다!");
+      alert("링크 복사에 실패하였습니다!");
       console.error("클립보드 복사 실패!::", error);
     }
   };
-
 
   //최신데이터 가져오기
   useEffect(() => {
@@ -262,22 +258,26 @@ export default function ClientCommunity({
 
         {/* og삽입 */}
         {preview && (
-          <a 
-          href={preview.url}
-          target="_blank"
-          className="block mt-4 p-4 border rounded bg-gray-100 hover:bg-gray-200"
+          <a
+            href={preview.url}
+            target="_blank"
+            className="block mt-4 p-4 border rounded bg-gray-100 hover:bg-gray-200"
           >
             <div className="flex gap-4">
               {preview.image && (
                 <img
-                src={preview.image}
-                alt="미리보기 이미지"
-                className="w-20 h-20 object-cover rounded border"
+                  src={preview.image}
+                  alt="미리보기 이미지"
+                  className="w-20 h-20 object-cover rounded border"
                 />
               )}
               <div className="overflow-hidden">
-                <p className="font-bold text-sm line-clamp-2">{preview.title}</p>
-                <p className="text-xs text-gray-600 mt-1 line-clamp-1">{preview.description}</p>
+                <p className="font-bold text-sm line-clamp-2">
+                  {preview.title}
+                </p>
+                <p className="text-xs text-gray-600 mt-1 line-clamp-1">
+                  {preview.description}
+                </p>
               </div>
             </div>
           </a>
@@ -297,7 +297,10 @@ export default function ClientCommunity({
           <span className="text-gray-700">{changeLikesCnt}</span>
         </button>
         <button className="flex justify-center items-center gap-1 flex-1">
-          <RiShare2Line className="w-5 h-5 text-gray-700" onClick={handleCopyLink}/>
+          <RiShare2Line
+            className="w-5 h-5 text-gray-700"
+            onClick={handleCopyLink}
+          />
           <p className="text-gray-500"></p>
         </button>
       </div>

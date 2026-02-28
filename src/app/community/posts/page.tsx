@@ -7,10 +7,10 @@ import { MdOutlineBrokenImage } from "react-icons/md";
 import { AiOutlineLink } from "react-icons/ai";
 import { IoIosArrowDown } from "react-icons/io";
 import { useEffect, useRef, useState } from "react";
-import { openGraph } from "@/api/server/community/mock.server";
+import { openGraph } from "@/api/server/community/mock.server"; //추후 수정하기!!
 import { useRouter } from "next/navigation";
 import OpenGraphPreview from "@/app/_components/OpenGraphLinkReview";
-import { createCommunity } from "@/api/server/community/mock.client";
+import { createCommunity } from "@/api/server/community";
 
 // const CATEGORIES = ["소통해요", "수영장", "수영물품", "수영대회"];
 const CATEGORIES = [

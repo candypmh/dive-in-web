@@ -14,7 +14,7 @@ export function buildCommunityDetail(postId: number) {
     cmntCnt: 0,
     writer: "Mock Writer",
     writerProfile: null,
-    createdAt: "2026-01-01 00:00:00",
+    createdAt: "2026-01-01T00:00:00.000Z",
     updatedAt: null,
     commentList: [
       {
@@ -26,7 +26,7 @@ export function buildCommunityDetail(postId: number) {
         writer: "Mock commenter",
         writerProfile: "https://picsum.photos/seed/commenter/100/100",
         likeCnt: 0,
-        createdAt: "2026-01-01 00:00:00",
+        createdAt: "2026-01-01T00:00:00.000Z",
       },
     ],
     isLiked: false,

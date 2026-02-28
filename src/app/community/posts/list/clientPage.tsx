@@ -4,15 +4,16 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import FloatingButton from "../../_components/FloatingButton";
 import CategoryFilter from "@/app/community/_components/CategoryFilter";
-import { getCommunities } from "@/api/server/community/mock";
+import { getCommunities } from "@/api/server/community/mock.server";
 import { useRouter } from "next/navigation";
 import {
   CommunitiesProps,
   communityResponseDetailProps,
   communityResponseProps,
 } from "@/types/community";
-import { CATEGORIES } from "@/constants/categories";
+import { CATEGORIES, KEY_TO_CATEGORYNAME } from "@/constants/categories";
 import { useInView } from "react-intersection-observer";
+import { ensureSeeded, listPosts, toListItem } from "@/lib/community/communityRepo.client";
 
 // export const CATEGORIES = [
 //   {name: "전체", key: "none"},
@@ -50,62 +51,82 @@ export default function CommunitiesClient({
   const router = useRouter();
 
   //카테고리 변경시 URL 업데이트
+  // useEffect(() => {
+  //   //카테고리 변경시 데이터 가져옴
+  //   let isCancel = false;
+  //   const fetchData = async () => {
+  //     try {
+  //       // const page = "0";
+  //       // router.replace(`/community/posts/list?category=${category}&page=${page}`);
+  //       const data = await getCommunities(category, page);
+  //       if (isCancel) return;
+
+  //       setCommunities(data.posts);
+  //       setHasMore(data.hasMore);
+  //       setCurrentPage(Number(page) || 0);
+  //     } catch (error) {
+  //       console.error("[communityList error]::", error);
+  //       setHasMore(false);
+  //     }
+  //   };
+
+  //   fetchData();
+  //   return () => {
+  //     isCancel = true;
+  //   };
+  // }, [category, page]);
+
+
+  //Mock
   useEffect(() => {
-    //카테고리 변경시 데이터 가져옴
-    let isCancel = false;
-    const fetchData = async () => {
-      try {
-        // const page = "0";
-        // router.replace(`/community/posts/list?category=${category}&page=${page}`);
-        const data = await getCommunities(category, page);
-        if (isCancel) return;
+  ensureSeeded();
 
-        setCommunities(data.posts);
-        setHasMore(data.hasMore);
-        setCurrentPage(Number(page) || 0);
-      } catch (error) {
-        console.error("[communityList error]::", error);
-        setHasMore(false);
-      }
-    };
+  const posts = listPosts();
+  let filtered = posts;
+  if(category === "popular") {
+    filtered = posts.filter(p => p.isPopular);
+  }else{
+    const categoryValue = KEY_TO_CATEGORYNAME[category];
+    if(categoryValue) filtered = posts.filter(p => p.categoryName === categoryValue);
+  }
 
-    fetchData();
-    return () => {
-      isCancel = true;
-    };
-  }, [category, page]);
+  // const listItems = posts.map(toListItem);
+  setCommunities(filtered.map(toListItem));
+  setHasMore(false);
+  setCurrentPage(0);
+}, [category]);
 
   //무한스크롤
-  useEffect(() => {
-    if (inView && hasMore) {
-      let isCancel = false;
+  // useEffect(() => {
+  //   if (inView && hasMore) {
+  //     let isCancel = false;
 
-      const fetchMoreData = async () => {
-        try {
-          const nextPage = currentPage + 1;
-          const data = await getCommunities(category, String(nextPage));
-          if (isCancel) return;
+  //     const fetchMoreData = async () => {
+  //       try {
+  //         const nextPage = currentPage + 1;
+  //         const data = await getCommunities(category, String(nextPage));
+  //         if (isCancel) return;
 
-          if (data.posts.length > 0) {
-            setCommunities((prev) => [...prev, ...data.posts]);
-            setHasMore(data.hasMore);
-            setCurrentPage(nextPage);
-          } else {
-            setHasMore(false);
-          }
-        } catch (error) {
-          if (isCancel) return;
-          console.error("[communityList error]::", error);
-          setHasMore(false);
-        }
-      };
+  //         if (data.posts.length > 0) {
+  //           setCommunities((prev) => [...prev, ...data.posts]);
+  //           setHasMore(data.hasMore);
+  //           setCurrentPage(nextPage);
+  //         } else {
+  //           setHasMore(false);
+  //         }
+  //       } catch (error) {
+  //         if (isCancel) return;
+  //         console.error("[communityList error]::", error);
+  //         setHasMore(false);
+  //       }
+  //     };
 
-      fetchMoreData();
-      return () => {
-        isCancel = true;
-      };
-    }
-  }, [inView, hasMore, currentPage, category]);
+  //     fetchMoreData();
+  //     return () => {
+  //       isCancel = true;
+  //     };
+  //   }
+  // }, [inView, hasMore, currentPage, category]);
 
   return (
     <div>

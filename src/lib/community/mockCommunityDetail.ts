@@ -3,7 +3,7 @@ import { communityDetailSchema } from "@/schemas/communities";
 export function buildCommunityDetail(postId: number) {
   const post = {
     postId: postId,
-    categoryName: "none",
+    // categoryName: String(category),
     title: `Mock title ${postId}`,
     content: `Mock content ${postId}`,
     images: [  

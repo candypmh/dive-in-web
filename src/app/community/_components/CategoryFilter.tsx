@@ -16,6 +16,14 @@ import { CATEGORIES } from "@/constants/categories";
 //   { name: "수영대회", key: "competition" },
 // ];
 
+//Mock
+const CATEGORY_LABEL_MAP: Record<string, string> = {
+  COMMUNICATION: "소통해요",
+  POOL: "수영장",
+  GOODS: "수영물품",
+  COMPETITION: "수영대회",
+};
+
 export default function CategoryFilter({
   community,
   selectedCategory,
@@ -23,9 +31,9 @@ export default function CategoryFilter({
   community: CommunitiesProps;
   selectedCategory: string;
 }) {
-  const categoryName =
-    CATEGORIES.find((category) => category.key === selectedCategory)?.name ||
-    "알 수 없음";
+  // const categoryName =
+  //   CATEGORIES.find((category) => category.key === selectedCategory)?.name ||
+  //   "알 수 없음";
 
   // console.warn(":::::::::::::::::::::::카테고리필터의 postID:", community.postId);
 
@@ -42,7 +50,8 @@ export default function CategoryFilter({
             <div
               className={`text-label_sb px-1.5 py-1 mt-4 rounded bg-chip-1 text-chip-1-foreground inline-block w-fit`}
             >
-              <p>{community.categoryName || "\u00A0"}</p>
+              {/* <p>{community.categoryName || "\u00A0"}</p> */}
+              <p>{CATEGORY_LABEL_MAP[community.categoryName ?? ""] ?? ""}</p>
             </div>
 
             {/* {selectedCategory === "none" || selectedCategory === "popular" ? 

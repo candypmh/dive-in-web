@@ -1,5 +1,6 @@
 import { communityResponseSchema } from "@/schemas/communities";
 
+// export function buildCommunityList(category: string, page: number) {
 export function buildCommunityList(category: string, page: number) {
   const pageSize = 10;
   const totalPosts = 35;

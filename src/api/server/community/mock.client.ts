@@ -1,5 +1,6 @@
 "use client";
 
+import { CATEGORY_NAMES, toCategoryName } from "@/constants/categories";
 import { createPost, ensureSeeded } from "@/lib/community/communityRepo.client";
 import { CommunitiesProps, CommunityProps } from "@/types/community";
 
@@ -14,7 +15,13 @@ export async function createCommunity(formData: FormData): Promise<number> {
     ensureSeeded();
 
     const postId = Date.now();
-    const categoryType = String(formData.get("categoryType") ?? "COMMUNICATION");
+
+    const categoryData = formData.get("categoryType");
+    if((typeof categoryData !== "string") || (!CATEGORY_NAMES.includes(categoryData))){
+      throw new Error("Invalid category type");
+    }
+    const categoryType = toCategoryName(categoryData);
+
     const title = String(formData.get("title") ?? "");
     const content = String(formData.get("content") ?? "");
     const memberId = String(formData.get("memberId") ?? "1");

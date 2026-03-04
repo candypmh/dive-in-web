@@ -24,13 +24,12 @@ export const getCommunities = async( category: string = "none", page: string = "
 export const getCommunity = async (postId: string): Promise<CommunityProps|null> => {
   try {
     const res = buildCommunityDetail(Number(postId));
-    const body = res;
-    console.log("API 응답 데이터:", body);
+    console.log("API 응답 데이터:", res);
 
     return {
-      ...body,
-      commentList: body.commentList ?? [],
-      images: body.images ?? [],
+      ...res,
+      commentList: res.commentList ?? [],
+      images: res.images ?? [],
     };
   } catch (error) {
     console.error("[getCommunity] error::", error);

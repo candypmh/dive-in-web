@@ -19,24 +19,33 @@ import {
   deleteLikePost,
   openGraph,
 } from "@/api/server/community/real";
-import { getCommunity } from "@/api/server/community";
+import { getPost } from "@/lib/community/communityRepo.client";
+import { formatKST } from "@/utils";
 import DetailPagePhotoSlider from "@/app/_components/PhotoSlider";
 import CommentList from "../../_components/CommentList";
 
-export default function ClientCommunity({
-  community,
-}: {
-  community: CommunityProps;
-}) {
-  console.warn("::::::::::postId가 넘어오니?::", community.postId);
+export default function ClientCommunity({ postId }: { postId: number }) {
+  const [community, setCommunity] = useState<CommunityProps | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [comment, setComment] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [changeLiked, setChangeLiked] = useState(community.isLiked);
-  const [changeLikesCnt, setChangeLikesCnt] = useState(community.likesCnt);
+  const [changeLiked, setChangeLiked] = useState(false);
+  const [changeLikesCnt, setChangeLikesCnt] = useState(0);
   const router = useRouter();
+
+  useEffect(() => {
+    getPost(postId).then((post) => {
+      if (!post) {
+        router.back();
+        return;
+      }
+      setCommunity(post);
+      setChangeLiked(post.isLiked);
+      setChangeLikesCnt(post.likesCnt);
+    });
+  }, [postId]);
   // console.warn("코멘트 안오냐?:::::::::::", community.commentList);
 
   //og관련
@@ -91,8 +100,8 @@ export default function ClientCommunity({
   };
 
   const handleDelete = async () => {
-    const isDeleted = await deleteCommunity(community.postId + "", "1");
-    console.warn("삭제된 게시글:", community.postId);
+    const isDeleted = await deleteCommunity(postId + "", "1");
+    console.warn("삭제된 게시글:", postId);
 
     if (isDeleted) {
       await router.replace("/community/posts/list?category=none&page=0");
@@ -103,6 +112,8 @@ export default function ClientCommunity({
   };
 
   const handleLike = async () => {
+    if(!community) return;
+    
     console.warn("현재 좋아요의 상태는?:::::::::::::::::::", community.isLiked);
 
     try {
@@ -110,8 +121,8 @@ export default function ClientCommunity({
       setChangeLikesCnt((prev) => (changeLiked ? prev - 1 : prev + 1));
 
       const response = changeLiked
-        ? await deleteLikePost(community.postId + "", "1") //좋아요가 되어있으면
-        : await addLikePost(community.postId + "", "1"); //좋아요가 안되어있으면
+        ? await deleteLikePost(postId + "", "1") //좋아요가 되어있으면
+        : await addLikePost(postId + "", "1"); //좋아요가 안되어있으면
 
       if (!response || !response.success || response.data === null) {
         throw new Error(response?.message || "서버 응답 오류");
@@ -134,7 +145,7 @@ export default function ClientCommunity({
   const handleCommentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("postId", String(community.postId));
+    formData.append("postId", String(postId));
     formData.append("content", comment);
     formData.append("memberId", "1");
 
@@ -167,23 +178,9 @@ export default function ClientCommunity({
     }
   };
 
-  //최신데이터 가져오기
-  useEffect(() => {
-    const fetchPost = async () => {
-      try {
-        const reloadPost = await getCommunity(community.postId + "");
-
-        if (reloadPost) {
-          setChangeLiked(reloadPost?.isLiked);
-          setChangeLikesCnt(reloadPost?.likesCnt);
-        }
-      } catch (error) {
-        console.error("초기 데이터 동기화 오류:", error);
-      }
-    };
-
-    fetchPost();
-  }, [community.postId]);
+  if (!community) {
+    return <div className="flex justify-center py-20 text-gray-400 text-sm">로딩중...</div>;
+  }
 
   return (
     <div className="flex flex-col pb-10 relative h-full">
@@ -224,7 +221,7 @@ export default function ClientCommunity({
 
           <div className="flex gap-2 text-sm text-gray-500">
             <span className="text-sm text-gray-500 ml-auto">
-              {community.createdAt}
+              {formatKST(community.createdAt)}
             </span>
             <span className="text-sm text-gray-500 ml-auto">
               조회{community.viewCnt}

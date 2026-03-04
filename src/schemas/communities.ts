@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { toCategoryName } from "@/constants/categories";
 
 export const imageSchema = z.object({
   repImage: z.boolean(),
@@ -7,7 +8,7 @@ export const imageSchema = z.object({
 
 export const communitySchema = z.object({
   postId: z.number(),
-  categoryName: z.string(),
+  categoryName: z.string().transform(toCategoryName),
   title: z.string(),
   content: z.string(),
   image: imageSchema.nullable(),
@@ -54,7 +55,7 @@ export const communityDetailReCommentSchema = z.object({
 
 export const communityDetailSchema = z.object({
   postId: z.number(),
-  categoryName: z.string(),
+  categoryName: z.string().transform(toCategoryName),
   title: z.string(),
   content: z.string(),
   images: z.array(imageSchema).max(5).default([]), //이미지가 최대 5장 들어감

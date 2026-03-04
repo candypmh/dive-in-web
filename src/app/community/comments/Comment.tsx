@@ -4,9 +4,8 @@
 //   return <div>댓글 페이지</div>;
 // }
 
-import { getComments } from "@/api/server/community/mock.server";
-import { getUser } from "@/actions/user";
 import { RiShare2Line } from "react-icons/ri";
+import { formatKST } from "@/utils";
 import WriterProfile from "../_components/WriterProfile";
 import { VscKebabVertical } from "react-icons/vsc";
 import { useEffect, useState } from "react";
@@ -76,7 +75,7 @@ export const Comment = ({
       <p className="text-gray-700 px-4 mt-2">{content}</p>
 
       <div className="flex flex-row items-center gap-2 mt-2">
-        <span className="text-sm text-gray-500 pl-4">{createdAt}</span>
+        <span className="text-sm text-gray-500 pl-4">{formatKST(createdAt)}</span>
         <button type="button" className="text-xs text-gray-600">
           <span>답글 쓰기</span>
         </button>

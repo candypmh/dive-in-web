@@ -8,11 +8,10 @@ import { AiOutlineLink } from "react-icons/ai";
 import { IoIosArrowDown } from "react-icons/io";
 import { useEffect, useRef, useState } from "react";
 import {
-  createCommunity,
   getCommunity,
   openGraph,
   updateCommunity,
-} from "@/api/server/community/mock";
+} from "@/api/server/community/mock.server";
 import { useRouter } from "next/navigation";
 import OpenGraphPreview from "@/app/_components/OpenGraphLinkReview";
 

@@ -1,169 +1,114 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useInView } from "react-intersection-observer";
 import FloatingButton from "../../_components/FloatingButton";
 import CategoryFilter from "@/app/community/_components/CategoryFilter";
-import { getCommunities } from "@/api/server/community/mock";
-import { useRouter } from "next/navigation";
-import {
-  CommunitiesProps,
-  communityResponseDetailProps,
-  communityResponseProps,
-} from "@/types/community";
-import { CATEGORIES } from "@/constants/categories";
-import { useInView } from "react-intersection-observer";
+import { CATEGORIES, KEY_TO_CATEGORYNAME } from "@/constants/categories";
+import { listPage } from "@/lib/community/communityRepo.client";
+import { CommunitiesProps } from "@/types/community";
 
-// export const CATEGORIES = [
-//   {name: "전체", key: "none"},
-//   {name: "인기글", key: "popular"},
-//   {name: "소통해요", key: "communication"},
-//   {name: "수영장", key: "pool"},
-//   {name: "수영물품", key: "goods"},
-//   {name: "수영대회", key: "competition"},
-// ];
+const PAGE_SIZE = 10;
+type CategoryKey = keyof typeof KEY_TO_CATEGORYNAME;
 
 export default function CommunitiesClient({
-  communityList,
   category,
-  page,
 }: {
-  // communityList: CommunitiesProps[];
-  communityList: communityResponseDetailProps;
   category: string;
-  page: string;
-  // hasMore: boolean;
-  // totalposts: number;
 }) {
-  // const [selectedCategory, setSelectedCategory] = useState<string>(category); //기본 카테고리
-  const [communities, setCommunities] = useState<CommunitiesProps[]>(
-    communityList.posts,
-  ); //초기 데이터
-
-  //무한스크롤 추가
-  const [currentPage, setCurrentPage] = useState<number>(Number(page) || 0);
-  const [hasMore, setHasMore] = useState<boolean>(communityList.hasMore);
-  const { ref, inView } = useInView({
-    threshold: 0.5, // 요소가 50% 보일 때 inView가 true로 바뀜
-  });
-
+  const categoryKey = category as CategoryKey;
+  const [items, setItems] = useState<CommunitiesProps[]>([]);
+  const [page, setPage] = useState(0);
+  const [hasNext, setHasNext] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const { ref, inView } = useInView({ threshold: 0 });
   const router = useRouter();
 
-  //카테고리 변경시 URL 업데이트
+  // Reset state when category changes
   useEffect(() => {
-    //카테고리 변경시 데이터 가져옴
-    let isCancel = false;
-    const fetchData = async () => {
-      try {
-        // const page = "0";
-        // router.replace(`/community/posts/list?category=${category}&page=${page}`);
-        const data = await getCommunities(category, page);
-        if (isCancel) return;
+    setItems([]);
+    setPage(0);
+    setHasNext(true);
+  }, [categoryKey]);
 
-        setCommunities(data.posts);
-        setHasMore(data.hasMore);
-        setCurrentPage(Number(page) || 0);
-      } catch (error) {
-        console.error("[communityList error]::", error);
-        setHasMore(false);
-      }
-    };
+  // Load a page whenever categoryKey or page changes
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
 
-    fetchData();
+    listPage({ categoryKey, page, pageSize: PAGE_SIZE })
+      .then((result) => {
+        if (cancelled) return;
+        setItems((prev) => (page === 0 ? result.items : [...prev, ...result.items]));
+        setHasNext(result.hasNext);
+      })
+      .catch(() => {
+        if (!cancelled) setHasNext(false);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
     return () => {
-      isCancel = true;
+      cancelled = true;
     };
-  }, [category, page]);
+  }, [categoryKey, page]);
 
-  //무한스크롤
+  // Trigger next page when sentinel enters view
   useEffect(() => {
-    if (inView && hasMore) {
-      let isCancel = false;
-
-      const fetchMoreData = async () => {
-        try {
-          const nextPage = currentPage + 1;
-          const data = await getCommunities(category, String(nextPage));
-          if (isCancel) return;
-
-          if (data.posts.length > 0) {
-            setCommunities((prev) => [...prev, ...data.posts]);
-            setHasMore(data.hasMore);
-            setCurrentPage(nextPage);
-          } else {
-            setHasMore(false);
-          }
-        } catch (error) {
-          if (isCancel) return;
-          console.error("[communityList error]::", error);
-          setHasMore(false);
-        }
-      };
-
-      fetchMoreData();
-      return () => {
-        isCancel = true;
-      };
+    if (inView && hasNext && !loading) {
+      setPage((p) => p + 1);
     }
-  }, [inView, hasMore, currentPage, category]);
+  }, [inView, hasNext, loading]);
 
   return (
     <div>
-      {/* <div className="flex gap-2 mb-4 px-4"> */}
       <div className="mb-4 px-4 grid grid-cols-3 gap-2 md:flex md:flex-nowrap md:gap-2">
         {CATEGORIES.map((c) => (
           <button
             key={c.key}
             onClick={() =>
-              router.replace(`/community/posts/list?category=${c.key}&page=0`)
+              router.replace(`/community/posts/list?category=${c.key}`)
             }
             className={`w-full md:w-auto px-2 py-1 text-xs md:px-4 md:py-2 md:text-base
-                        rounded-full whitespace-nowrap 
-           ${
-             category === c.key
-               ? "bg-gray-300 text-black font-bold"
-               : "bg-gray-100 text-gray-500 font-bold"
-           } 
-              hover:bg-gray-300`}
+                        rounded-full whitespace-nowrap font-bold
+                        ${category === c.key ? "bg-gray-300 text-black" : "bg-gray-100 text-gray-500"}
+                        hover:bg-gray-300`}
           >
             {c.name}
           </button>
         ))}
       </div>
 
-      {/*로딩 중*/}
-      {/* {loading? (
-          <p>로딩 중...</p>
-        ) : ( */}
       <ul className="flex flex-col gap-1 px-4 pb-10">
-        {communities && communities.length > 0 ? (
-          communities.map((community) => (
+        {items.length > 0 ? (
+          items.map((community) => (
             <CategoryFilter
               key={community.postId}
               community={community}
               selectedCategory={category}
             />
           ))
-        ) : (
-          // <p className="text-gray-500">해당 커뮤니티가 존재하지 않습니다.</p>
+        ) : !loading ? (
           <p className="text-gray-500"></p>
-        )}
+        ) : null}
       </ul>
-      {/* )} */}
+
       <FloatingButton />
-      {/* 무한스크롤 감지 */}
-      {hasMore ? (
-        <div className="flex justify-center pb-8 gap-2">
-          <div className="w-6 h-6 border-4 border-gray-300 border-t-gray-500 rounded-full animate-spin"></div>
-          <div ref={ref} className="text-gray-400">
-            Loading more...
+
+      {/* Infinite scroll sentinel — always rendered so the observer stays active */}
+      <div ref={ref} className="py-4 flex justify-center">
+        {loading && (
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 border-4 border-gray-300 border-t-gray-500 rounded-full animate-spin" />
+            <span className="text-gray-400">Loading more...</span>
           </div>
-        </div>
-      ) : (
-        <p className="text-center text-gray-400 pb-8">
-          더 이상 게시물이 없습니다.
-        </p>
-      )}
+        )}
+        {!hasNext && !loading && (
+          <p className="pb-8 text-center text-gray-400">더 이상 게시물이 없습니다.</p>
+        )}
+      </div>
     </div>
   );
 }

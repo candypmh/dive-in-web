@@ -1,5 +1,6 @@
 import { communityResponseSchema } from "@/schemas/communities";
 
+// export function buildCommunityList(category: string, page: number) {
 export function buildCommunityList(category: string, page: number) {
   const pageSize = 10;
   const totalPosts = 35;
@@ -17,7 +18,7 @@ export function buildCommunityList(category: string, page: number) {
       viewCnt: 0,
       writer: "Mock Writer",
       writerProfile: null,
-      createdAt: "2026-01-01 00:00:00",
+      createdAt: "2026-01-01T00:00:00.000Z",
       updatedAt: null,
       isPopular: false,
     };

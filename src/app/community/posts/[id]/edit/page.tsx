@@ -8,7 +8,6 @@ import { AiOutlineLink } from "react-icons/ai";
 import { IoIosArrowDown } from "react-icons/io";
 import { useEffect, useRef, useState } from "react";
 import {
-  createCommunity,
   getCommunity,
   openGraph,
   updateCommunity,

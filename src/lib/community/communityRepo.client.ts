@@ -1,9 +1,10 @@
 "use client";
 
 import { CommunitiesProps, CommunityProps } from "@/types/community";
-import { buildCommunityList } from "./mockCommunityList";
 import { buildCommunityDetail } from "./mockCommunityDetail";
-import { CATEGORY_NAMES, CategoryName } from "@/constants/categories";
+import { CATEGORY_NAMES, CategoryName, KEY_TO_CATEGORYNAME } from "@/constants/categories";
+
+type CategoryKey = keyof typeof KEY_TO_CATEGORYNAME;
 
 const STORAGE_KEY = "mock_communities_v1";
 const SEEDED_KEY = "mock_communities_seeded_v1";
@@ -50,20 +51,15 @@ export async function ensureSeeded(category: string = "none") {
     return;
   }
 
-  //seed데이터 생성
-  // const seedListRes = buildCommunityList(category, 0);
-  const seedListRes = buildCommunityList(category, 0);
-  const seedPosts: CommunitiesProps[] = seedListRes.data.posts;
-
-  //detail로 확장
-  const fullPosts: CommunityProps[] = seedPosts.map((p) => {
-    const detail = buildCommunityDetail(Number(p.postId));
+  // seed 데이터 35개 직접 생성
+  const SEED_COUNT = 35;
+  const fullPosts: CommunityProps[] = Array.from({ length: SEED_COUNT }, (_, i) => {
+    const postId = i + 1;
+    const detail = buildCommunityDetail(postId);
     const categoryName = randomCategory();
-    // const categoryName = detail.categoryName ?? p.categoryName ?? randomCategory();
-
     const likesCnt = randomInt(0, 120);
     const viewCnt = randomInt(0, 1500);
-    const isPopular = likesCnt >= 50;
+    const isPopular = likesCnt >= 80;
 
     return {
       ...detail,
@@ -112,6 +108,46 @@ export async function createPost(newPost: CommunityProps): Promise<number> {
     // 선택 2) throw 해서 UI에서 토스트 띄우기
     throw error;
   }
-  
+
   return newPost.postId;
+}
+
+export async function listPage(params: {
+  categoryKey: CategoryKey;
+  page: number;
+  pageSize: number;
+}): Promise<{
+  items: CommunitiesProps[];
+  page: number;
+  pageSize: number;
+  total: number;
+  hasNext: boolean;
+}> {
+  await ensureSeeded();
+  const { categoryKey, page, pageSize } = params;
+
+  const posts = await listPosts();
+
+  let filtered: CommunityProps[];
+  if (categoryKey === "popular") {
+    filtered = posts.filter((p) => p.isPopular);
+  } else {
+    const categoryValue = KEY_TO_CATEGORYNAME[categoryKey];
+    filtered = categoryValue ? posts.filter((p) => p.categoryName === categoryValue) : posts;
+  }
+
+  const sorted = [...filtered].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+
+  const total = sorted.length;
+  const start = page * pageSize;
+
+  return {
+    items: sorted.slice(start, start + pageSize).map(toListItem),
+    page,
+    pageSize,
+    total,
+    hasNext: start + pageSize < total,
+  };
 }

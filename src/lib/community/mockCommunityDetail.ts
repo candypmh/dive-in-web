@@ -3,7 +3,7 @@ import { communityDetailSchema } from "@/schemas/communities";
 export function buildCommunityDetail(postId: number) {
   const post = {
     postId: postId,
-    // categoryName: String(category),
+    categoryName: "COMMUNICATION", // placeholder — ensureSeeded에서 randomCategory()로 덮어씌움
     title: `Mock title ${postId}`,
     content: `Mock content ${postId}`,
     images: [  

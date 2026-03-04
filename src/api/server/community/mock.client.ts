@@ -4,11 +4,6 @@ import { CATEGORY_NAMES, toCategoryName } from "@/constants/categories";
 import { createPost, ensureSeeded } from "@/lib/community/communityRepo.client";
 import { CommunitiesProps, CommunityProps } from "@/types/community";
 
-// export function formatKST(isoString: string) {
-//   return new Date(isoString).toLocaleString("ko-KR", {
-//     timeZone: "Asia/Seoul",
-//   });
-// }
 
 export async function createCommunity(formData: FormData): Promise<number> {
   try {
@@ -17,7 +12,7 @@ export async function createCommunity(formData: FormData): Promise<number> {
     const postId = Date.now();
 
     const categoryData = formData.get("categoryType");
-    if((typeof categoryData !== "string") || (!CATEGORY_NAMES.includes(categoryData))){
+    if((typeof categoryData !== "string") || (!(CATEGORY_NAMES as readonly string[]).includes(categoryData))){
       throw new Error("Invalid category type");
     }
     const categoryType = toCategoryName(categoryData);

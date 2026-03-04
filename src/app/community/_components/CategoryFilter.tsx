@@ -6,6 +6,7 @@ import WriterProfile from "./WriterProfile";
 import { useState } from "react";
 import { CommunitiesProps } from "@/types/community";
 import { CATEGORIES } from "@/constants/categories";
+import { formatKST } from "@/utils";
 
 // const CATEGORIES = [
 //   { name: "전체", key: "none" },
@@ -137,8 +138,7 @@ export default function CategoryFilter({
             } */}
 
             <span className="mt-3 text-b text-gray-500 ml-auto">
-              {community.createdAt.split(" ")[0]}
-              {/* {community.createdAt.slice(0, 11)} */}
+              {formatKST(community.createdAt)}
             </span>
           </div>
         </div>

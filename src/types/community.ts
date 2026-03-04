@@ -84,7 +84,7 @@ export type communityResponseProps = {
 
 //추가
 export type communityResponseDetailProps = {
-  posts: CommunitiesProps[];
+  posts: CommunityApiProps[];
   totalPosts: number;
   hasMore: boolean;
 };

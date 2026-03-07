@@ -90,19 +90,15 @@ export default function HomeClient({ home }: { home: HomeProps }) {
         {/* 카드리스트 */}
         <div className="grid grid-cols-2 gap-6 px-8 py-1">
           {popularLessons.map((lesson) => (
-            <Link
-              href={"/lessons/" + lesson.id}
+            <div
               key={lesson.id}
-              className="p-6 rounded-lg shadow-sm bg-gray-100 flex flex-col h-full"
+              className="p-6 rounded-lg shadow-sm bg-gray-100 flex flex-col h-full opacity-60 cursor-not-allowed"
             >
               {/* 카드 1*/}
               <div className="flex flex-wrap gap-2 items-center pb-2">
                 {[...lesson.level.split(","), ...lesson.keyword.split(",")].map(
-                  (
-                    tag,
-                    index //태그분리
-                  ) => (
-                    <LessonChip key={index} label={tag.trim()} /> //공백제거
+                  (tag, index) => (
+                    <LessonChip key={index} label={tag.trim()} />
                   )
                 )}
               </div>
@@ -115,7 +111,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
                   name={lesson.instructorName}
                 />
               </div>
-            </Link>
+            </div>
           ))}
         </div>
       </section>
@@ -130,19 +126,15 @@ export default function HomeClient({ home }: { home: HomeProps }) {
         {/* 카드리스트 */}
         <div className="grid grid-cols-2 gap-6 px-8 py-1">
           {NewLessons.map((lesson) => (
-            <Link
-              href={"/lessons/" + lesson.id}
+            <div
               key={lesson.id}
-              className="p-6 rounded-lg shadow-sm bg-gray-100 flex flex-col h-full"
+              className="p-6 rounded-lg shadow-sm bg-gray-100 flex flex-col h-full opacity-60 cursor-not-allowed"
             >
               {/* 카드 1*/}
               <div className="flex flex-wrap gap-2 items-center pb-2">
                 {[...lesson.level.split(","), ...lesson.keyword.split(",")].map(
-                  (
-                    tag,
-                    index //태그분리
-                  ) => (
-                    <LessonChip key={index} label={tag.trim()} /> //공백제거
+                  (tag, index) => (
+                    <LessonChip key={index} label={tag.trim()} />
                   )
                 )}
               </div>
@@ -155,7 +147,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
                   name={lesson.instructorName}
                 />
               </div>
-            </Link>
+            </div>
           ))}
         </div>
       </section>

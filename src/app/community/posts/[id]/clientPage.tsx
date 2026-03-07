@@ -11,6 +11,7 @@ import { GoTrash } from "react-icons/go";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CommunityProps } from "@/types/community";
+import { CATEGORYNAME_TO_LABEL } from "@/constants/categories";
 import CustomModal from "@/app/_components/CustomModal";
 import {
   addLikePost,
@@ -177,12 +178,9 @@ export default function ClientCommunity({ postId }: { postId: number }) {
     <div className="flex flex-col pb-10 relative h-full">
       {/* 상단Nav */}
       <div className="flex items-center justify-between py-1 px-1">
-        <Link
-          href="/community/posts/list?category=none&page=0"
-          className="flex p-3"
-        >
+        <button type="button" className="flex p-3" onClick={() => router.back()}>
           <ArrowLeftIcon className="w-6 h-6 text-gray-900" />
-        </Link>
+        </button>
 
         <button type="button" className="flex p-3" onClick={handleMenuToggle}>
           <VscKebabVertical className="mt-1 w-6 h-6 text-gray-900" />
@@ -194,7 +192,7 @@ export default function ClientCommunity({ postId }: { postId: number }) {
         className={`mx-4 text-label_sb px-1.5 py-1 rounded bg-chip-1 text-chip-1-foreground inline-block w-fit`}
       >
         {/* <p>{community.category}</p> */}
-        <p>{community.categoryName}</p>
+        <p>{CATEGORYNAME_TO_LABEL[community.categoryName]}</p>
       </div>
 
       {/* 작성자 */}

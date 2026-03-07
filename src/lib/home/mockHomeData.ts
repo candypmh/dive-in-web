@@ -1,4 +1,23 @@
+import { buildCommunityDetail } from "@/lib/community/mockCommunityDetail";
 import { HomeProps } from "@/types/home";
+
+function toPostListItem(postId: number) {
+  const detail = buildCommunityDetail(postId);
+  return {
+    postId: detail.postId,
+    categoryName: detail.categoryName,
+    title: detail.title,
+    content: detail.content,
+    image: detail.images?.[0] ?? null,
+    likesCnt: detail.likesCnt,
+    cmmtCnt: detail.cmntCnt,
+    viewCnt: detail.viewCnt,
+    writer: detail.writer,
+    writerProfile: detail.writerProfile,
+    createdAt: detail.createdAt,
+    updatedAt: detail.updatedAt,
+  };
+}
 
 export const mockHomeData: HomeProps = {
   topViewLessonList: [
@@ -73,95 +92,9 @@ export const mockHomeData: HomeProps = {
     },
   ],
 
-  topViewPostList: [
-    {
-      postId: 5,
-      categoryName: "COMMUNICATION",
-      title: "수영 처음 시작하는 분들께 드리는 꿀팁",
-      content: "저도 처음엔 물 무서웠는데 이제는 매일 수영장 다니고 있어요. 초보분들을 위해 제가 겪은 것들 공유합니다.",
-      image: null,
-      likesCnt: 98,
-      cmmtCnt: 14,
-      viewCnt: 540,
-      writer: "수영러",
-      writerProfile: null,
-      createdAt: "2026-03-01T09:00:00.000Z",
-      updatedAt: null,
-    },
-    {
-      postId: 12,
-      categoryName: "GOODS",
-      title: "수경 브랜드별 비교 후기 (스피도 vs 아레나)",
-      content: "3년 동안 여러 수경 써본 솔직 후기입니다. 눈에 맞는 수경 찾기가 제일 중요하더라고요.",
-      image: null,
-      likesCnt: 85,
-      cmmtCnt: 9,
-      viewCnt: 420,
-      writer: "장비덕후",
-      writerProfile: null,
-      createdAt: "2026-02-28T14:00:00.000Z",
-      updatedAt: null,
-    },
-    {
-      postId: 20,
-      categoryName: "POOL",
-      title: "올림픽 수영장 새벽반 후기",
-      content: "드디어 올림픽 수영장 새벽반 등록했어요. 50m 레인 처음 타봤는데 감동이었습니다.",
-      image: null,
-      likesCnt: 72,
-      cmmtCnt: 6,
-      viewCnt: 380,
-      writer: "새벽수영러",
-      writerProfile: null,
-      createdAt: "2026-02-25T05:30:00.000Z",
-      updatedAt: null,
-    },
-  ],
+  topViewPostList: [5, 12, 20].map(toPostListItem),
 
-  newPostList: [
-    {
-      postId: 33,
-      categoryName: "COMMUNICATION",
-      title: "같이 수영할 버디 구해요 (강남구)",
-      content: "평일 저녁 6-8시 같이 수영하실 분 구합니다. 실력은 무관이에요.",
-      image: null,
-      likesCnt: 3,
-      cmmtCnt: 2,
-      viewCnt: 25,
-      writer: "수영좋아",
-      writerProfile: null,
-      createdAt: "2026-03-06T20:00:00.000Z",
-      updatedAt: null,
-    },
-    {
-      postId: 34,
-      categoryName: "GOODS",
-      title: "수영복 사이즈 추천 부탁드려요",
-      content: "평소 M인데 수영복은 어떤 사이즈로 사야할지 모르겠어요. 조언 부탁드립니다.",
-      image: null,
-      likesCnt: 1,
-      cmmtCnt: 4,
-      viewCnt: 18,
-      writer: "수영입문",
-      writerProfile: null,
-      createdAt: "2026-03-06T18:00:00.000Z",
-      updatedAt: null,
-    },
-    {
-      postId: 35,
-      categoryName: "POOL",
-      title: "잠실 실내 수영장 주차 어때요?",
-      content: "잠실 실내수영장 다니려고 하는데 주차 공간이 충분한지 아시는 분 계신가요?",
-      image: null,
-      likesCnt: 2,
-      cmmtCnt: 1,
-      viewCnt: 12,
-      writer: "잠실근처",
-      writerProfile: null,
-      createdAt: "2026-03-06T15:00:00.000Z",
-      updatedAt: null,
-    },
-  ],
+  newPostList: [33, 34, 35].map(toPostListItem),
 
   competitionPostList: [
     {

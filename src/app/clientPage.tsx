@@ -13,6 +13,7 @@ import { FiMessageSquare } from "react-icons/fi";
 import { TiHeartOutline } from "react-icons/ti";
 import { getHome } from "@/api/server/home";
 import { HomeProps } from "@/types/home";
+import { CATEGORYNAME_TO_LABEL, CategoryName } from "@/constants/categories";
 
 // export default function Home({content}: {content: string}) {
 export default function HomeClient({ home }: { home: HomeProps }) {
@@ -186,7 +187,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
                     <div
                       className={`text-label_sb px-1.5 py-1 mt-4 rounded bg-chip-1 text-chip-1-foreground inline-block w-fit`}
                     >
-                      <p>{community.categoryName || "\u00A0"}</p>
+                      <p>{community.categoryName ? CATEGORYNAME_TO_LABEL[community.categoryName as CategoryName] : "\u00A0"}</p>
                     </div>
                     <div className="flex flex-col gap-0.5">
                       <h3 className="text-gray-900 text-body_bb">
@@ -280,7 +281,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
                     <div
                       className={`text-label_sb px-1.5 py-1 mt-4 rounded bg-chip-1 text-chip-1-foreground inline-block w-fit`}
                     >
-                      <p>{community.categoryName || "\u00A0"}</p>
+                      <p>{community.categoryName ? CATEGORYNAME_TO_LABEL[community.categoryName as CategoryName] : "\u00A0"}</p>
                     </div>
                     <div className="flex flex-col gap-0.5">
                       <h3 className="text-gray-900 text-body_bb">
@@ -384,7 +385,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
                       <div
                         className={`text-label_sb px-1.5 py-1 mt-4 rounded bg-chip-1 text-chip-1-foreground inline-block w-fit`}
                       >
-                        <p>{contest.categoryName || "\u00A0"}</p>
+                        <p>{contest.categoryName ? CATEGORYNAME_TO_LABEL[contest.categoryName as CategoryName] : "\u00A0"}</p>
                       </div>
                       <div className="flex flex-col gap-0.5">
                         <h3 className="text-gray-900 text-body_bb">

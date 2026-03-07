@@ -91,6 +91,7 @@ export async function listPosts(): Promise<CommunityProps[]> {
 }
 
 export async function getPost(postId: number): Promise<CommunityProps | null> {
+  await ensureSeeded();
   const posts = await listPosts();
   return posts.find((p) => Number(p.postId) === Number(postId)) ?? null;
 }

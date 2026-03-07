@@ -9,7 +9,7 @@ export const getSearch = async(keyword: string) => {
     
     return searchSchema.array().parse(body.data);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return [];
   }
 };

@@ -47,7 +47,6 @@ export async function ensureSeeded(category: string = "none") {
 
   const seeded = localStorage.getItem(SEEDED_KEY);
   if (seeded === "true") {
-    console.log("seeded::", true);
     return;
   }
 

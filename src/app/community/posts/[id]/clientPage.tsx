@@ -65,7 +65,7 @@ export default function ClientCommunity({ postId }: { postId: number }) {
           setPreview(og);
         }
       } catch (error) {
-        console.log("OG미리보기 불러오기 실패", error);
+        console.error("OG미리보기 불러오기 실패", error);
       }
     };
 
@@ -101,7 +101,6 @@ export default function ClientCommunity({ postId }: { postId: number }) {
 
   const handleDelete = async () => {
     const isDeleted = await deleteCommunity(postId + "", "1");
-    console.warn("삭제된 게시글:", postId);
 
     if (isDeleted) {
       await router.replace("/community/posts/list?category=none&page=0");
@@ -114,8 +113,6 @@ export default function ClientCommunity({ postId }: { postId: number }) {
   const handleLike = async () => {
     if(!community) return;
     
-    console.warn("현재 좋아요의 상태는?:::::::::::::::::::", community.isLiked);
-
     try {
       setChangeLiked((prev) => !prev);
       setChangeLikesCnt((prev) => (changeLiked ? prev - 1 : prev + 1));
@@ -128,10 +125,7 @@ export default function ClientCommunity({ postId }: { postId: number }) {
         throw new Error(response?.message || "서버 응답 오류");
       }
 
-      console.log("현재setIsLiked::", response.data.isLiked);
       setChangeLiked(response.data.isLiked);
-
-      console.log("현재setLikesCnt::", response.data.likeCnt);
       setChangeLikesCnt(response.data.likeCnt);
     } catch (error) {
       console.error("좋아요 처리 오류! 기존으로 돌아갑니다:::", error);
@@ -149,11 +143,8 @@ export default function ClientCommunity({ postId }: { postId: number }) {
     formData.append("content", comment);
     formData.append("memberId", "1");
 
-    console.warn("입력된 댓글내용?::::", comment);
-
     try {
       const result = await createComment(formData);
-      console.log("댓글 등록 결과는::::", result);
 
       // {
       //   "content": "9482308953개요",
@@ -316,7 +307,6 @@ export default function ClientCommunity({ postId }: { postId: number }) {
             <button
               className="text-left text-sm font-semibold text-blue-900"
               onClick={() => {
-                console.log("로그인되었습니다");
                 setIsLoggedIn(true);
               }}
             >

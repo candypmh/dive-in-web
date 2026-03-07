@@ -30,8 +30,6 @@ export default function CommentList({
     fetchUserId();
   }, []);
 
-  console.warn("commentList page:::::::::::::::", commentList);
-
   if (!commentList || commentList.length === 0) {
     return (
       <>

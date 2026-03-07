@@ -45,7 +45,7 @@ export async function createCommunity(formData: FormData): Promise<number> {
     return createPost(newPost);
 
   } catch (error) {
-    console.log("글 작성 실패:", error);
+    console.error("글 작성 실패:", error);
     throw error;
   }
 }

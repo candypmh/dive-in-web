@@ -7,7 +7,7 @@ import { CommunitiesProps, CommunityProps } from "@/types/community";
 
 export async function createCommunity(formData: FormData): Promise<number> {
   try {
-    ensureSeeded();
+    await ensureSeeded();
 
     const postId = Date.now();
 

@@ -59,3 +59,4 @@ next-env.d.ts
 *.sw?
 build.sh
 claude.md
+/Claude-Work

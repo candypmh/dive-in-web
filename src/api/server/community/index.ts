@@ -2,7 +2,7 @@ import * as mockServer from "./mock.server";
 import * as mockClient from "./mock.client";
 import * as real from "./real";
 
-const useMock = process.env.USE_MOCK === "true";
+const useMock = process.env.NEXT_PUBLIC_USE_MOCK === "true";
 
 export const getCommunities = useMock? mockServer.getCommunities : real.getCommunities;
 export const getCommunity = useMock? mockServer.getCommunity : real.getCommunity;

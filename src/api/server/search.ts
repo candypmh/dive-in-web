@@ -1,13 +1,11 @@
-"use server";
-
 import { searchSchema } from "@/schemas/search";
 
-export const getSearch = async(keyword: string) => {
+export const getSearch = async (keyword: string) => {
   try {
-    const response = await fetch(`https://api.dive-in.co.kr/home/search?keyword=${keyword}`);
+    const response = await fetch(`/api/search?keyword=${encodeURIComponent(keyword)}`);
     const body = await response.json();
-    
-    return searchSchema.array().parse(body.data);
+
+    return searchSchema.array().parse(body);
   } catch (error) {
     console.error(error);
     return [];

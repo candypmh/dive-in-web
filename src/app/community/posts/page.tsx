@@ -123,8 +123,7 @@ export default function CreatePost() {
       const res = await fetch(`/api/og?url=${encodeURIComponent(link)}`);
       const og = await res.json();
 
-      // if(!og || !og.title){
-      if (!og) {
+      if (og.error) {
         alert("유효한 링크가 아닙니다.");
         return;
       } else if (!og.title && !og.description && !og.image) {

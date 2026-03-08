@@ -11,61 +11,68 @@ import { GoTrash } from "react-icons/go";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CommunityProps } from "@/types/community";
+import { CATEGORYNAME_TO_LABEL } from "@/constants/categories";
 import CustomModal from "@/app/_components/CustomModal";
 import {
   addLikePost,
   createComment,
   deleteCommunity,
   deleteLikePost,
-  getCommunity,
-  openGraph,
-} from "@/api/server/community";
+} from "@/api/server/community/real";
+import { getPost } from "@/lib/community/communityRepo.client";
+import { formatKST } from "@/utils";
 import DetailPagePhotoSlider from "@/app/_components/PhotoSlider";
 import CommentList from "../../_components/CommentList";
 
-export default function ClientCommunity({
-  community,
-}: {
-  community: CommunityProps;
-}) {
-  console.warn("::::::::::postId가 넘어오니?::", community.postId);
+export default function ClientCommunity({ postId }: { postId: number }) {
+  const [community, setCommunity] = useState<CommunityProps | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [comment, setComment] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [changeLiked, setChangeLiked] = useState(community.isLiked);
-  const [changeLikesCnt, setChangeLikesCnt] = useState(community.likesCnt);
+  const [changeLiked, setChangeLiked] = useState(false);
+  const [changeLikesCnt, setChangeLikesCnt] = useState(0);
   const router = useRouter();
+
+  useEffect(() => {
+    getPost(postId).then((post) => {
+      if (!post) {
+        router.back();
+        return;
+      }
+      setCommunity(post);
+      setChangeLiked(post.isLiked);
+      setChangeLikesCnt(post.likesCnt);
+    });
+  }, [postId]);
   // console.warn("코멘트 안오냐?:::::::::::", community.commentList);
-  
+
   //og관련
   const [preview, setPreview] = useState<any>(null);
   const urlRegex = /(https?:\/\/[^\s]+)/g; //OG추출을 위한 정규표현식
   useEffect(() => {
-    if(!community?.content) return;
+    if (!community?.content) return;
 
     const matchUrls = community.content.match(urlRegex);
     const lastUrl = matchUrls?.[matchUrls?.length - 1]; //마지막링크
-    if(!lastUrl) return;
+    if (!lastUrl) return;
 
     const fetchOG = async () => {
       try {
-        const og = await openGraph(lastUrl);
-        if(og) {
+        const res = await fetch(`/api/og?url=${encodeURIComponent(lastUrl)}`);
+        const og = await res.json();
+        if (og) {
           setPreview(og);
         }
-
       } catch (error) {
-        console.log("OG미리보기 불러오기 실패", error);
+        console.error("OG미리보기 불러오기 실패", error);
       }
-    }
+    };
 
     fetchOG();
+  }, [community?.content]);
 
-  },[community?.content]);
-
-  
   const handleTextareaHeight = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const textarea = textareaRef.current;
 
@@ -94,8 +101,7 @@ export default function ClientCommunity({
   };
 
   const handleDelete = async () => {
-    const isDeleted = await deleteCommunity(community.postId + "", "1");
-    console.warn("삭제된 게시글:", community.postId);
+    const isDeleted = await deleteCommunity(postId + "", "1");
 
     if (isDeleted) {
       await router.replace("/community/posts/list?category=none&page=0");
@@ -106,24 +112,21 @@ export default function ClientCommunity({
   };
 
   const handleLike = async () => {
-    console.warn("현재 좋아요의 상태는?:::::::::::::::::::", community.isLiked);
-
+    if(!community) return;
+    
     try {
       setChangeLiked((prev) => !prev);
       setChangeLikesCnt((prev) => (changeLiked ? prev - 1 : prev + 1));
 
       const response = changeLiked
-        ? await deleteLikePost(community.postId + "", "1") //좋아요가 되어있으면
-        : await addLikePost(community.postId + "", "1"); //좋아요가 안되어있으면
+        ? await deleteLikePost(postId + "", "1") //좋아요가 되어있으면
+        : await addLikePost(postId + "", "1"); //좋아요가 안되어있으면
 
       if (!response || !response.success || response.data === null) {
         throw new Error(response?.message || "서버 응답 오류");
       }
 
-      console.log("현재setIsLiked::", response.data.isLiked);
       setChangeLiked(response.data.isLiked);
-
-      console.log("현재setLikesCnt::", response.data.likeCnt);
       setChangeLikesCnt(response.data.likeCnt);
     } catch (error) {
       console.error("좋아요 처리 오류! 기존으로 돌아갑니다:::", error);
@@ -137,15 +140,12 @@ export default function ClientCommunity({
   const handleCommentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("postId", String(community.postId));
+    formData.append("postId", String(postId));
     formData.append("content", comment);
     formData.append("memberId", "1");
 
-    console.warn("입력된 댓글내용?::::", comment);
-
     try {
       const result = await createComment(formData);
-      console.log("댓글 등록 결과는::::", result);
 
       // {
       //   "content": "9482308953개요",
@@ -165,40 +165,22 @@ export default function ClientCommunity({
       await navigator.clipboard.writeText(window.location.href);
       alert("링크가 복사되었습니다!");
     } catch (error) {
-       alert("링크 복사에 실패하였습니다!");
+      alert("링크 복사에 실패하였습니다!");
       console.error("클립보드 복사 실패!::", error);
     }
   };
 
-
-  //최신데이터 가져오기
-  useEffect(() => {
-    const fetchPost = async () => {
-      try {
-        const reloadPost = await getCommunity(community.postId + "");
-
-        if (reloadPost) {
-          setChangeLiked(reloadPost?.isLiked);
-          setChangeLikesCnt(reloadPost?.likesCnt);
-        }
-      } catch (error) {
-        console.error("초기 데이터 동기화 오류:", error);
-      }
-    };
-
-    fetchPost();
-  }, [community.postId]);
+  if (!community) {
+    return <div className="flex justify-center py-20 text-gray-400 text-sm">로딩중...</div>;
+  }
 
   return (
     <div className="flex flex-col pb-10 relative h-full">
       {/* 상단Nav */}
       <div className="flex items-center justify-between py-1 px-1">
-        <Link
-          href="/community/posts/list?category=none&page=0"
-          className="flex p-3"
-        >
+        <button type="button" className="flex p-3" onClick={() => router.back()}>
           <ArrowLeftIcon className="w-6 h-6 text-gray-900" />
-        </Link>
+        </button>
 
         <button type="button" className="flex p-3" onClick={handleMenuToggle}>
           <VscKebabVertical className="mt-1 w-6 h-6 text-gray-900" />
@@ -210,7 +192,7 @@ export default function ClientCommunity({
         className={`mx-4 text-label_sb px-1.5 py-1 rounded bg-chip-1 text-chip-1-foreground inline-block w-fit`}
       >
         {/* <p>{community.category}</p> */}
-        <p>{community.categoryName}</p>
+        <p>{CATEGORYNAME_TO_LABEL[community.categoryName]}</p>
       </div>
 
       {/* 작성자 */}
@@ -228,7 +210,7 @@ export default function ClientCommunity({
 
           <div className="flex gap-2 text-sm text-gray-500">
             <span className="text-sm text-gray-500 ml-auto">
-              {community.createdAt}
+              {formatKST(community.createdAt)}
             </span>
             <span className="text-sm text-gray-500 ml-auto">
               조회{community.viewCnt}
@@ -262,22 +244,26 @@ export default function ClientCommunity({
 
         {/* og삽입 */}
         {preview && (
-          <a 
-          href={preview.url}
-          target="_blank"
-          className="block mt-4 p-4 border rounded bg-gray-100 hover:bg-gray-200"
+          <a
+            href={preview.url}
+            target="_blank"
+            className="block mt-4 p-4 border rounded bg-gray-100 hover:bg-gray-200"
           >
             <div className="flex gap-4">
               {preview.image && (
                 <img
-                src={preview.image}
-                alt="미리보기 이미지"
-                className="w-20 h-20 object-cover rounded border"
+                  src={preview.image}
+                  alt="미리보기 이미지"
+                  className="w-20 h-20 object-cover rounded border"
                 />
               )}
               <div className="overflow-hidden">
-                <p className="font-bold text-sm line-clamp-2">{preview.title}</p>
-                <p className="text-xs text-gray-600 mt-1 line-clamp-1">{preview.description}</p>
+                <p className="font-bold text-sm line-clamp-2">
+                  {preview.title}
+                </p>
+                <p className="text-xs text-gray-600 mt-1 line-clamp-1">
+                  {preview.description}
+                </p>
               </div>
             </div>
           </a>
@@ -297,7 +283,10 @@ export default function ClientCommunity({
           <span className="text-gray-700">{changeLikesCnt}</span>
         </button>
         <button className="flex justify-center items-center gap-1 flex-1">
-          <RiShare2Line className="w-5 h-5 text-gray-700" onClick={handleCopyLink}/>
+          <RiShare2Line
+            className="w-5 h-5 text-gray-700"
+            onClick={handleCopyLink}
+          />
           <p className="text-gray-500"></p>
         </button>
       </div>
@@ -316,7 +305,6 @@ export default function ClientCommunity({
             <button
               className="text-left text-sm font-semibold text-blue-900"
               onClick={() => {
-                console.log("로그인되었습니다");
                 setIsLoggedIn(true);
               }}
             >

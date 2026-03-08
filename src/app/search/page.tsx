@@ -28,8 +28,6 @@ export default function ClientSearch() {
 
         if (data) {
           setResults(data);
-        } else {
-          console.log("검색 결과가 존재하지 않습니다.");
         }
       } catch (error) {
         console.error("검색 결과 에러:::", error);
@@ -42,7 +40,7 @@ export default function ClientSearch() {
   return (
     <div className="flex flex-col">
       <div className="relative flex items-center justify-between py-1 px-1">
-       <BackButton />
+        <BackButton />
         <h1 className="absolute left-1/2 transform -translate-x-1/2 text-xl font-bold">
           통합검색
         </h1>
@@ -68,7 +66,7 @@ export default function ClientSearch() {
           </button> */}
         </form>
       </div>
-
+      
       <div>
         <div>
           {/* <p className="p-4">클라이언트 페이지</p> */}

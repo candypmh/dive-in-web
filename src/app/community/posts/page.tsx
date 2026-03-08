@@ -7,9 +7,9 @@ import { MdOutlineBrokenImage } from "react-icons/md";
 import { AiOutlineLink } from "react-icons/ai";
 import { IoIosArrowDown } from "react-icons/io";
 import { useEffect, useRef, useState } from "react";
-import { createCommunity, openGraph } from "@/api/server/community";
 import { useRouter } from "next/navigation";
 import OpenGraphPreview from "@/app/_components/OpenGraphLinkReview";
+import { createCommunity } from "@/api/server/community";
 
 // const CATEGORIES = ["소통해요", "수영장", "수영물품", "수영대회"];
 const CATEGORIES = [
@@ -33,10 +33,7 @@ export default function CreatePost() {
   const [link, setLink] = useState("");
   const [preview, setPreview] = useState<any>(null); //OG데이터
   // const [ogContent, setOgContent] = useState("");
-  const containerRef = useRef<HTMLDivElement | null>(null);
   const router = useRouter();
-
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // useEffect(() => {
   //   if (isLinkOpen) {
@@ -75,6 +72,7 @@ export default function CreatePost() {
 
     formData.append("content", content);
 
+    //임시
     const userId = "1";
     formData.append("memberId", userId); //마이페이지 보고 가져오기
 
@@ -84,12 +82,11 @@ export default function CreatePost() {
 
     try {
       const postId = await createCommunity(formData);
-      console.log("글 작성 성공! postId::", postId);
       if (postId) {
         router.push(`/community/posts/${postId}`);
       }
     } catch (err) {
-      console.log("글 작성 실패", err);
+      console.error("글 작성 실패", err);
     }
   };
 
@@ -111,11 +108,6 @@ export default function CreatePost() {
     setImages((prev) => [...prev, ...selectedFiles]); //이미지추가
   };
 
-  //이미지 삭제
-  const handleImageDelete = (index: number) => {
-    setImages((prev) => prev.filter((_, i) => i !== index)); //해당index 이미지삭제
-  };
-
   const handleImageButtonClick = () => {
     fileInputRef.current?.click();
   };
@@ -126,11 +118,10 @@ export default function CreatePost() {
 
   //링크
   const handleSubmitLink = async () => {
-    console.log("링크 삽입 완료", link);
-
     if (!link.trim()) return;
     try {
-      const og = await openGraph(link);
+      const res = await fetch(`/api/og?url=${encodeURIComponent(link)}`);
+      const og = await res.json();
 
       // if(!og || !og.title){
       if (!og) {
@@ -177,7 +168,7 @@ export default function CreatePost() {
     // <div className="flex flex-col pb-10 relative h-full">
     <div className="flex flex-col h-screen pb-[4.5rem]">
       <div className="flex items-center justify-between py-1 px-1">
-        <Link href="/community/posts/list/none/0" className="flex p-3">
+        <Link href="/community/posts/list?category=none" className="flex p-3">
           <ArrowLeftIcon className="w-6 h-6 text-gray-900" />
         </Link>
 

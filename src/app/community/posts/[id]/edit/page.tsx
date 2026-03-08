@@ -8,11 +8,10 @@ import { AiOutlineLink } from "react-icons/ai";
 import { IoIosArrowDown } from "react-icons/io";
 import { useEffect, useRef, useState } from "react";
 import {
-  createCommunity,
   getCommunity,
   openGraph,
   updateCommunity,
-} from "@/api/server/community";
+} from "@/api/server/community/mock.server";
 import { useRouter } from "next/navigation";
 import OpenGraphPreview from "@/app/_components/OpenGraphLinkReview";
 
@@ -132,8 +131,6 @@ useEffect(() => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.warn("카테고리는?::::", selectedCategory);
-
     // const formData = new FormData(e.currentTarget);
     const formData = new FormData();
     const category = CATEGORIES.find(
@@ -164,12 +161,10 @@ useEffect(() => {
     );
 
     try {
-      const result = await updateCommunity(postId, formData);
-      console.log("글 수정 성공", result);
+      await updateCommunity(postId, formData);
 
       //최신 데이터 가져오기
       const updatePost = await getCommunity(postId);
-      console.log("변경된 내용:", updatePost);
       if (updatePost) {
         setTitle(updatePost.title);
         setContent(updatePost?.content);
@@ -221,7 +216,6 @@ useEffect(() => {
 
   //링크
   const handleSubmitLink = async () => {
-    console.log("링크 삽입 완료", link);
     if (!link.trim()) return;
     
     // content에 이미 같은 링크가 있다면 중복 삽입 안 함

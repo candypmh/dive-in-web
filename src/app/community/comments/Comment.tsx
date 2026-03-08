@@ -4,36 +4,17 @@
 //   return <div>댓글 페이지</div>;
 // }
 
-import { getComments } from "@/api/server/community";
-import { getUser } from "@/actions/user";
 import { RiShare2Line } from "react-icons/ri";
+import { formatKST } from "@/utils";
 import WriterProfile from "../_components/WriterProfile";
 import { VscKebabVertical } from "react-icons/vsc";
 import { useEffect, useState } from "react";
 import { GoPencil } from "react-icons/go";
 import { GoTrash } from "react-icons/go";
-// import { CommentProps } from "@/types/community";
-
-interface CommentProps {
-  // writerId: number;
-  // loggedUserId: number | null;
-  cmmtId: number;
-  content: string;
-  groupName?: number;
-  orderNumber?: number;
-  cmntClass?: number;
-  writer: string;
-  writerProfile: string;
-  likeCnt?: number;
-  createdAt: string;
-}
-
-// interface CommentsProps {
-//   commentList: CommentProps[];
-// }
+import { CommentProps } from "@/types/community";
 
 export const Comment = ({
-  cmmtId,
+  cmntId,
   content,
   groupName,
   orderNumber,
@@ -57,7 +38,7 @@ export const Comment = ({
   };
 
   return (
-    <div key={cmmtId} className="py-3">
+    <div key={cmntId} className="py-3">
       {/* 작성자 */}
       <div className="flex flex-row items-start px-4">
         <WriterProfile
@@ -94,7 +75,7 @@ export const Comment = ({
       <p className="text-gray-700 px-4 mt-2">{content}</p>
 
       <div className="flex flex-row items-center gap-2 mt-2">
-        <span className="text-sm text-gray-500 pl-4">{createdAt}</span>
+        <span className="text-sm text-gray-500 pl-4">{formatKST(createdAt)}</span>
         <button type="button" className="text-xs text-gray-600">
           <span>답글 쓰기</span>
         </button>

@@ -25,8 +25,6 @@ const LessonPage = async ({ params }: { params: { id: string } }) => {
     notFound();
   }
 
-  console.log("lessonDetail::::::::::::::::::", lesson.lessonDetail);
-
   // const applyChannels = lesson.applyChannels.filter(
   //   ({ applyUrl }) => !!applyUrl
   // );

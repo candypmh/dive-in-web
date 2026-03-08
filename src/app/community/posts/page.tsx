@@ -86,12 +86,11 @@ export default function CreatePost() {
 
     try {
       const postId = await createCommunity(formData);
-      console.log("글 작성 성공! postId::", postId);
       if (postId) {
         router.push(`/community/posts/${postId}`);
       }
     } catch (err) {
-      console.log("글 작성 실패", err);
+      console.error("글 작성 실패", err);
     }
   };
 
@@ -128,8 +127,6 @@ export default function CreatePost() {
 
   //링크
   const handleSubmitLink = async () => {
-    console.log("링크 삽입 완료", link);
-
     if (!link.trim()) return;
     try {
       const og = await openGraph(link);

@@ -7,7 +7,7 @@ import { CommunitiesProps, CommunityProps } from "@/types/community";
 
 export async function createCommunity(formData: FormData): Promise<number> {
   try {
-    ensureSeeded();
+    await ensureSeeded();
 
     const postId = Date.now();
 
@@ -45,7 +45,7 @@ export async function createCommunity(formData: FormData): Promise<number> {
     return createPost(newPost);
 
   } catch (error) {
-    console.log("글 작성 실패:", error);
+    console.error("글 작성 실패:", error);
     throw error;
   }
 }

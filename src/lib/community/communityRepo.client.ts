@@ -47,7 +47,6 @@ export async function ensureSeeded(category: string = "none") {
 
   const seeded = localStorage.getItem(SEEDED_KEY);
   if (seeded === "true") {
-    console.log("seeded::", true);
     return;
   }
 
@@ -92,6 +91,7 @@ export async function listPosts(): Promise<CommunityProps[]> {
 }
 
 export async function getPost(postId: number): Promise<CommunityProps | null> {
+  await ensureSeeded();
   const posts = await listPosts();
   return posts.find((p) => Number(p.postId) === Number(postId)) ?? null;
 }

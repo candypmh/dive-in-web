@@ -28,8 +28,6 @@ export default function ClientSearch() {
 
         if (data) {
           setResults(data);
-        } else {
-          console.log("검색 결과가 존재하지 않습니다.");
         }
       } catch (error) {
         console.error("검색 결과 에러:::", error);

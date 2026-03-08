@@ -13,6 +13,7 @@ import { FiMessageSquare } from "react-icons/fi";
 import { TiHeartOutline } from "react-icons/ti";
 import { getHome } from "@/api/server/home";
 import { HomeProps } from "@/types/home";
+import { CATEGORYNAME_TO_LABEL, CategoryName } from "@/constants/categories";
 
 // export default function Home({content}: {content: string}) {
 export default function HomeClient({ home }: { home: HomeProps }) {
@@ -90,19 +91,15 @@ export default function HomeClient({ home }: { home: HomeProps }) {
         {/* 카드리스트 */}
         <div className="grid grid-cols-2 gap-6 px-8 py-1">
           {popularLessons.map((lesson) => (
-            <Link
-              href={"/lessons/" + lesson.id}
+            <div
               key={lesson.id}
-              className="p-6 rounded-lg shadow-sm bg-gray-100 flex flex-col h-full"
+              className="p-6 rounded-lg shadow-sm bg-gray-100 flex flex-col h-full opacity-60 cursor-not-allowed"
             >
               {/* 카드 1*/}
               <div className="flex flex-wrap gap-2 items-center pb-2">
                 {[...lesson.level.split(","), ...lesson.keyword.split(",")].map(
-                  (
-                    tag,
-                    index //태그분리
-                  ) => (
-                    <LessonChip key={index} label={tag.trim()} /> //공백제거
+                  (tag, index) => (
+                    <LessonChip key={index} label={tag.trim()} />
                   )
                 )}
               </div>
@@ -115,7 +112,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
                   name={lesson.instructorName}
                 />
               </div>
-            </Link>
+            </div>
           ))}
         </div>
       </section>
@@ -130,19 +127,15 @@ export default function HomeClient({ home }: { home: HomeProps }) {
         {/* 카드리스트 */}
         <div className="grid grid-cols-2 gap-6 px-8 py-1">
           {NewLessons.map((lesson) => (
-            <Link
-              href={"/lessons/" + lesson.id}
+            <div
               key={lesson.id}
-              className="p-6 rounded-lg shadow-sm bg-gray-100 flex flex-col h-full"
+              className="p-6 rounded-lg shadow-sm bg-gray-100 flex flex-col h-full opacity-60 cursor-not-allowed"
             >
               {/* 카드 1*/}
               <div className="flex flex-wrap gap-2 items-center pb-2">
                 {[...lesson.level.split(","), ...lesson.keyword.split(",")].map(
-                  (
-                    tag,
-                    index //태그분리
-                  ) => (
-                    <LessonChip key={index} label={tag.trim()} /> //공백제거
+                  (tag, index) => (
+                    <LessonChip key={index} label={tag.trim()} />
                   )
                 )}
               </div>
@@ -155,7 +148,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
                   name={lesson.instructorName}
                 />
               </div>
-            </Link>
+            </div>
           ))}
         </div>
       </section>
@@ -194,7 +187,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
                     <div
                       className={`text-label_sb px-1.5 py-1 mt-4 rounded bg-chip-1 text-chip-1-foreground inline-block w-fit`}
                     >
-                      <p>{community.categoryName || "\u00A0"}</p>
+                      <p>{community.categoryName ? CATEGORYNAME_TO_LABEL[community.categoryName as CategoryName] : "\u00A0"}</p>
                     </div>
                     <div className="flex flex-col gap-0.5">
                       <h3 className="text-gray-900 text-body_bb">
@@ -288,7 +281,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
                     <div
                       className={`text-label_sb px-1.5 py-1 mt-4 rounded bg-chip-1 text-chip-1-foreground inline-block w-fit`}
                     >
-                      <p>{community.categoryName || "\u00A0"}</p>
+                      <p>{community.categoryName ? CATEGORYNAME_TO_LABEL[community.categoryName as CategoryName] : "\u00A0"}</p>
                     </div>
                     <div className="flex flex-col gap-0.5">
                       <h3 className="text-gray-900 text-body_bb">
@@ -392,7 +385,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
                       <div
                         className={`text-label_sb px-1.5 py-1 mt-4 rounded bg-chip-1 text-chip-1-foreground inline-block w-fit`}
                       >
-                        <p>{contest.categoryName || "\u00A0"}</p>
+                        <p>{contest.categoryName ? CATEGORYNAME_TO_LABEL[contest.categoryName as CategoryName] : "\u00A0"}</p>
                       </div>
                       <div className="flex flex-col gap-0.5">
                         <h3 className="text-gray-900 text-body_bb">

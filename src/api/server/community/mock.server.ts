@@ -9,7 +9,6 @@ export const getCommunities = async( category: string = "none", page: string = "
     // const url = `${baseUrl}/api/community/posts/list/${category}/${page}`;
     const res =  buildCommunityList(category, Number(page));
     const body = res.data;
-    console.log("[getCommunities] body keys::", Object.keys(body));
 
     return body;
 
@@ -24,7 +23,6 @@ export const getCommunities = async( category: string = "none", page: string = "
 export const getCommunity = async (postId: string): Promise<CommunityProps|null> => {
   try {
     const res = buildCommunityDetail(Number(postId));
-    console.log("API 응답 데이터:", res);
 
     return {
       ...res,
@@ -39,7 +37,6 @@ export const getCommunity = async (postId: string): Promise<CommunityProps|null>
 
 export const updateCommunity = async (postId: string, formData: FormData) => {
   try {
-    console.warn("FormData 확인:", Array.from(formData.entries())); // 디버깅
     const response = await fetch(
       `https://api.dive-in.co.kr/community/posts/${postId}`,
       {
@@ -57,9 +54,9 @@ export const updateCommunity = async (postId: string, formData: FormData) => {
     }
 
     const result = await response.json();
-    console.log("글 수정 성공:", result);
+    return result;
   } catch (error) {
-    console.log("글 수정 실패:", error);
+    console.error("글 수정 실패:", error);
     throw error;
   }
 };
@@ -79,11 +76,9 @@ export const deleteCommunity = async (id: string, memberId: string) => {
     if (!response) {
       throw new Error("게시글 삭제 실패!");
     }
-    // console.warn("API 요청 URL:", `https://api.dive-in.co.kr/community/posts/${id}`);
-    console.log("게시글이 삭제 성공!");
     return true;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return false;
   }
 };
@@ -99,7 +94,7 @@ export const getOG = async (link: string) => {
     const result = await response.json();
     return result;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return [];
   }
 };
@@ -124,7 +119,7 @@ export const getComments = async (postId: number) => {
 
     return body;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return [];
   }
 };
@@ -147,9 +142,9 @@ export const createComment = async (formData: FormData) => {
     }
 
     const result = await response.json();
-    console.log("댓글 작성 성공:", result);
+    return result;
   } catch (error) {
-    console.log("댓글 작성 실패:", error);
+    console.error("댓글 작성 실패:", error);
     return [];
   }
 };
@@ -188,17 +183,13 @@ export const addLikePost = async (postId: string, memberId: string) => {
       }
     );
 
-    console.log("Response status:", response.status);
-    // console.log("Response body:", await response.text());
-
     if (!response.ok) {
       throw new Error("좋아요 실패!");
     }
     const body = await response.json();
-    console.log("좋아요 성공:", body);
     return body;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return [];
   }
 };
@@ -217,27 +208,21 @@ export const deleteLikePost = async (postId: string, memberId: string) => {
       }
     );
 
-    console.log("Response status:", response.status);
-    // console.log("Response body:", await response.text());
-
     if (!response.ok) {
       const errorMessage = `좋아요 취소 실패: HTTP ${response.status}`;
       console.error(errorMessage);
       throw new Error("좋아요 취소 실패!");
     }
     const body = await response.json();
-    console.log("좋아요 취소 성공:", body);
     return body;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return [];
   }
 };
 
 export const openGraph = async (url: string) => {
   try {
-    console.log(":::url이 서버로 넘어가는중:", url);
-
     const response = await fetch(
       `https://api.dive-in.co.kr/api/openGraph/fetch?url=${url}`
     );

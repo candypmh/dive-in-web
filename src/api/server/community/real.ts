@@ -137,22 +137,6 @@ export const deleteCommunity = async (id: string, memberId: string) => {
   }
 };
 
-export const getOG = async (link: string) => {
-  try {
-    const response = await fetch("/api/shorten-link", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ url: link }),
-    });
-
-    const result = await response.json();
-    return result;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-};
-
 // 댓글
 // export const getComments = async () => {
 //   try {
@@ -275,16 +259,3 @@ export const deleteLikePost = async (postId: string, memberId: string) => {
   }
 };
 
-export const openGraph = async (url: string) => {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/openGraph/fetch?url=${url}`
-    );
-    const body = await response.json();
-
-    return body;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-};

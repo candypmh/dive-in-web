@@ -18,7 +18,6 @@ import {
   createComment,
   deleteCommunity,
   deleteLikePost,
-  openGraph,
 } from "@/api/server/community/real";
 import { getPost } from "@/lib/community/communityRepo.client";
 import { formatKST } from "@/utils";
@@ -61,7 +60,8 @@ export default function ClientCommunity({ postId }: { postId: number }) {
 
     const fetchOG = async () => {
       try {
-        const og = await openGraph(lastUrl);
+        const res = await fetch(`/api/og?url=${encodeURIComponent(lastUrl)}`);
+        const og = await res.json();
         if (og) {
           setPreview(og);
         }

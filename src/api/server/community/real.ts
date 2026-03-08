@@ -9,7 +9,7 @@ import { CommunityProps, communityResponseDetailProps } from "@/types/community"
 export const getCommunities = async( category: string = "none", page: string = "0" ): Promise<communityResponseDetailProps>  => {
   try {
     //기존
-    const url = `https://api.dive-in.co.kr/community/posts/list/${category}/${page}`;
+    const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/community/posts/list/${category}/${page}`;
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`HTTP에러 상태 코드: ${response.status}`);
@@ -29,7 +29,7 @@ export const getCommunities = async( category: string = "none", page: string = "
 export const getCommunity = async (postId: string): Promise<CommunityProps|null> => {
   try {
     const response = await fetch(
-      `https://api.dive-in.co.kr/community/posts/${postId}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/community/posts/${postId}`,
       {
         method: "GET",
         headers: {
@@ -65,7 +65,7 @@ export const getCommunity = async (postId: string): Promise<CommunityProps|null>
 
 export const createCommunity = async (formData: FormData) => {
   try {
-    const response = await fetch("https://api.dive-in.co.kr/community/posts", {
+    const response = await fetch("${process.env.NEXT_PUBLIC_API_BASE_URL}/community/posts", {
       method: "POST",
       body: formData,
       headers: {
@@ -92,7 +92,7 @@ export const createCommunity = async (formData: FormData) => {
 export const updateCommunity = async (postId: string, formData: FormData) => {
   try {
     const response = await fetch(
-      `https://api.dive-in.co.kr/community/posts/${postId}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/community/posts/${postId}`,
       {
         method: "PUT",
         body: formData,
@@ -118,7 +118,7 @@ export const updateCommunity = async (postId: string, formData: FormData) => {
 export const deleteCommunity = async (id: string, memberId: string) => {
   try {
     const response = await fetch(
-      `https://api.dive-in.co.kr/community/posts/${id}?memberId=${memberId}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/community/posts/${id}?memberId=${memberId}`,
       {
         method: "DELETE",
         headers: {
@@ -137,26 +137,10 @@ export const deleteCommunity = async (id: string, memberId: string) => {
   }
 };
 
-export const getOG = async (link: string) => {
-  try {
-    const response = await fetch("/api/shorten-link", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ url: link }),
-    });
-
-    const result = await response.json();
-    return result;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-};
-
 // 댓글
 // export const getComments = async () => {
 //   try {
-//     const response = await fetch("https://api.dive-in.co.kr/community/comments");
+//     const response = await fetch("${process.env.NEXT_PUBLIC_API_BASE_URL}/community/comments");
 //     const body = await response.json();
 //   } catch (error) {
 //     console.log(error);
@@ -167,7 +151,7 @@ export const getOG = async (link: string) => {
 export const getComments = async (postId: number) => {
   try {
     const response = await fetch(
-      `https://api.dive-in.co.kr/community/comments/${postId}`
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/community/comments/${postId}`
     );
     const body = await response.json();
 
@@ -181,7 +165,7 @@ export const getComments = async (postId: number) => {
 export const createComment = async (formData: FormData) => {
   try {
     const response = await fetch(
-      "https://api.dive-in.co.kr/community/comments",
+      "${process.env.NEXT_PUBLIC_API_BASE_URL}/community/comments",
       {
         method: "POST",
         headers: {
@@ -205,7 +189,7 @@ export const createComment = async (formData: FormData) => {
 
 // export const updateComments = async() => {
 //   try {
-//     const response = await fetch("https://api.dive-in.co.kr/community/comments");
+//     const response = await fetch("${process.env.NEXT_PUBLIC_API_BASE_URL}/community/comments");
 //     const body = await response.json();
 //   } catch (error) {
 //     console.log(error);
@@ -215,7 +199,7 @@ export const createComment = async (formData: FormData) => {
 
 // export const deleteComments = async() => {
 //   try {
-//     const response = await fetch("https://api.dive-in.co.kr/community/comments");
+//     const response = await fetch("${process.env.NEXT_PUBLIC_API_BASE_URL}/community/comments");
 //     const body = await response.json();
 //   } catch (error) {
 //     console.log(error);
@@ -227,7 +211,7 @@ export const addLikePost = async (postId: string, memberId: string) => {
   // const user = parseInt(memberId);
   try {
     const response = await fetch(
-      `https://api.dive-in.co.kr/community/posts/${postId}/like?memberId=${memberId}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/community/posts/${postId}/like?memberId=${memberId}`,
       {
         method: "POST",
         headers: {
@@ -252,7 +236,7 @@ export const deleteLikePost = async (postId: string, memberId: string) => {
   // const user = parseInt(memberId);
   try {
     const response = await fetch(
-      `https://api.dive-in.co.kr/community/posts/${postId}/like?memberId=${memberId}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/community/posts/${postId}/like?memberId=${memberId}`,
       {
         method: "DELETE",
         headers: {
@@ -275,16 +259,3 @@ export const deleteLikePost = async (postId: string, memberId: string) => {
   }
 };
 
-export const openGraph = async (url: string) => {
-  try {
-    const response = await fetch(
-      `https://api.dive-in.co.kr/api/openGraph/fetch?url=${url}`
-    );
-    const body = await response.json();
-
-    return body;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-};

@@ -4,16 +4,14 @@ import Link from "next/link";
 import ChatIcon from "@/components/icons/ChatIcon";
 import PoolIcon from "@/components/icons/PoolIcon";
 import SwimHatIcon from "@/components/icons/SwimHatIcon";
-import { Search } from "@/types/search";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { getSearch } from "@/api/server/search";
 import BackButton from "../_components/backButton";
 import { useDebounce } from "@/hooks/useDebounce";
+import { useSearchStore } from "@/store/searchStore";
 
 export default function ClientSearch() {
-  // const keyword = 사용자의 키보드 입력으로 받은 값
-  const [keyword, setKeyword] = useState(""); //실시간 사용자 입력값
-  const [result, setResults] = useState<Search[]>([]); //검색어에 따른 결과
+  const { keyword, results: result, setKeyword, setResults } = useSearchStore();
   const debounceKeyword = useDebounce(keyword, 300); //디바운싱 적용된 입력값
 
   useEffect(() => {
@@ -29,6 +27,7 @@ export default function ClientSearch() {
         if (data) {
           setResults(data);
         }
+
       } catch (error) {
         console.error("검색 결과 에러:::", error);
       }

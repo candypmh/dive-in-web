@@ -2,7 +2,7 @@
 
 import { CATEGORY_NAMES, toCategoryName } from "@/constants/categories";
 import { createPost, ensureSeeded } from "@/lib/community/communityRepo.client";
-import { CommunitiesProps, CommunityProps } from "@/types/community";
+import { CommunityProps } from "@/types/community";
 
 
 export async function createCommunity(formData: FormData): Promise<number> {

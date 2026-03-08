@@ -7,7 +7,6 @@ import { MdOutlineBrokenImage } from "react-icons/md";
 import { AiOutlineLink } from "react-icons/ai";
 import { IoIosArrowDown } from "react-icons/io";
 import { useEffect, useRef, useState } from "react";
-import { openGraph } from "@/api/server/community/mock.server"; //추후 수정하기!!
 import { useRouter } from "next/navigation";
 import OpenGraphPreview from "@/app/_components/OpenGraphLinkReview";
 import { createCommunity } from "@/api/server/community";
@@ -34,10 +33,7 @@ export default function CreatePost() {
   const [link, setLink] = useState("");
   const [preview, setPreview] = useState<any>(null); //OG데이터
   // const [ogContent, setOgContent] = useState("");
-  const containerRef = useRef<HTMLDivElement | null>(null);
   const router = useRouter();
-
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // useEffect(() => {
   //   if (isLinkOpen) {
@@ -112,11 +108,6 @@ export default function CreatePost() {
     setImages((prev) => [...prev, ...selectedFiles]); //이미지추가
   };
 
-  //이미지 삭제
-  const handleImageDelete = (index: number) => {
-    setImages((prev) => prev.filter((_, i) => i !== index)); //해당index 이미지삭제
-  };
-
   const handleImageButtonClick = () => {
     fileInputRef.current?.click();
   };
@@ -129,10 +120,10 @@ export default function CreatePost() {
   const handleSubmitLink = async () => {
     if (!link.trim()) return;
     try {
-      const og = await openGraph(link);
+      const res = await fetch(`/api/og?url=${encodeURIComponent(link)}`);
+      const og = await res.json();
 
-      // if(!og || !og.title){
-      if (!og) {
+      if (og.error) {
         alert("유효한 링크가 아닙니다.");
         return;
       } else if (!og.title && !og.description && !og.image) {
@@ -176,7 +167,7 @@ export default function CreatePost() {
     // <div className="flex flex-col pb-10 relative h-full">
     <div className="flex flex-col h-screen pb-[4.5rem]">
       <div className="flex items-center justify-between py-1 px-1">
-        <Link href="/community/posts/list/none/0" className="flex p-3">
+        <Link href="/community/posts/list?category=none" className="flex p-3">
           <ArrowLeftIcon className="w-6 h-6 text-gray-900" />
         </Link>
 

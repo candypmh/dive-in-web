@@ -49,7 +49,8 @@ export default function ClientCommunity({ postId }: { postId: number }) {
   // console.warn("코멘트 안오냐?:::::::::::", community.commentList);
 
   //og관련
-  const [preview, setPreview] = useState<any>(null);
+  type OgPreview = { title: string; description: string; image: string | null; url: string };
+  const [preview, setPreview] = useState<OgPreview | null>(null);
   const urlRegex = /(https?:\/\/[^\s]+)/g; //OG추출을 위한 정규표현식
   useEffect(() => {
     if (!community?.content) return;

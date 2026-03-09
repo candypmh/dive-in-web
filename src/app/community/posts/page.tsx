@@ -10,6 +10,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import OpenGraphPreview from "@/app/_components/OpenGraphLinkReview";
 import { createCommunity } from "@/api/server/community";
+import toast from "react-hot-toast";
 
 // const CATEGORIES = ["소통해요", "수영장", "수영물품", "수영대회"];
 const CATEGORIES = [
@@ -31,7 +32,8 @@ export default function CreatePost() {
 
   const [isLinkOpen, setIsLinkOpen] = useState(false);
   const [link, setLink] = useState("");
-  const [preview, setPreview] = useState<any>(null); //OG데이터
+  type OgPreview = { title: string; description: string; image: string | null; url: string };
+  const [preview, setPreview] = useState<OgPreview | null>(null); //OG데이터
   // const [ogContent, setOgContent] = useState("");
   const router = useRouter();
 
@@ -57,7 +59,7 @@ export default function CreatePost() {
       (category) => category.name === selectedCategory
     )?.key;
     if (!selectedCategoryKey) {
-      alert("카테고리를 선택해주세요!");
+      toast.error("카테고리를 선택해주세요!");
       return;
     }
     formData.append("categoryType", selectedCategoryKey);
@@ -102,7 +104,7 @@ export default function CreatePost() {
 
     const selectedFiles = Array.from(e.target.files); //선택파일 배열변환
     if (images.length + selectedFiles.length > 5) {
-      alert("이미지는 최대 5장까지 업로드 가능합니다.");
+      toast.error("이미지는 최대 5장까지 업로드 가능합니다.");
       return;
     }
     setImages((prev) => [...prev, ...selectedFiles]); //이미지추가
@@ -124,7 +126,7 @@ export default function CreatePost() {
       const og = await res.json();
 
       if (og.error) {
-        alert("유효한 링크가 아닙니다.");
+        toast.error("유효한 링크가 아닙니다.");
         return;
       } else if (!og.title && !og.description && !og.image) {
         setPreview({
@@ -148,7 +150,7 @@ export default function CreatePost() {
       setIsLinkOpen(false);
     } catch (error) {
       console.error("오픈그래프 불러오기 실패:::", error);
-      alert("오픈그래프 정보를 불러올 수 없습니다.");
+      toast.error("오픈그래프 정보를 불러올 수 없습니다.");
     }
   };
 

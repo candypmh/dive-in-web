@@ -13,6 +13,7 @@ import {
   updateCommunity,
 } from "@/api/server/community/mock.server";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 import OpenGraphPreview from "@/app/_components/OpenGraphLinkReview";
 
 // const CATEGORIES = ["소통해요", "수영장", "수영물품", "수영대회"];
@@ -44,7 +45,8 @@ export default function EditPost({ params }: EditPostProps) {
 
   const [isLinkOpen, setIsLinkOpen] = useState(false);
   const [link, setLink] = useState("");
-  const [preview, setPreview] = useState<any>(null); //OG데이터
+  type OgPreview = { title: string; description: string; image: string | null; url: string };
+  const [preview, setPreview] = useState<OgPreview | null>(null); //OG데이터
   // const [ogContent, setOgContent] = useState("");
   const containerRef = useRef<HTMLDivElement | null>(null);
   const router = useRouter();
@@ -137,7 +139,7 @@ useEffect(() => {
       (category) => category.name === selectedCategory
     );
     if (!category) {
-      alert("카테고리를 선택해주세요!");
+      toast.error("카테고리를 선택해주세요!");
       return;
     }
 
@@ -175,7 +177,7 @@ useEffect(() => {
       }
     } catch (err) {
       console.error(err);
-      alert("글 수정 실패");
+      toast.error("글 수정에 실패했습니다.");
     }
   };
 
@@ -189,7 +191,7 @@ useEffect(() => {
 
     const selectedFiles = Array.from(e.target.files); //선택파일 배열변환
     if (existImages.length + newImages.length >= 5) {
-      alert("이미지는 최대 5장까지 업로드 가능합니다.");
+      toast.error("이미지는 최대 5장까지 업로드 가능합니다.");
       return;
     }
 
@@ -231,7 +233,7 @@ useEffect(() => {
 
       // if(!og || !og.title){
       if (!og) {
-        alert("유효한 링크가 아닙니다.");
+        toast.error("유효한 링크가 아닙니다.");
         return;
       } else if (!og.title && !og.description && !og.image) {
         setPreview({
@@ -255,7 +257,7 @@ useEffect(() => {
       setIsLinkOpen(false);
     } catch (error) {
       console.error("오픈그래프 불러오기 실패:::", error);
-      alert("오픈그래프 정보를 불러올 수 없습니다.");
+      toast.error("오픈그래프 정보를 불러올 수 없습니다.");
     }
   };
 

@@ -9,25 +9,34 @@ import { getSearch } from "@/api/server/search";
 import BackButton from "../_components/backButton";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useSearchStore } from "@/store/searchStore";
+import { IoCloseOutline } from "react-icons/io5";
 
 export default function ClientSearch() {
-  const { keyword, results: result, setKeyword, setResults } = useSearchStore();
+  const {
+    keyword,
+    results: result,
+    recentKeywords,
+    setKeyword,
+    setResults,
+    addRecentKeyword,
+    removeRecentKeyword,
+    clearRecentKeywords,
+  } = useSearchStore();
   const debounceKeyword = useDebounce(keyword, 300); //디바운싱 적용된 입력값
 
   useEffect(() => {
     const fetchSearch = async () => {
       if (!debounceKeyword.trim()) {
-        setResults([]); //검색창이 비면 결과 비우기
-        return; //함수 종료(빈문자열로 api요청 안보내도록 무시/fetch요청 막기)
+        setResults([]);
+        return;
       }
 
       try {
         const data = await getSearch(debounceKeyword);
-
         if (data) {
           setResults(data);
+          addRecentKeyword(debounceKeyword);
         }
-
       } catch (error) {
         console.error("검색 결과 에러:::", error);
       }
@@ -57,48 +66,72 @@ export default function ClientSearch() {
             autoFocus
             onChange={(e) => setKeyword(e.target.value)}
           />
-          {/* <button
-            type="submit"
-            className="flex-none flex items-center justify-center bg-gray-100 w-10 h-10"
-          >
-            <SearchIcon className="w-5 h-5" />
-          </button> */}
         </form>
       </div>
-      
-      <div>
-        <div>
-          {/* <p className="p-4">클라이언트 페이지</p> */}
-          <ul className="list-none px-4">
-            {result.map((result) => (
-              // <li key={result.id} className="border-b border-gray-300 pb-4">
-              <li className="border-b border-gray-300 pb-4">
-                <Link href={result.dataUrl} className="flex p-3">
-                  <div className="flex flex-col items-start bg-white-100 rounded-lg mt-4">
-                    <div className="flex flex-row">
-                      {getCategoryIcon(result.categoryName)}
-                      <div
-                        className={`text-label_sb py-1 rounded text-chip-1-foreground inline-block w-fit`}
-                      >
-                        <p className="pl-2">{result.categoryName}</p>
-                      </div>
-                    </div>
-                    <p className="text-md pl-8">{result.title}</p>
-                    <p className="text-sm text-gray-600 pl-8">
-                      {result.content}
-                    </p>
-                    <p className="text-sm text-gray-600 pl-8">
-                      {result.contentSummary}
-                    </p>
-                    <p className="text-sm text-gray-600 pl-8">
-                      {result.createdAt}
-                    </p>
-                  </div>
-                </Link>
+
+      {/* 최근 검색어 — 검색창이 비어있을 때만 표시 */}
+      {!keyword.trim() && recentKeywords.length > 0 && (
+        <div className="px-4 pt-4">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-bold text-gray-700">최근 검색어</span>
+            <button
+              onClick={clearRecentKeywords}
+              className="text-xs text-gray-400 hover:text-gray-600"
+            >
+              전체 삭제
+            </button>
+          </div>
+          <ul className="flex flex-col gap-1">
+            {recentKeywords.map((kw) => (
+              <li key={kw} className="flex items-center justify-between py-1">
+                <button
+                  className="text-sm text-gray-700 hover:text-blue-900 text-left"
+                  onClick={() => setKeyword(kw)}
+                >
+                  {kw}
+                </button>
+                <button
+                  onClick={() => removeRecentKeyword(kw)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <IoCloseOutline className="w-4 h-4" />
+                </button>
               </li>
             ))}
           </ul>
         </div>
+      )}
+
+      {/* 검색 결과 */}
+      <div>
+        <ul className="list-none px-4">
+          {result.map((result) => (
+            <li className="border-b border-gray-300 pb-4">
+              <Link href={result.dataUrl} className="flex p-3">
+                <div className="flex flex-col items-start bg-white-100 rounded-lg mt-4">
+                  <div className="flex flex-row">
+                    {getCategoryIcon(result.categoryName)}
+                    <div
+                      className={`text-label_sb py-1 rounded text-chip-1-foreground inline-block w-fit`}
+                    >
+                      <p className="pl-2">{result.categoryName}</p>
+                    </div>
+                  </div>
+                  <p className="text-md pl-8">{result.title}</p>
+                  <p className="text-sm text-gray-600 pl-8">
+                    {result.content}
+                  </p>
+                  <p className="text-sm text-gray-600 pl-8">
+                    {result.contentSummary}
+                  </p>
+                  <p className="text-sm text-gray-600 pl-8">
+                    {result.createdAt}
+                  </p>
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );

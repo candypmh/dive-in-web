@@ -91,9 +91,10 @@ export default function HomeClient({ home }: { home: HomeProps }) {
         {/* 카드리스트 */}
         <div className="grid grid-cols-2 gap-6 px-8 py-1">
           {popularLessons.map((lesson) => (
-            <div
+            <Link
               key={lesson.id}
-              className="p-6 rounded-lg shadow-sm bg-gray-100 flex flex-col h-full opacity-60 cursor-not-allowed"
+              href={`/lessons/${lesson.id}`}
+              className="p-6 rounded-lg shadow-sm bg-gray-100 flex flex-col h-full hover:bg-gray-200 transition-colors"
             >
               {/* 카드 1*/}
               <div className="flex flex-wrap gap-2 items-center pb-2">
@@ -112,7 +113,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
                   name={lesson.instructorName}
                 />
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>
@@ -127,9 +128,10 @@ export default function HomeClient({ home }: { home: HomeProps }) {
         {/* 카드리스트 */}
         <div className="grid grid-cols-2 gap-6 px-8 py-1">
           {NewLessons.map((lesson) => (
-            <div
+            <Link
               key={lesson.id}
-              className="p-6 rounded-lg shadow-sm bg-gray-100 flex flex-col h-full opacity-60 cursor-not-allowed"
+              href={`/lessons/${lesson.id}`}
+              className="p-6 rounded-lg shadow-sm bg-gray-100 flex flex-col h-full hover:bg-gray-200 transition-colors"
             >
               {/* 카드 1*/}
               <div className="flex flex-wrap gap-2 items-center pb-2">
@@ -148,7 +150,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
                   name={lesson.instructorName}
                 />
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>

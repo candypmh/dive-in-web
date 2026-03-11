@@ -1,223 +1,140 @@
-# 로그인
+# 🏊 Dive In — 수영 클래스 통합 조회 플랫폼
 
-## 1. (프론트) 로그인 페이지
+**Dive + In** 의 합성어로, 수영에 진심인 스위머(swimmer)들이 깊게 다이빙하여 뛰어든다는 뜻입니다.
 
-> `https://dive-in.co.kr/login`
+여기저기 흩어져 있던 수영 클래스 정보를 한 눈에 확인할 수 있는 통합 조회 플랫폼입니다.
 
-로그인 페이지에서 “카카오로 로그인하기” 버튼을 누르면, 카카오 로그인 페이지로 이동합니다.
+**배포 링크**: [dive-in-web-vercel-deploy-8vor-7855qu2ia.vercel.app](https://dive-in-web-vercel-deploy-8vor-7855qu2ia.vercel.app)
 
-```tsx
-Kakao.Auth.autorize({
-  redirectUri: "https://dive-in.co.kr/api/auth/callback",
-  scope: "openid",
-});
+---
+
+## 📌 프로젝트 배경
+
+수영 클래스 정보를 찾을 때 어려움을 느낀다고 응답한 사용자가 **116명 중 58.5%** 에 달했습니다.
+
+> "수영 클래스 정보가 여기저기 다 흩어져 있어서 진짜 헷갈려요!"
+> "원하는 시간대나 조건 맞는 클래스를 찾기가 정말 힘들어요"
+> "강사 정보가 부족해서 누구한테 배워야 할지 고민돼요"
+
+이 문제를 해결하기 위해 수영 클래스, 수영장, 커뮤니티 정보를 한 곳에서 확인할 수 있는 서비스를 기획했습니다.
+
+---
+
+## 👥 팀 구성 및 기간
+
+| 역할 | 인원 |
+|------|------|
+| 서비스 기획 | 2명 |
+| 디자인 | 1명 |
+| 프론트엔드 | 1명 (본인) |
+| 백엔드 | 1명 |
+
+**팀 프로젝트 기간**: 2024.12 ~ 2025.05
+**개인 프로젝트 전환**: 2026.02 ~ 현재
+
+> 팀 프로젝트로 시작해 약 6개월간 개발했으나, 이후 개인 프로젝트로 전환하여 Mock 인프라를 직접 구축했습니다.
+
+---
+
+## 📸 데모
+
+> 추후 GIF 추가 예정
+
+---
+
+## ✨ 핵심 기능
+
+| 버전 | 기능 | 설명 |
+|------|------|------|
+| v1.0 | 수영 클래스 | 흩어져 있던 수영 클래스를 한눈에 확인. 난이도, 강사, 가격, 신청 링크 제공 |
+| v1.0 | 수영장 | 수영장 정보 및 위치 확인, 카카오맵 길찾기 연동 |
+| v1.5 | 마이페이지 | 내 정보 확인 및 프로필 관리, 수영코칭팀/강사 등록 |
+| v2.0 | 커뮤니티 | 카테고리별 게시글 작성·조회·댓글, 무한스크롤, OG 링크 미리보기 |
+| v2.5 | 통합검색 | 클래스·수영장·커뮤니티 통합 검색, 디바운싱 + Zustand 전역 상태 관리 |
+
+---
+
+## 🛠 기술 스택
+
+| 분류 | 기술 | 선택 이유 |
+|------|------|----------|
+| Framework | Next.js 14 (App Router) | 서버 컴포넌트와 Route Handler로 클라이언트/서버 역할을 명확히 분리 |
+| Language | TypeScript | API 응답 타입을 Zod로 검증하고 컴파일 타임에 타입 오류 방지 |
+| Styling | Tailwind CSS | 유틸리티 클래스 기반 빠른 UI 구성 |
+| Validation | Zod | API 경계에서 런타임 타입 검증 및 transform으로 안전한 데이터 처리 |
+| 상태 관리 | Zustand | 검색 상태를 여러 컴포넌트에서 공유하고 props drilling 없이 접근 |
+| 인증 | Kakao OAuth | 소셜 로그인 UX 제공 |
+
+---
+
+## 🏗 아키텍처
+
+### Mock / Real API 전환 구조
+
+백엔드 서버 이탈 후 `NEXT_PUBLIC_USE_MOCK` 환경변수 하나로 mock과 real API를 전환할 수 있는 구조를 설계했습니다.
+
+```
+src/api/server/community/
+├── index.ts        # USE_MOCK 분기 — mock/real 중 하나를 re-export
+├── real.ts         # 외부 API 호출 (api.dive-in.co.kr)
+├── mock.server.ts  # 서버사이드 읽기 (getCommunities, getCommunity)
+└── mock.client.ts  # 클라이언트 쓰기 (createCommunity → localStorage)
 ```
 
-## 2. (외부) 카카오 로그인 페이지
+Mock 환경에서는 `localStorage`를 데이터 저장소로 사용합니다. seed 데이터 35개가 자동으로 생성되며 `SEEDED_KEY`로 중복 seed를 방지합니다.
 
-카카오 계정을 입력하여 로그인합니다.
+### 페이지 구조 패턴
 
-카카오 로그인이 성공적으로 이루어진 경우, `redirectUri` 에 code를 파라미터로 추가하여 리다이렉트합니다.
-
-## 3. 리다이렉트
-
-### 3-1. (프론트) 리다이렉트 페이지
-
-> `https://dive-in.co.kr/api/auth/callback`
-
-```tsx
-export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url);
-  const code = searchParams.get("code");
-
-  // code가 없는 경우, 에러
-  if (!code) {
-    return NextResponse.redirect(`${origin}/auth/login?error=invalid_code`);
-  }
-
-  // 1. 백엔드로 code와 redirect_uri를 전달하여, 로그인을 요청합니다. (3-2로 이동합니다)
-  const url = new URL(`http://localhost:8080/login/kakao`);
-  url.searchParams.append("code", code);
-  url.searchParams.append("redirect_uri", `${origin}/api/auth/callback`);
-  const res = await fetch(url);
-
-  if (!res.ok) {
-    return NextResponse.redirect(`${origin}/auth/login?error=failed_to_login`);
-  }
-
-  const { access_token, refresh_token } = await res.json();
-
-  // (3-2에서 이어집니다)
-  // 2. 백엔드에서 응답받은 token을 쿠키에 삽입하여, 회원가입/로그인을 완료합니다.
-  return NextResponse.redirect(`${origin}`, {
-    headers: [
-      [
-        "Set-Cookie",
-        `access_token=${access_token}; Path=/; HttpOnly; SameSite=Strict`,
-      ],
-      [
-        "Set-Cookie",
-        `refresh_token=${refresh_token}; Path=/; HttpOnly; SameSite=Strict`,
-      ],
-    ],
-  });
-}
+```
+page.tsx (Server Component)
+  └── clientPage.tsx (Client Component)
+        └── _components/ (코로케이션 컴포넌트)
 ```
 
-### 3-2. (백엔드) 로그인 페이지
+서버 컴포넌트에서 데이터를 fetch하고 클라이언트 컴포넌트에 props로 전달합니다. 인터랙션(필터링, 무한스크롤, 폼)은 클라이언트 컴포넌트에서 처리합니다.
 
-> `http://localhost:8080/login/kakao?code={code}&redirect_uri={redirect_uri}`
+### Route Handler 활용
 
-1. `code`와 `redirect_uri`를 이용하여, `token`을 요청합니다.
-2. 발급받은 `token`을 이용해 사용자 정보를 가져옵니다.
-3. 사용자 정보의 이메일을 이용하여, 회원가입과 로그인 로직을 분기합니다.
-   - 회원가입
-     1. 사용자 정보를 Member 테이블에 저장하고, jwt 토큰을 발급합니다.
-   - 로그인
-     1. 이메일을 이용하여, 사용자 정보를 Member 테이블에서 불러옵니다.
-4. TokenManager 테이블에 데이터를 저장합니다.
-5. access_token과 refresh_token을 반환합니다.
+외부 API 호출 시 발생하는 CORS 문제와 서버 액션 남용을 Route Handler로 해결했습니다.
 
-- 프론트 코드 예시
+| Route Handler | 역할 |
+|--------------|------|
+| `/api/og?url=` | 외부 URL OG 메타태그 서버사이드 파싱 (CORS 우회) |
+| `/api/search?keyword=` | Mock: 빌더 기반 키워드 필터링 / Real: 외부 API 프록시 |
 
-  ```tsx
-  import { NextRequest, NextResponse } from "next/server";
+---
 
-  const REST_API_KEY = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY!;
-  const KAKAO_CLIENT_SECRET = process.env.KAKAO_CLIENT_SECRET!;
+## 📁 폴더 구조
 
-  export const GET = async (request: NextRequest) => {
-    const { searchParams } = request.nextUrl;
-    const code = searchParams.get("code");
-    const redirectUri = searchParams.get("redirect_uri");
-
-    // 1. code가 없다면, 400 에러를 반환합니다.
-    if (!code || !redirectUri) {
-      return NextResponse.json({ error: "invalid_code" }, { status: 400 });
-    }
-
-    // 2. code를 이용해 Kakao API로부터 access_token을 발급받습니다.
-    const tokenResponse = await getAccessToken(code, redirectUri);
-
-    if (!tokenResponse.ok) {
-      return NextResponse.json({ error: "failed_to_login" }, { status: 400 });
-    }
-
-    const token = await tokenResponse.json();
-
-    // 3. 발급받은 토큰을 이용해 사용자 정보를 가져옵니다.
-    const userResponse = await getUser(token.access_token);
-
-    if (!userResponse.ok) {
-      return NextResponse.json(
-        { error: "failed_to_get_user" },
-        { status: 400 }
-      );
-    }
-
-    const user = await userResponse.json();
-
-    // 4. 사용자 정보를 DB에 저장하고, jwt 토큰을 발급합니다.
-    const { userId } = await saveUser(user);
-    const { access_token, refresh_token } = await issueToken(user);
-
-    // 5. DB에 refresh_token을 저장합니다.
-    await saveRefreshToken(userId, refresh_token);
-
-    // 6. 응답에 access_token과 refresh_token을 담아 반환합니다.
-    return NextResponse.json({ access_token, refresh_token });
-  };
-
-  async function getAccessToken(code: string, redirectUri: string) {
-    const url = new URL("https://kauth.kakao.com/oauth/token");
-    url.searchParams.append("grant_type", "authorization_code");
-    url.searchParams.append("client_id", REST_API_KEY);
-    url.searchParams.append("redirect_uri", redirectUri);
-    url.searchParams.append("code", code);
-    url.searchParams.append("client_secret", KAKAO_CLIENT_SECRET);
-
-    return fetch(url.toString(), {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-    });
-  }
-
-  async function getUser(accessToken: string) {
-    return fetch("https://kapi.kakao.com/v2/user/me", {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-  }
-
-  async function saveUser(user: any) {
-    // ...
-    return { userId: 1 };
-  }
-
-  async function issueToken(user: any) {
-    // ...
-    return {
-      access_token: "access_token",
-      refresh_token: "refresh_token",
-    };
-  }
-
-  async function saveRefreshToken(userId: number, refreshToken: string) {
-    // ...
-  }
-  ```
-
-# 내 정보 가져오기
-
-> `GET` `api.dive-in.co.kr/me`
-
-- 백엔드 로직
-  1. access_token 유효성 체크
-     1. refresh_token 유효성 체크
-  2. token의 memberId를 이용하여 DB 검색 후 반환
-
-## 요청 (Request)
-
-### Cookie
-
-- access_token
-- refresh_token
-
-## 응답 (Response)
-
-### body
-
-```json
-{
-  "id": 1,
-  "email": "figma@kakao.com",
-  "nickname": "김병훈",
-  "role": "강사"
-}
+```
+src/
+├── app/                  # Next.js App Router 페이지 및 Route Handler
+│   ├── api/              # Route Handler (og, search, auth 등)
+│   └── community/        # 커뮤니티 관련 페이지
+├── api/server/           # API 레이어 (mock/real 분기)
+├── lib/community/        # Mock 데이터 빌더 및 localStorage CRUD
+├── store/                # Zustand 전역 상태
+├── schemas/              # Zod 스키마
+├── types/                # z.infer 기반 타입
+└── constants/            # 카테고리 등 상수
 ```
 
-# 로그아웃
+---
 
-> `POST` `api.dive-in.co.kr/logout`
+## 🚀 로컬 실행
 
-- 백엔드 로직
-  1. refresh_token 유효성 검증
-  2. DB에서 TokenManager row 삭제
-
-## 요청 (Request)
-
-### body
-
-```json
-{
-  "access_token": "abcd",
-  "refresh_token": "zxcv"
-}
+```bash
+npm install
+npm run dev
 ```
 
-## 응답 (Response)
+**환경변수 설정** (`.env.local`):
 
-없음
+```env
+NEXT_PUBLIC_USE_MOCK=true
+NEXT_PUBLIC_KAKAO_APP_KEY=your_key
+NEXT_PUBLIC_KAKAO_REST_API_KEY=your_key
+KAKAO_CLIENT_SECRET=your_secret
+```
+
+> `NEXT_PUBLIC_USE_MOCK=true` 설정 시 외부 API 없이 Mock 데이터로 동작합니다.

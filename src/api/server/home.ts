@@ -4,7 +4,7 @@ import { homeResponseScheme } from "@/schemas/home";
 import { mockHomeData } from "@/lib/home/mockHomeData";
 
 export const getHome = async () => {
-  if (process.env.USE_MOCK === "true") {
+  if (process.env.NEXT_PUBLIC_USE_MOCK === "true") {
     return mockHomeData;
   }
 

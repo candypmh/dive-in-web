@@ -65,13 +65,16 @@ export default function CreatePost() {
     formData.append("categoryType", selectedCategoryKey);
 
     const title = e.currentTarget.querySelector<HTMLInputElement>("#title");
-    if (title) {
-      formData.append("title", title.value);
-    } else {
-      console.error("제목이 입력되지 않았습니다");
+    if (!title || !title.value.trim()) {
+      toast.error("제목을 입력해주세요!");
       return;
     }
+    formData.append("title", title.value.trim());
 
+    if (!content.trim()) {
+      toast.error("내용을 입력해주세요!");
+      return;
+    }
     formData.append("content", content);
 
     //임시
@@ -89,6 +92,7 @@ export default function CreatePost() {
       }
     } catch (err) {
       console.error("글 작성 실패", err);
+      toast.error("글 작성에 실패했습니다.");
     }
   };
 

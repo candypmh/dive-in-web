@@ -12,6 +12,7 @@ import {
   openGraph,
   updateCommunity,
 } from "@/api/server/community/mock.server";
+import { CATEGORYNAME_TO_LABEL } from "@/constants/categories";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import OpenGraphPreview from "@/app/_components/OpenGraphLinkReview";
@@ -122,7 +123,7 @@ useEffect(() => {
 
         setTitle(post.title);
         setContent(post.content);
-        setSelectedCategory(post.categoryName || "소통해요");
+        setSelectedCategory(CATEGORYNAME_TO_LABEL[post.categoryName] || "소통해요");
         setExistImages(post.images);
       } catch (error) {
         console.error(error);

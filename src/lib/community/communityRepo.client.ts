@@ -112,6 +112,14 @@ export async function createPost(newPost: CommunityProps): Promise<number> {
   return newPost.postId;
 }
 
+export async function updatePost(postId: number, updates: Partial<CommunityProps>): Promise<void> {
+  const posts = await listPosts();
+  const idx = posts.findIndex((p) => Number(p.postId) === postId);
+  if (idx === -1) throw new Error("Post not found");
+  posts[idx] = { ...posts[idx], ...updates, updatedAt: new Date().toISOString() };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+}
+
 export async function listPage(params: {
   categoryKey: CategoryKey;
   page: number;

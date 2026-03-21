@@ -10,6 +10,7 @@ import BackButton from "../_components/backButton";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useSearchStore } from "@/store/searchStore";
 import { IoCloseOutline } from "react-icons/io5";
+import { formatKST } from "@/utils";
 
 export default function ClientSearch() {
   const {
@@ -111,11 +112,6 @@ export default function ClientSearch() {
                 <div className="flex flex-col items-start bg-white-100 rounded-lg mt-4">
                   <div className="flex flex-row">
                     {getCategoryIcon(result.categoryName)}
-                    <div
-                      className={`text-label_sb py-1 rounded text-chip-1-foreground inline-block w-fit`}
-                    >
-                      <p className="pl-2">{result.categoryName}</p>
-                    </div>
                   </div>
                   <p className="text-md pl-8">{result.title}</p>
                   <p className="text-sm text-gray-600 pl-8">
@@ -125,7 +121,7 @@ export default function ClientSearch() {
                     {result.contentSummary}
                   </p>
                   <p className="text-sm text-gray-600 pl-8">
-                    {result.createdAt}
+                    {formatKST(result.createdAt)}
                   </p>
                 </div>
               </Link>
@@ -139,13 +135,13 @@ export default function ClientSearch() {
 
 const getCategoryIcon = (categoryName: string) => {
   switch (categoryName) {
+    case "소통해요":
+      return <ChatIcon className="h-6 w-6 text-gray-400" />;
     case "수영장":
       return <PoolIcon className="h-6 w-6 text-gray-400" />;
-    case "수영수업":
+    case "수영물품":
       return <SwimHatIcon className="h-6 w-6 text-gray-400" />;
-    case "커뮤니티":
-      return <ChatIcon className="h-6 w-6 text-gray-400" />;
     default:
-      return <div></div>;
+      return <div className="h-6 w-6" />;
   }
 };

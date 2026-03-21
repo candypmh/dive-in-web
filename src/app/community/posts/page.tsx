@@ -30,6 +30,8 @@ export default function CreatePost() {
   const [images, setImages] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null); //input참조
 
+  const [isLoading, setIsLoading] = useState(false);
+  const isSubmittingRef = useRef(false);
   const [isLinkOpen, setIsLinkOpen] = useState(false);
   const [link, setLink] = useState("");
   type OgPreview = { title: string; description: string; image: string | null; url: string };
@@ -54,7 +56,9 @@ export default function CreatePost() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData();
+    if (isSubmittingRef.current) return;
+
+    // validation 먼저 — 실패 시 isLoading 건드리지 않음
     const selectedCategoryKey = CATEGORIES.find(
       (category) => category.name === selectedCategory
     )?.key;
@@ -62,37 +66,39 @@ export default function CreatePost() {
       toast.error("카테고리를 선택해주세요!");
       return;
     }
-    formData.append("categoryType", selectedCategoryKey);
 
     const title = e.currentTarget.querySelector<HTMLInputElement>("#title");
     if (!title || !title.value.trim()) {
       toast.error("제목을 입력해주세요!");
       return;
     }
-    formData.append("title", title.value.trim());
 
     if (!content.trim()) {
       toast.error("내용을 입력해주세요!");
       return;
     }
+
+    // validation 통과 후 제출
+    isSubmittingRef.current = true;
+    setIsLoading(true);
+    const formData = new FormData();
+    formData.append("categoryType", selectedCategoryKey);
+    formData.append("title", title.value.trim());
     formData.append("content", content);
-
-    //임시
-    const userId = "1";
-    formData.append("memberId", userId); //마이페이지 보고 가져오기
-
+    formData.append("memberId", "1");
     images.forEach((image) => {
       formData.append("images", image);
     });
 
     try {
       const postId = await createCommunity(formData);
-      if (postId) {
-        router.push(`/community/posts/${postId}`);
-      }
+      router.replace(`/community/posts/${postId}`);
     } catch (err) {
       console.error("글 작성 실패", err);
       toast.error("글 작성에 실패했습니다.");
+    } finally {
+      isSubmittingRef.current = false;
+      setIsLoading(false);
     }
   };
 
@@ -180,8 +186,8 @@ export default function CreatePost() {
         <h2 className="text-heading_3 font-bold text-center">글쓰기</h2>
         {/* <Link href={`/communities/${community.id}`} className="flex p-3"> */}
 
-        <button type="submit" form="createPostForm" className="flex p-3">
-          <IoCheckmark className="w-6 h-6 text-gray-400 hover:text-blue-900" />
+        <button type="submit" form="createPostForm" className="flex p-3" disabled={isLoading}>
+          <IoCheckmark className={`w-6 h-6 ${isLoading ? "text-gray-200" : "text-gray-400 hover:text-blue-900"}`} />
         </button>
       </div>
 

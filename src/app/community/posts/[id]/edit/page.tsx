@@ -7,15 +7,12 @@ import { MdOutlineBrokenImage } from "react-icons/md";
 import { AiOutlineLink } from "react-icons/ai";
 import { IoIosArrowDown } from "react-icons/io";
 import { useEffect, useRef, useState } from "react";
-import {
-  getCommunity,
-  openGraph,
-  updateCommunity,
-} from "@/api/server/community/mock.server";
+import { openGraph } from "@/api/server/community/mock.server";
 import { CATEGORYNAME_TO_LABEL } from "@/constants/categories";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import OpenGraphPreview from "@/app/_components/OpenGraphLinkReview";
+import { getPost, updatePost } from "@/lib/community/communityRepo.client";
 
 // const CATEGORIES = ["소통해요", "수영장", "수영물품", "수영대회"];
 const CATEGORIES = [
@@ -116,7 +113,7 @@ useEffect(() => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const post = await getCommunity(postId);
+        const post = await getPost(Number(postId));
         if (!post) {
           throw new Error("게시글 수정 실패!");
         }
@@ -164,18 +161,14 @@ useEffect(() => {
     );
 
     try {
-      await updateCommunity(postId, formData);
+      await updatePost(Number(postId), {
+        title,
+        content,
+        categoryName: category.key as import("@/constants/categories").CategoryName,
+        images: existImages,
+      });
 
-      //최신 데이터 가져오기
-      const updatePost = await getCommunity(postId);
-      if (updatePost) {
-        setTitle(updatePost.title);
-        setContent(updatePost?.content);
-      }
-
-      if (postId) {
-        router.replace(`/community/posts/${postId}`);
-      }
+      router.replace(`/community/posts/${postId}`);
     } catch (err) {
       console.error(err);
       toast.error("글 수정에 실패했습니다.");

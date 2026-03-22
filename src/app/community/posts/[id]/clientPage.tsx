@@ -13,20 +13,15 @@ import { useRouter } from "next/navigation";
 import { CommunityProps } from "@/types/community";
 import { CATEGORYNAME_TO_LABEL } from "@/constants/categories";
 import CustomModal from "@/app/_components/CustomModal";
-import {
-  addLikePost,
-  createComment,
-  deleteCommunity,
-  deleteLikePost,
-} from "@/api/server/community/real";
-import { getPost } from "@/lib/community/communityRepo.client";
+import { getPost, deletePost, toggleLike, addComment } from "@/lib/community/communityRepo.client";
+import toast from "react-hot-toast";
 import { formatKST } from "@/utils";
 import DetailPagePhotoSlider from "@/app/_components/PhotoSlider";
 import CommentList from "../../_components/CommentList";
 
 export default function ClientCommunity({ postId }: { postId: number }) {
   const [community, setCommunity] = useState<CommunityProps | null>(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [comment, setComment] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -102,61 +97,39 @@ export default function ClientCommunity({ postId }: { postId: number }) {
   };
 
   const handleDelete = async () => {
-    const isDeleted = await deleteCommunity(postId + "", "1");
-
-    if (isDeleted) {
-      await router.replace("/community/posts/list?category=none&page=0");
-      alert("게시글이 삭제되었습니다.");
-    } else {
-      alert("게시글 삭제에 실패했습니다.");
+    try {
+      await deletePost(postId);
+      router.replace("/community/posts/list?category=none");
+      toast.success("게시글이 삭제되었습니다.");
+    } catch (error) {
+      console.error("게시글 삭제 실패:", error);
+      toast.error("게시글 삭제에 실패했습니다.");
     }
   };
 
   const handleLike = async () => {
-    if(!community) return;
-    
+    if (!community) return;
+
     try {
-      setChangeLiked((prev) => !prev);
-      setChangeLikesCnt((prev) => (changeLiked ? prev - 1 : prev + 1));
-
-      const response = changeLiked
-        ? await deleteLikePost(postId + "", "1") //좋아요가 되어있으면
-        : await addLikePost(postId + "", "1"); //좋아요가 안되어있으면
-
-      if (!response || !response.success || response.data === null) {
-        throw new Error(response?.message || "서버 응답 오류");
-      }
-
-      setChangeLiked(response.data.isLiked);
-      setChangeLikesCnt(response.data.likeCnt);
+      const { isLiked, likesCnt } = await toggleLike(postId);
+      setChangeLiked(isLiked);
+      setChangeLikesCnt(likesCnt);
     } catch (error) {
-      console.error("좋아요 처리 오류! 기존으로 돌아갑니다:::", error);
-
-      // 상태 롤백
-      setChangeLiked((prev) => !prev);
-      setChangeLikesCnt((prev) => (changeLiked ? prev + 1 : prev - 1));
+      console.error("좋아요 처리 오류:", error);
     }
   };
 
   const handleCommentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("postId", String(postId));
-    formData.append("content", comment);
-    formData.append("memberId", "1");
+    if (!comment.trim()) return;
 
     try {
-      const result = await createComment(formData);
-
-      // {
-      //   "content": "9482308953개요",
-      //   "postId": 13,
-      //   "memberId": 1
-      // }
-
-      setComment(""); //댓글필드 초기화
+      const updatedComments = await addComment(postId, comment);
+      setCommunity((prev) => prev ? { ...prev, commentList: updatedComments, cmntCnt: updatedComments.length } : prev);
+      setComment("");
     } catch (error) {
-      console.error("댓글 등록 실패!", error);
+      console.error("댓글 등록 실패:", error);
+      toast.error("댓글 등록에 실패했습니다.");
     }
   };
 
@@ -164,10 +137,10 @@ export default function ClientCommunity({ postId }: { postId: number }) {
   const handleCopyLink = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
-      alert("링크가 복사되었습니다!");
+      toast.success("링크가 복사되었습니다!");
     } catch (error) {
-      alert("링크 복사에 실패하였습니다!");
-      console.error("클립보드 복사 실패!::", error);
+      console.error("클립보드 복사 실패:", error);
+      toast.error("링크 복사에 실패하였습니다.");
     }
   };
 

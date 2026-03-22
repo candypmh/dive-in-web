@@ -6,6 +6,7 @@ import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useSearchStore } from "@/store/searchStore";
 import InstructorProfile from "./_components/InstructorProfile";
 import LessonChip from "@/components/ui/Chip";
 import { LuEye } from "react-icons/lu";
@@ -17,11 +18,13 @@ import { CATEGORYNAME_TO_LABEL, CategoryName } from "@/constants/categories";
 
 // export default function Home({content}: {content: string}) {
 export default function HomeClient({ home }: { home: HomeProps }) {
-  // const router = useRouter();
+  const router = useRouter();
   // useEffect(() => {
   //   router.replace("/lessons");
   // }, [router]);
   const [maxLength, setMaxLength] = useState(10);
+  const [homeKeyword, setHomeKeyword] = useState("");
+  const { setKeyword } = useSearchStore();
 
   const popularLessons = home.topViewLessonList;
   const NewLessons = home.newLessonList;
@@ -61,21 +64,31 @@ export default function HomeClient({ home }: { home: HomeProps }) {
       {/* 검색창 */}
       <section className="flex flex-col">
         <div className="flex items-center gap-2 pt-6 px-4 pb-5">
-          {/* <h2 className="text-heading_2 text-gray-900">수영장</h2> */}
-          {/* <p className="text-body_lb text-gray-500">{pools.length}</p> */}
-          <Link href="/search" className="relative w-full">
+          <form
+            className="relative w-full"
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (!homeKeyword.trim()) return;
+              setKeyword(homeKeyword.trim());
+              router.push("/search");
+            }}
+          >
             <div className="relative w-full">
-              <CiSearch
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
-                size={20}
-              />
               <input
                 type="text"
+                value={homeKeyword}
+                onChange={(e) => setHomeKeyword(e.target.value)}
                 placeholder="클래스명, 수영장, 커뮤니티 글을 검색해보세요"
-                className="w-full pl-10 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none"
-              ></input>
+                className="w-full pl-4 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none"
+              />
+              <button
+                type="submit"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-900"
+              >
+                <CiSearch size={20} />
+              </button>
             </div>
-          </Link>
+          </form>
         </div>
       </section>
 

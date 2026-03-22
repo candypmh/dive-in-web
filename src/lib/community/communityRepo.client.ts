@@ -1,6 +1,6 @@
 "use client";
 
-import { CommunitiesProps, CommunityProps } from "@/types/community";
+import { CommunitiesProps, CommunityProps, CommentProps } from "@/types/community";
 import { buildCommunityDetail } from "./mockCommunityDetail";
 import { CATEGORY_NAMES, CategoryName, KEY_TO_CATEGORYNAME } from "@/constants/categories";
 
@@ -118,6 +118,45 @@ export async function updatePost(postId: number, updates: Partial<CommunityProps
   if (idx === -1) throw new Error("Post not found");
   posts[idx] = { ...posts[idx], ...updates, updatedAt: new Date().toISOString() };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+}
+
+export async function deletePost(postId: number): Promise<void> {
+  const posts = await listPosts();
+  const filtered = posts.filter((p) => Number(p.postId) !== postId);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
+}
+
+export async function toggleLike(postId: number): Promise<{ isLiked: boolean; likesCnt: number }> {
+  const posts = await listPosts();
+  const idx = posts.findIndex((p) => Number(p.postId) === postId);
+  if (idx === -1) throw new Error("Post not found");
+  const post = posts[idx];
+  const newIsLiked = !post.isLiked;
+  const newLikesCnt = newIsLiked ? post.likesCnt + 1 : post.likesCnt - 1;
+  posts[idx] = { ...post, isLiked: newIsLiked, likesCnt: newLikesCnt };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+  return { isLiked: newIsLiked, likesCnt: newLikesCnt };
+}
+
+export async function addComment(postId: number, content: string): Promise<CommentProps[]> {
+  const posts = await listPosts();
+  const idx = posts.findIndex((p) => Number(p.postId) === postId);
+  if (idx === -1) throw new Error("Post not found");
+  const newComment: CommentProps = {
+    cmntId: Date.now(),
+    content,
+    writer: "나",
+    writerProfile: null,
+    groupName: 0,
+    orderNumber: 0,
+    cmntClass: 0,
+    likeCnt: 0,
+    createdAt: new Date().toISOString(),
+  };
+  const updated = [...(posts[idx].commentList ?? []), newComment];
+  posts[idx] = { ...posts[idx], commentList: updated, cmntCnt: updated.length };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+  return updated;
 }
 
 export async function listPage(params: {

@@ -7,7 +7,6 @@ import { MdOutlineBrokenImage } from "react-icons/md";
 import { AiOutlineLink } from "react-icons/ai";
 import { IoIosArrowDown } from "react-icons/io";
 import { useEffect, useRef, useState } from "react";
-import { openGraph } from "@/api/server/community/mock.server";
 import { CATEGORYNAME_TO_LABEL } from "@/constants/categories";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
@@ -69,7 +68,8 @@ useEffect(() => {
   const controller = new AbortController();
   const fetchOG = async () => {
     try {
-      const og = await openGraph(lastOgUrl);
+      const res = await fetch(`/api/og?url=${encodeURIComponent(lastOgUrl)}`);
+      const og = await res.json();
       if (!og || (!og.title && !og.description && !og.image)) {
         setPreview({
           title: "링크를 확인해보세요",
@@ -223,10 +223,10 @@ useEffect(() => {
     }
 
     try {
-      const og = await openGraph(link);
+      const res = await fetch(`/api/og?url=${encodeURIComponent(link)}`);
+      const og = await res.json();
 
-      // if(!og || !og.title){
-      if (!og) {
+      if (!og || og.error) {
         toast.error("유효한 링크가 아닙니다.");
         return;
       } else if (!og.title && !og.description && !og.image) {

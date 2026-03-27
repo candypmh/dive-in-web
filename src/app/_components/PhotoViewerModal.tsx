@@ -66,11 +66,11 @@ const ImageSlider = ({ urls, currentIndex, setCurrentIndex }: { urls: string[], 
   }, []);
 
   const goToPrev = () => {
-    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : urls.length - 1));
+    setCurrentIndex(currentIndex > 0 ? currentIndex - 1 : urls.length - 1);
   };
 
   const goToNext = () => {
-    setCurrentIndex((prev) => (prev < urls.length - 1 ? prev + 1 : 0));
+    setCurrentIndex(currentIndex < urls.length - 1 ? currentIndex + 1 : 0);
   };
 
   const handlePrev = () => goToPrev();

@@ -34,7 +34,7 @@ const PoolsPage = async () => {
                 className="flex flex-col items-start gap-3"
               >
                 <Image
-                  src={pool.imageUrl || "/empty/image.png"}
+                  src={pool.imageUrl || "/empty/swimpool_default.png"}
                   alt="수영장 사진"
                   width={200}
                   height={200}

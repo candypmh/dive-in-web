@@ -54,7 +54,7 @@ const LessonPage = async ({ params }: { params: { id: string } }) => {
   // "refundPolicy": []
 
   return (
-    <div className="flex flex-col pb-10">
+    <div className="flex flex-col">
       <div className="flex items-center justify-between px-1">
         <Link href="/lessons" className="flex p-3">
           <ArrowLeftIcon className="w-6 h-6 text-gray-900" />
@@ -82,7 +82,7 @@ const LessonPage = async ({ params }: { params: { id: string } }) => {
         />
       </div>
 
-      <section className="flex flex-col gap-3 px-4 mb-6">
+      <section className="flex flex-col gap-3 px-4">
         <div className="flex flex-wrap items-center gap-1">
           {!!levels.length &&
             levels.map((tag) => <LessonChip key={tag} label={tag} />)}

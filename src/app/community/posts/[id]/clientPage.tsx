@@ -369,16 +369,16 @@ export default function ClientCommunity({ postId }: { postId: number }) {
               <p className="text-red-500">삭제하기</p>
             </div>
 
-            <CustomModal
+          </li>
+        </ul>
+      </div>
+        <CustomModal
               isOpen={isModalOpen}
               title="삭제 확인"
               message="정말로 게시글을 삭제하시겠습니까?"
               onConfirm={handleDelete}
               onCancel={handleDeleteModalCancel}
             />
-          </li>
-        </ul>
-      </div>
     </div>
   );
 }

@@ -22,7 +22,6 @@ export default function HomeClient({ home }: { home: HomeProps }) {
   // useEffect(() => {
   //   router.replace("/lessons");
   // }, [router]);
-  const [maxLength, setMaxLength] = useState(10);
   const [homeKeyword, setHomeKeyword] = useState("");
   const { setKeyword } = useSearchStore();
 
@@ -32,22 +31,6 @@ export default function HomeClient({ home }: { home: HomeProps }) {
   const NewCommunities = home.newPostList;
   const swimContests = home.competitionPostList;
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 640) {
-        setMaxLength(16);
-      } else if (window.innerWidth < 1024) {
-        setMaxLength(30);
-      } else {
-        setMaxLength(40);
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-    handleResize();
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   return (
     // <div className="flex flex-col items-center justify-center h-screen bg-white">
@@ -205,17 +188,14 @@ export default function HomeClient({ home }: { home: HomeProps }) {
                       <p>{community.categoryName ? CATEGORYNAME_TO_LABEL[community.categoryName as CategoryName] : "\u00A0"}</p>
                     </div>
                     <div className="flex flex-col gap-0.5">
-                      <h3 className="text-gray-900 text-body_bb">
-                        {/* {community.communityTitle} */}
+                      <h3 className="text-gray-900 text-body_bb line-clamp-1 sm:line-clamp-none">
                         {community.title}
                       </h3>
                     </div>
                     {/* <p className="text-body_b text-gray-600 block truncate xs:max-w-[100px] sm:max-w-[200px] md:max-w-[300px] lg:max-w-[400px] "> */}
                     <div className="flex items-center gap-1 overflow-hidden min-w-0">
-                      <p className="text-body_b text-gray-600 block truncate w-full">
-                        {community.content.length > maxLength
-                          ? `${community.content.substring(0, maxLength)}...`
-                          : community.content}
+                      <p className="text-body_b text-gray-600 w-full line-clamp-2 sm:line-clamp-none">
+                        {community.content}
                       </p>
                     </div>
 
@@ -299,17 +279,14 @@ export default function HomeClient({ home }: { home: HomeProps }) {
                       <p>{community.categoryName ? CATEGORYNAME_TO_LABEL[community.categoryName as CategoryName] : "\u00A0"}</p>
                     </div>
                     <div className="flex flex-col gap-0.5">
-                      <h3 className="text-gray-900 text-body_bb">
-                        {/* {community.communityTitle} */}
+                      <h3 className="text-gray-900 text-body_bb line-clamp-1 sm:line-clamp-none">
                         {community.title}
                       </h3>
                     </div>
                     {/* <p className="text-body_b text-gray-600 block truncate xs:max-w-[100px] sm:max-w-[200px] md:max-w-[300px] lg:max-w-[400px] "> */}
                     <div className="flex items-center gap-1 overflow-hidden min-w-0">
-                      <p className="text-body_b text-gray-600 block truncate w-full">
-                        {community.content.length > maxLength
-                          ? `${community.content.substring(0, maxLength)}...`
-                          : community.content}
+                      <p className="text-body_b text-gray-600 w-full line-clamp-2 sm:line-clamp-none">
+                        {community.content}
                       </p>
                     </div>
 

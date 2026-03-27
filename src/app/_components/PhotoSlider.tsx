@@ -37,8 +37,10 @@ const DetailPagePhotoSlider = ({ imageUrls, alt, sliderType = "community" }: Pro
     }else{
       return imageUrls.map((url) => encodeURIComponent(url));
     }
-    
+
   }, [imageUrls]);
+
+  const displayUrls = imageUrls.length === 0 ? ["/empty/image.png"] : imageUrls;
 
   
   // const { sliderRef, imageRefs, visibleImageNumber } = usePhotoSlider(urls);
@@ -53,25 +55,39 @@ const DetailPagePhotoSlider = ({ imageUrls, alt, sliderType = "community" }: Pro
   const sliderRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHover, setIsHover] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const touchStartX = useRef<number>(0);
+
+  useEffect(() => {
+    setIsTouchDevice(window.matchMedia("(pointer: coarse)").matches);
+  }, []);
+
+  const goToPrev = () => {
+    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : displayUrls.length - 1));
+  };
+
+  const goToNext = () => {
+    setCurrentIndex((prev) => (prev < displayUrls.length - 1 ? prev + 1 : 0));
+  };
 
   const handlePrev = (e: React.MouseEvent) => {
-    if (currentIndex > 0) {
-      e.stopPropagation();
-      setCurrentIndex(currentIndex - 1);
-    } else {
-      e.stopPropagation();
-      setCurrentIndex(imageUrls.length - 1); //0미만일 경우, 첫 번째 이미지에서 마지막으로 이동
-    }
+    e.stopPropagation();
+    goToPrev();
   };
-  
+
   const handleNext = (e: React.MouseEvent) => {
-    if (currentIndex < imageUrls.length - 1) {
-      e.stopPropagation();
-      setCurrentIndex(currentIndex + 1);
-    } else {
-      e.stopPropagation();
-      setCurrentIndex(0); //마지막 이미지에서 첫번째 이미지로 이동
-    }
+    e.stopPropagation();
+    goToNext();
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const delta = touchStartX.current - e.changedTouches[0].clientX;
+    if (delta > 50) goToNext();
+    if (delta < -50) goToPrev();
   };
 
   //이미지 슬라이드 크기 선택
@@ -96,9 +112,10 @@ const DetailPagePhotoSlider = ({ imageUrls, alt, sliderType = "community" }: Pro
         <div
           className="relative w-full flex overflow-x-auto snap-x snap-mandatory no-scrollbar"
           ref={sliderRef}
-          //   style={{scrollSnapType: "x mandatody"}}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
         >
-          {imageUrls.map((url, index) => (
+          {displayUrls.map((url, index) => (
             <div
               key={url}
               className={`snap-start shrink-0 ${sliderTypeStyles[sliderType]} verflow-hidden ${
@@ -132,7 +149,7 @@ const DetailPagePhotoSlider = ({ imageUrls, alt, sliderType = "community" }: Pro
         </div>
 
         {/* 왼쪽 화살표 */}
-        {isHover && (
+        {!isTouchDevice && isHover && (
           <button
             className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full"
             onClick={handlePrev}
@@ -142,7 +159,7 @@ const DetailPagePhotoSlider = ({ imageUrls, alt, sliderType = "community" }: Pro
         )}
 
         {/* 오른쪽 화살표 */}
-        {isHover && (
+        {!isTouchDevice && isHover && (
           <button
             className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full"
             onClick={handleNext}
@@ -151,10 +168,10 @@ const DetailPagePhotoSlider = ({ imageUrls, alt, sliderType = "community" }: Pro
           </button>
         )}
 
-        {isHover && (
+        {!isTouchDevice && isHover && (
           <div className="absolute bottom-3 right-3 flex items-center gap-0.5 bg-gray-900/70 px-1.5 py-0.5 rounded">
             <span className="text-label_sb text-gray-500">
-              {currentIndex + 1} / {imageUrls.length}
+              {currentIndex + 1} / {displayUrls.length}
               {/* {visibleImageNumber} / {imageUrls.length} */}
             </span>
           </div>
@@ -164,7 +181,7 @@ const DetailPagePhotoSlider = ({ imageUrls, alt, sliderType = "community" }: Pro
       <PhotoViewerModal
         isOpen={showImageViewerModal}
         onClose={() => setShowImageViewerModal(false)}
-        urls={imageUrls}
+        urls={displayUrls}
         current={currentIndex}
       />
     </>

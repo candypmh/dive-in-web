@@ -71,7 +71,7 @@ const LessonPage = async ({ params }: { params: { id: string } }) => {
             height={32}
             className="w-6 h-6 rounded-full"
           />
-          <span className="text-body_sr text-gray-100">
+          <span className="text-body_sr text-gray-100 pr-1.5">
             {lesson.academy.academyName}
           </span>
         </div>
@@ -202,7 +202,7 @@ const LessonPage = async ({ params }: { params: { id: string } }) => {
           </div>
           <div className="flex flex-col py-2">
             <div className="flex gap-3 px-4 py-2">
-              <p className="flex-none text-body_sb w-[52px] text-gray-700">
+              <p className="flex-none text-body_sb w-[60px] text-gray-700">
                 주제
               </p>
               <span className="text-body_sr text-gray-700">
@@ -211,7 +211,7 @@ const LessonPage = async ({ params }: { params: { id: string } }) => {
             </div>
 
             <div className="flex gap-3 px-4 py-2">
-              <p className="flex-none text-body_sb w-[52px] text-gray-700">
+              <p className="flex-none text-body_sb w-[60px] text-gray-700">
                 신청자격
               </p>
               <div className="flex flex-col gap-1 text-body_sr text-gray-700">
@@ -228,7 +228,7 @@ const LessonPage = async ({ params }: { params: { id: string } }) => {
             </div>
 
             <div className="flex gap-3 px-4 py-2">
-              <p className="flex-none text-body_sb w-[52px] text-gray-700">
+              <p className="flex-none text-body_sb w-[60px] text-gray-700">
                 소개
               </p>
               <span className="text-body_sr text-gray-700 whitespace-pre-line">
@@ -237,7 +237,7 @@ const LessonPage = async ({ params }: { params: { id: string } }) => {
             </div>
 
             <div className="flex gap-1.5 px-4 py-2">
-              <p className="flex-none text-body_sb w-[52px] text-gray-700">
+              <p className="flex-none text-body_sb w-[60px] text-gray-700">
                 신청방법
               </p>
               <span className="text-body_sr text-gray-700">
@@ -261,7 +261,7 @@ const LessonPage = async ({ params }: { params: { id: string } }) => {
             </div>
 
             <div className="flex gap-3 px-4 py-2">
-              <p className="flex-none text-body_sb w-[52px] text-gray-700">
+              <p className="flex-none text-body_sb w-[60px] text-gray-700">
                 환불안내
               </p>
               <div className="flex flex-col gap-1 text-body_sr text-gray-700">

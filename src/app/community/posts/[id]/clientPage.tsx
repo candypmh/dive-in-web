@@ -149,11 +149,11 @@ export default function ClientCommunity({ postId }: { postId: number }) {
     <div className="flex flex-col pb-10 relative h-full">
       {/* 상단Nav */}
       <div className="flex items-center justify-between py-1 px-1">
-        <button type="button" className="flex p-3" onClick={() => router.back()}>
+        <button type="button" aria-label="뒤로 가기" className="flex p-3" onClick={() => router.back()}>
           <ArrowLeftIcon className="w-6 h-6 text-gray-900" />
         </button>
 
-        <button type="button" className="flex p-3" onClick={handleMenuToggle}>
+        <button type="button" aria-label="게시글 메뉴 열기" className="flex p-3" onClick={handleMenuToggle}>
           <VscKebabVertical className="mt-1 w-6 h-6 text-gray-900" />
         </button>
       </div>
@@ -241,6 +241,7 @@ export default function ClientCommunity({ postId }: { postId: number }) {
 
       <div className="flex justify-center items-center gap-4">
         <button
+          aria-label={changeLiked ? "좋아요 취소" : "좋아요"}
           className="flex flex-row justify-center items-center gap-1 flex-1"
           onClick={handleLike}
         >
@@ -251,10 +252,9 @@ export default function ClientCommunity({ postId }: { postId: number }) {
           )}
           <span className="text-gray-700">{changeLikesCnt}</span>
         </button>
-        <button className="flex justify-center items-center gap-1 flex-1">
+        <button aria-label="링크 복사" className="flex justify-center items-center gap-1 flex-1" onClick={handleCopyLink}>
           <RiShare2Line
             className="w-5 h-5 text-gray-700"
-            onClick={handleCopyLink}
           />
           <p className="text-gray-500"></p>
         </button>

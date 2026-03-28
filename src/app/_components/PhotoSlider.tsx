@@ -140,6 +140,7 @@ const DetailPagePhotoSlider = ({ imageUrls, alt, sliderType = "community" }: Pro
         {/* 왼쪽 화살표 */}
         {!isTouchDevice && isHover && (
           <button
+            aria-label="이전 이미지"
             className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full"
             onClick={handlePrev}
           >
@@ -150,6 +151,7 @@ const DetailPagePhotoSlider = ({ imageUrls, alt, sliderType = "community" }: Pro
         {/* 오른쪽 화살표 */}
         {!isTouchDevice && isHover && (
           <button
+            aria-label="다음 이미지"
             className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full"
             onClick={handleNext}
           >

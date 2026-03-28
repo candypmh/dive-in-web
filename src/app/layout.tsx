@@ -42,9 +42,10 @@ export default async function RootLayout({
           </div>
 
         <Script
+          id="kakao-map-sdk"
           type="text/javascript"
-          src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_APP_KEY}&autoload=false`}
-          strategy="beforeInteractive"
+          src={`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_APP_KEY}&autoload=false`}
+          strategy="afterInteractive"
         />
         <KakaoSdkScript />
         <SpeedInsights />

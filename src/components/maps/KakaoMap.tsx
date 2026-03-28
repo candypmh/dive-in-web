@@ -24,11 +24,6 @@ const KakaoMap = ({
     const mapElement = mapContainerRef.current;
     const isKakaoScriptLoaded = isKakaoScriptLoadedRef.current;
 
-    if (!window.kakao) {
-      console.error("Kakao Map SDK is not loaded.");
-      return;
-    }
-
     const createMap = () => {
       const lat = center.lat;
       const lng = center.lng;
@@ -56,14 +51,22 @@ const KakaoMap = ({
       setKakaoMap(map);
     };
 
-    window.kakao.maps.load(() => {
-      isKakaoScriptLoadedRef.current = true;
-      createMap();
-    });
+    const initMap = () => {
+      window.kakao.maps.load(() => {
+        isKakaoScriptLoadedRef.current = true;
+        createMap();
+      });
+    };
 
-    if (isKakaoScriptLoaded) {
-      createMap();
+    if (!window.kakao) {
+      const script = document.querySelector('script[src*="dapi.kakao.com"]');
+      if (script) {
+        script.addEventListener("load", initMap);
+      }
+      return;
     }
+
+    initMap();
   }, [center]);
 
   return (

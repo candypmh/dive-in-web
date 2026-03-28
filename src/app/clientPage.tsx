@@ -1,20 +1,16 @@
 "use client";
 
-import Image from "next/image";
 import { CiSearch } from "react-icons/ci";
 import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 import { useSearchStore } from "@/store/searchStore";
-import InstructorProfile from "./_components/InstructorProfile";
-import LessonChip from "@/components/ui/Chip";
-import { LuEye } from "react-icons/lu";
-import { FiMessageSquare } from "react-icons/fi";
-import { TiHeartOutline } from "react-icons/ti";
 import { HomeProps } from "@/types/home";
 import { CATEGORYNAME_TO_LABEL, CategoryName } from "@/constants/categories";
 import { calcDDay } from "@/utils";
+import LessonCard from "./_components/LessonCard";
+import CommunityCard from "./_components/CommunityCard";
 
 export default function HomeClient({ home }: { home: HomeProps }) {
   const router = useRouter();
@@ -73,29 +69,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
         {/* 카드리스트 */}
         <div className="grid grid-cols-2 gap-6 px-8 py-1">
           {popularLessons.map((lesson) => (
-            <Link
-              key={lesson.id}
-              href={`/lessons/${lesson.id}`}
-              className="p-6 rounded-lg shadow-sm bg-gray-100 flex flex-col h-full hover:bg-gray-200 transition-colors"
-            >
-              {/* 카드 1*/}
-              <div className="flex flex-wrap gap-2 items-center pb-2">
-                {[...lesson.level.split(","), ...lesson.keyword.split(",")].map(
-                  (tag, index) => (
-                    <LessonChip key={index} label={tag.trim()} />
-                  )
-                )}
-              </div>
-              <h4 className="pb-10 text-base sm:text-xl font-bold text-gray-900 mb-1">
-                {lesson.lessonName}
-              </h4>
-              <div className="mt-auto">
-                <InstructorProfile
-                  avatar={lesson.instructorImgUrl}
-                  name={lesson.instructorName}
-                />
-              </div>
-            </Link>
+            <LessonCard key={lesson.id} lesson={lesson} />
           ))}
         </div>
       </section>
@@ -110,29 +84,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
         {/* 카드리스트 */}
         <div className="grid grid-cols-2 gap-6 px-8 py-1">
           {NewLessons.map((lesson) => (
-            <Link
-              key={lesson.id}
-              href={`/lessons/${lesson.id}`}
-              className="p-6 rounded-lg shadow-sm bg-gray-100 flex flex-col h-full hover:bg-gray-200 transition-colors"
-            >
-              {/* 카드 1*/}
-              <div className="flex flex-wrap gap-2 items-center pb-2">
-                {[...lesson.level.split(","), ...lesson.keyword.split(",")].map(
-                  (tag, index) => (
-                    <LessonChip key={index} label={tag.trim()} />
-                  )
-                )}
-              </div>
-              <h4 className="pb-10 text-base sm:text-xl font-bold text-gray-900 mb-1">
-                {lesson.lessonName}
-              </h4>
-              <div className="mt-auto">
-                <InstructorProfile
-                  avatar={lesson.instructorImgUrl}
-                  name={lesson.instructorName}
-                />
-              </div>
-            </Link>
+            <LessonCard key={lesson.id} lesson={lesson} />
           ))}
         </div>
       </section>
@@ -152,61 +104,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
         {/* 카드리스트 */}
         <div className="flex flex-wrap gap-6 px-8 py-1">
           {topViewPostList.map((community) => (
-            <Link
-              href={"/community/posts/" + community.postId}
-              key={community.postId}
-              className="px-4 py-2 rounded-lg shadow-sm bg-gray-100 w-full"
-            >
-              {/* 카드 1*/}
-              <div className="items-center gap-2 pb-2">
-                <div className="flex flex-row justify-between items-start w-full rounded-lg px-2 gap-3">
-                  {/* 왼쪽 */}
-                  <div className="flex-1 min-w-0 max-w-[80%] flex flex-col items-start gap-1.5 overflow-hidden">
-                    <div
-                      className={`text-label_sb px-1.5 py-1 mt-4 rounded bg-chip-1 text-chip-1-foreground inline-block w-fit`}
-                    >
-                      <p>{community.categoryName ? CATEGORYNAME_TO_LABEL[community.categoryName as CategoryName] : "\u00A0"}</p>
-                    </div>
-                    <div className="flex flex-col gap-0.5">
-                      <h3 className="text-gray-900 text-body_bb line-clamp-1 sm:line-clamp-none">
-                        {community.title}
-                      </h3>
-                    </div>
-                    <div className="flex items-center gap-1 overflow-hidden min-w-0">
-                      <p className="text-body_b text-gray-600 w-full line-clamp-2 sm:line-clamp-none">
-                        {community.content}
-                      </p>
-                    </div>
-                    <div className="flex flex-row items-center gap-4">
-                      <div className="flex items-center gap-1">
-                        <LuEye className="w-5 h-5 text-gray-400" />
-                        <p className="text-gray-500"> {community.viewCnt}</p>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <FiMessageSquare className="w-5 h-5 text-gray-400" />
-                        <p className="text-gray-500">{community.cmmtCnt}</p>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <TiHeartOutline className="w-5 h-5 text-gray-400" />
-                        <p className="text-gray-500"> {community.likesCnt}</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* 오른쪽 */}
-                  <div className="mt-6 items-center w-24 flex-shrink-0">
-                    <Image
-                      src={community.image?.imageUrl || "/empty/community_thumbnail.png"}
-                      alt="썸네일"
-                      width={96}
-                      height={96}
-                      className="w-24 h-24 object-cover rounded-lg"
-                      unoptimized
-                    />
-                  </div>
-                </div>
-              </div>
-            </Link>
+            <CommunityCard key={community.postId} community={community} />
           ))}
         </div>
       </section>
@@ -224,61 +122,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
         {/* 카드리스트 */}
         <div className="flex flex-wrap gap-6 px-8 py-1">
           {NewCommunities.map((community) => (
-            <Link
-              href={"/community/posts/" + community.postId}
-              key={community.postId}
-              className="px-4 py-2 rounded-lg shadow-sm bg-gray-100 w-full"
-            >
-              {/* 카드 1*/}
-              <div className="items-center gap-2 pb-2">
-                <div className="flex flex-row justify-between items-start w-full rounded-lg px-2 gap-3">
-                  {/* 왼쪽 */}
-                  <div className="flex-1 min-w-0 max-w-[80%] flex flex-col items-start gap-1.5 overflow-hidden">
-                    <div
-                      className={`text-label_sb px-1.5 py-1 mt-4 rounded bg-chip-1 text-chip-1-foreground inline-block w-fit`}
-                    >
-                      <p>{community.categoryName ? CATEGORYNAME_TO_LABEL[community.categoryName as CategoryName] : "\u00A0"}</p>
-                    </div>
-                    <div className="flex flex-col gap-0.5">
-                      <h3 className="text-gray-900 text-body_bb line-clamp-1 sm:line-clamp-none">
-                        {community.title}
-                      </h3>
-                    </div>
-                    <div className="flex items-center gap-1 overflow-hidden min-w-0">
-                      <p className="text-body_b text-gray-600 w-full line-clamp-2 sm:line-clamp-none">
-                        {community.content}
-                      </p>
-                    </div>
-                    <div className="flex flex-row items-center gap-4">
-                      <div className="flex items-center gap-1">
-                        <LuEye className="w-5 h-5 text-gray-400" />
-                        <p className="text-gray-500"> {community.viewCnt}</p>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <FiMessageSquare className="w-5 h-5 text-gray-400" />
-                        <p className="text-gray-500">{community.cmmtCnt}</p>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <TiHeartOutline className="w-5 h-5 text-gray-400" />
-                        <p className="text-gray-500"> {community.likesCnt}</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* 오른쪽 */}
-                  <div className="mt-6 items-center w-24 flex-shrink-0">
-                    <Image
-                      src={community.image?.imageUrl || "/empty/community_thumbnail.png"}
-                      alt="썸네일"
-                      width={96}
-                      height={96}
-                      className="w-24 h-24 object-cover rounded-lg"
-                      unoptimized
-                    />
-                  </div>
-                </div>
-              </div>
-            </Link>
+            <CommunityCard key={community.postId} community={community} />
           ))}
         </div>
       </section>

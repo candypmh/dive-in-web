@@ -7,13 +7,11 @@ import { RiShare2Line } from "react-icons/ri";
 import WriterProfile from "../../_components/WriterProfile";
 import ArrowLeftIcon from "@/components/icons/ArrowLeftIcon";
 import { VscKebabVertical } from "react-icons/vsc";
-import { GoPencil } from "react-icons/go";
-import { GoTrash } from "react-icons/go";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CommunityProps } from "@/types/community";
 import { CATEGORYNAME_TO_LABEL } from "@/constants/categories";
 import CustomModal from "@/app/_components/CustomModal";
+import PostMenuSlide from "./_components/PostMenuSlide";
 import { getPost, deletePost, toggleLike, addComment } from "@/lib/community/communityRepo.client";
 import toast from "react-hot-toast";
 import { formatKST } from "@/utils";
@@ -314,65 +312,14 @@ export default function ClientCommunity({ postId }: { postId: number }) {
         )}
       </div>
 
-      {/* 배경 */}
-      {isMenuOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300"
-          style={{ zIndex: 40 }}
-          onClick={handleMenuClose}
-        />
-      )}
-
-      {/* 글 메뉴 슬라이드 */}
-      <div
-        className={`fixed bottom-0 left-1/2 w-full transform -translate-x-1/2 bg-white p-4 pt-6 pb-6 border-t rounded-t-2xl transition-transform duration-300 ${
-          isMenuOpen ? "translate-y-0" : "translate-y-full"
-        }`}
-        style={{
-          width: "100%",
-          maxWidth: "48rem",
-          boxShadow: "0 -1px 3px rgba(0, 0, 0, 0.05)",
-          zIndex: 80,
-        }}
-      >
-        <ul>
-          <li
-            className="py-2 text-sm font-bold hover:bg-gray-100 cursor-pointer"
-            onClick={handleCopyLink}
-          >
-            <div className="flex justify-start items-center gap-1 flex-1">
-              <RiShare2Line className="w-5 h-5 text-gray-900" />
-              <p className="text-gray-900">공유하기</p>
-            </div>
-          </li>
-
-          <li
-            className="py-2 text-sm font-bold hover:bg-gray-100 cursor-pointer"
-            onClick={() => {}}
-          >
-            <div
-              className="flex justify-start items-center gap-1 flex-1"
-              onClick={() =>
-                router.push(`/community/posts/${community.postId}/edit`)
-              }
-            >
-              <GoPencil className="w-5 h-5 text-gray-900" />
-              <p className="text-gray-900">수정하기</p>
-            </div>
-          </li>
-          <li
-            className="py-2 text-sm font-bold hover:bg-gray-100 cursor-pointer"
-            onClick={handleDeleteModalOpen}
-          >
-            <div className="flex justify-start items-center gap-1 flex-1">
-              <GoTrash className="w-5 h-5 text-red-500" />
-              <p className="text-red-500">삭제하기</p>
-            </div>
-
-          </li>
-        </ul>
-      </div>
-        <CustomModal
+      <PostMenuSlide
+        isOpen={isMenuOpen}
+        onClose={handleMenuClose}
+        onShare={handleCopyLink}
+        onEdit={() => router.push(`/community/posts/${community.postId}/edit`)}
+        onDeleteClick={handleDeleteModalOpen}
+      />
+      <CustomModal
               isOpen={isModalOpen}
               title="삭제 확인"
               message="정말로 게시글을 삭제하시겠습니까?"

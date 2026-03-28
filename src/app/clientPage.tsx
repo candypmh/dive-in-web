@@ -16,13 +16,24 @@ import { getHome } from "@/api/server/home";
 import { HomeProps } from "@/types/home";
 import { CATEGORYNAME_TO_LABEL, CategoryName } from "@/constants/categories";
 
+function calcDDay(period: string | null): string {
+  if (!period) return "";
+  const startStr = period.split("~")[0].trim().replace(/\./g, "-");
+  const start = new Date(startStr);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const diff = Math.ceil((start.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+  if (diff > 0) return `D-${diff}`;
+  if (diff === 0) return "D-Day";
+  return `D+${Math.abs(diff)}`;
+}
+
 // export default function Home({content}: {content: string}) {
 export default function HomeClient({ home }: { home: HomeProps }) {
   const router = useRouter();
   // useEffect(() => {
   //   router.replace("/lessons");
   // }, [router]);
-  const [maxLength, setMaxLength] = useState(10);
   const [homeKeyword, setHomeKeyword] = useState("");
   const { setKeyword } = useSearchStore();
 
@@ -32,22 +43,6 @@ export default function HomeClient({ home }: { home: HomeProps }) {
   const NewCommunities = home.newPostList;
   const swimContests = home.competitionPostList;
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 640) {
-        setMaxLength(16);
-      } else if (window.innerWidth < 1024) {
-        setMaxLength(30);
-      } else {
-        setMaxLength(40);
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-    handleResize();
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   return (
     // <div className="flex flex-col items-center justify-center h-screen bg-white">
@@ -117,7 +112,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
                   )
                 )}
               </div>
-              <h4 className="pb-10 text-xl font-bold text-gray-900 mb-1">
+              <h4 className="pb-10 text-base sm:text-xl font-bold text-gray-900 mb-1">
                 {lesson.lessonName}
               </h4>
               <div className="mt-auto">
@@ -154,7 +149,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
                   )
                 )}
               </div>
-              <h4 className="pb-10 text-xl font-bold text-gray-900 mb-1">
+              <h4 className="pb-10 text-base sm:text-xl font-bold text-gray-900 mb-1">
                 {lesson.lessonName}
               </h4>
               <div className="mt-auto">
@@ -195,7 +190,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
                   className=""
                 > */}
                 {/* 박스 내용물 하나 */}
-                <div className="flex flex-row justify-between items-start w-full rounded-lg px-2">
+                <div className="flex flex-row justify-between items-start w-full rounded-lg px-2 gap-3">
                   {/* 왼쪽 */}
                   <div className="flex-1 min-w-0 max-w-[80%] flex flex-col items-start gap-1.5 overflow-hidden">
                     {/* 여기가 태그/인기 */}
@@ -205,17 +200,14 @@ export default function HomeClient({ home }: { home: HomeProps }) {
                       <p>{community.categoryName ? CATEGORYNAME_TO_LABEL[community.categoryName as CategoryName] : "\u00A0"}</p>
                     </div>
                     <div className="flex flex-col gap-0.5">
-                      <h3 className="text-gray-900 text-body_bb">
-                        {/* {community.communityTitle} */}
+                      <h3 className="text-gray-900 text-body_bb line-clamp-1 sm:line-clamp-none">
                         {community.title}
                       </h3>
                     </div>
                     {/* <p className="text-body_b text-gray-600 block truncate xs:max-w-[100px] sm:max-w-[200px] md:max-w-[300px] lg:max-w-[400px] "> */}
                     <div className="flex items-center gap-1 overflow-hidden min-w-0">
-                      <p className="text-body_b text-gray-600 block truncate w-full">
-                        {community.content.length > maxLength
-                          ? `${community.content.substring(0, maxLength)}...`
-                          : community.content}
+                      <p className="text-body_b text-gray-600 w-full line-clamp-2 sm:line-clamp-none">
+                        {community.content}
                       </p>
                     </div>
 
@@ -289,7 +281,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
                   className=""
                 > */}
                 {/* 박스 내용물 하나 */}
-                <div className="flex flex-row justify-between items-start w-full rounded-lg px-2">
+                <div className="flex flex-row justify-between items-start w-full rounded-lg px-2 gap-3">
                   {/* 왼쪽 */}
                   <div className="flex-1 min-w-0 max-w-[80%] flex flex-col items-start gap-1.5 overflow-hidden">
                     {/* 여기가 태그/인기 */}
@@ -299,17 +291,14 @@ export default function HomeClient({ home }: { home: HomeProps }) {
                       <p>{community.categoryName ? CATEGORYNAME_TO_LABEL[community.categoryName as CategoryName] : "\u00A0"}</p>
                     </div>
                     <div className="flex flex-col gap-0.5">
-                      <h3 className="text-gray-900 text-body_bb">
-                        {/* {community.communityTitle} */}
+                      <h3 className="text-gray-900 text-body_bb line-clamp-1 sm:line-clamp-none">
                         {community.title}
                       </h3>
                     </div>
                     {/* <p className="text-body_b text-gray-600 block truncate xs:max-w-[100px] sm:max-w-[200px] md:max-w-[300px] lg:max-w-[400px] "> */}
                     <div className="flex items-center gap-1 overflow-hidden min-w-0">
-                      <p className="text-body_b text-gray-600 block truncate w-full">
-                        {community.content.length > maxLength
-                          ? `${community.content.substring(0, maxLength)}...`
-                          : community.content}
+                      <p className="text-body_b text-gray-600 w-full line-clamp-2 sm:line-clamp-none">
+                        {community.content}
                       </p>
                     </div>
 
@@ -393,7 +382,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
                   className=""
                 > */}
                   {/* 박스 내용물 하나 */}
-                  <div className="flex flex-row justify-between items-start w-full rounded-lg px-2">
+                  <div className="flex flex-row justify-between items-start w-full rounded-lg px-2 gap-3">
                     {/* 왼쪽 */}
                     <div className="flex-1 min-w-0 max-w-[80%] flex flex-col items-start gap-1.5 overflow-hidden">
                       {/* 여기가 태그/인기 */}
@@ -443,7 +432,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
                     {/* <div className="flex flex-col items-center w-24 flex-shrink-0"> */}
                     <div className="mt-6 items-center flex-shrink-0">
                       {/* <div className="mt-6 w-24 h-24 overflow-hidden rounded-lg"> */}
-                      <p className="mr-2 font-bold">{contest.dDay}</p>
+                      <p className="mr-2 font-bold">{calcDDay(contest.period)}</p>
                       {/* <img
                           src={
                             community.images?.imageUrl ||

@@ -65,7 +65,7 @@ export const getCommunity = async (postId: string): Promise<CommunityProps|null>
 
 export const createCommunity = async (formData: FormData) => {
   try {
-    const response = await fetch("${process.env.NEXT_PUBLIC_API_BASE_URL}/community/posts", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/community/posts`, {
       method: "POST",
       body: formData,
       headers: {
@@ -165,7 +165,7 @@ export const getComments = async (postId: number) => {
 export const createComment = async (formData: FormData) => {
   try {
     const response = await fetch(
-      "${process.env.NEXT_PUBLIC_API_BASE_URL}/community/comments",
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/community/comments`,
       {
         method: "POST",
         headers: {

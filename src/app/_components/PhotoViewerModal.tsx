@@ -5,7 +5,7 @@ import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import { url } from "inspector";
 import { XIcon } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 
 type Props = {
@@ -58,21 +58,32 @@ const ImageSlider = ({ urls, currentIndex, setCurrentIndex }: { urls: string[], 
   // const imageLength = urls.length;
   const { sliderRef, imageRefs, visibleImageNumber } = usePhotoSlider(urls);
   const [isHover, setIsHover] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const touchStartX = useRef<number>(0);
 
-  const handlePrev = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
-    } else {
-      setCurrentIndex(urls.length - 1);
-    }
+  useEffect(() => {
+    setIsTouchDevice(window.matchMedia("(pointer: coarse)").matches);
+  }, []);
+
+  const goToPrev = () => {
+    setCurrentIndex(currentIndex > 0 ? currentIndex - 1 : urls.length - 1);
   };
 
-  const handleNext = () => {
-    if (currentIndex < urls.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-    } else {
-      setCurrentIndex(0);
-    }
+  const goToNext = () => {
+    setCurrentIndex(currentIndex < urls.length - 1 ? currentIndex + 1 : 0);
+  };
+
+  const handlePrev = () => goToPrev();
+  const handleNext = () => goToNext();
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const delta = touchStartX.current - e.changedTouches[0].clientX;
+    if (delta > 50) goToNext();
+    if (delta < -50) goToPrev();
   };
 
   return (
@@ -83,6 +94,8 @@ const ImageSlider = ({ urls, currentIndex, setCurrentIndex }: { urls: string[], 
         <div
           className={`h-full w-full snap-x snap-mandatory flex overflow-x-auto no-scrollbar`}
           ref={sliderRef}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
         >
           {urls.map((url, index) => (
             <div
@@ -107,8 +120,8 @@ const ImageSlider = ({ urls, currentIndex, setCurrentIndex }: { urls: string[], 
         </div>
 
         {/* 왼쪽 버튼 */}
-          { isHover && (
-            <button 
+          {!isTouchDevice && isHover && (
+            <button
               className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full"
               onClick={handlePrev}>
               <FaChevronLeft />
@@ -116,7 +129,7 @@ const ImageSlider = ({ urls, currentIndex, setCurrentIndex }: { urls: string[], 
           )}
 
         {/* 오른쪽 버튼 */}
-          { isHover && (
+          {!isTouchDevice && isHover && (
             <button
               className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full"
               onClick={handleNext}

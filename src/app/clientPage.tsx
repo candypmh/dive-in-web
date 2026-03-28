@@ -15,18 +15,7 @@ import { TiHeartOutline } from "react-icons/ti";
 import { getHome } from "@/api/server/home";
 import { HomeProps } from "@/types/home";
 import { CATEGORYNAME_TO_LABEL, CategoryName } from "@/constants/categories";
-
-function calcDDay(period: string | null): string {
-  if (!period) return "";
-  const startStr = period.split("~")[0].trim().replace(/\./g, "-");
-  const start = new Date(startStr);
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const diff = Math.ceil((start.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-  if (diff > 0) return `D-${diff}`;
-  if (diff === 0) return "D-Day";
-  return `D+${Math.abs(diff)}`;
-}
+import { calcDDay } from "@/utils";
 
 // export default function Home({content}: {content: string}) {
 export default function HomeClient({ home }: { home: HomeProps }) {

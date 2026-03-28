@@ -1,17 +1,19 @@
 "use client";
 
-// export default function CommentsPage() {
-//   return <div>댓글 페이지</div>;
-// }
-
-import { RiShare2Line } from "react-icons/ri";
 import { formatKST } from "@/utils";
 import WriterProfile from "../_components/WriterProfile";
 import { VscKebabVertical } from "react-icons/vsc";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { GoPencil } from "react-icons/go";
 import { GoTrash } from "react-icons/go";
 import { CommentProps } from "@/types/community";
+import { deleteComment, updateComment } from "@/lib/community/communityRepo.client";
+import toast from "react-hot-toast";
+
+type CommentComponentProps = CommentProps & {
+  postId: number;
+  onCommentChange: (comments: CommentProps[]) => void;
+};
 
 export const Comment = ({
   cmntId,
@@ -22,95 +24,110 @@ export const Comment = ({
   writer,
   writerProfile,
   likeCnt,
-  createdAt
-}: CommentProps) => {
+  createdAt,
+  postId,
+  onCommentChange,
+}: CommentComponentProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // const isWriter = writerId === loggedUserId;
+  const [isEditing, setIsEditing] = useState(false);
+  const [editContent, setEditContent] = useState(content);
+  const isMyComment = writer === "나";
 
-  //케밥 메뉴 열고닫기
-  const handleMenuToggle = () => {
-    setIsMenuOpen((prev) => !prev);
+  const handleMenuToggle = () => setIsMenuOpen((prev) => !prev);
+  const handleMenuClose = () => setIsMenuOpen(false);
+
+  const handleDelete = async () => {
+    try {
+      const updated = await deleteComment(postId, cmntId);
+      onCommentChange(updated);
+      toast.success("댓글이 삭제되었습니다.");
+    } catch {
+      toast.error("댓글 삭제에 실패했습니다.");
+    }
+    setIsMenuOpen(false);
   };
 
-  //배경 클릭시 메뉴 닫기
-  const handleMenuClose = () => {
-    setIsMenuOpen(false);
+  const handleEditSubmit = async () => {
+    if (!editContent.trim()) return;
+    try {
+      const updated = await updateComment(postId, cmntId, editContent);
+      onCommentChange(updated);
+      setIsEditing(false);
+      toast.success("댓글이 수정되었습니다.");
+    } catch {
+      toast.error("댓글 수정에 실패했습니다.");
+    }
   };
 
   return (
     <div key={cmntId} className="py-3">
-      {/* 작성자 */}
       <div className="flex flex-row items-start px-4">
-        <WriterProfile
-          width={24}
-          height={24}
-          avatar={writerProfile}
-          name={writer}
-        />
-
-        {/* <div className="flex flex-col"> */}
-          {/* <p className="text-sm font-semibold text-gray-700"> */}
-            {/* {community.userName || "작성자"} */}
-            {/* {writer} */}
-          {/* </p> */}
-        {/* </div> */}
-
+        <WriterProfile width={24} height={24} avatar={writerProfile} name={writer} />
+        {isMyComment && (
           <button type="button" className="flex ml-auto">
-            <VscKebabVertical
-              className="w-6 h-6 text-gray-900"
-              onClick={handleMenuToggle}
-            />
+            <VscKebabVertical className="w-6 h-6 text-gray-900" onClick={handleMenuToggle} />
           </button>
-        {/* {isWriter && (
-          <button type="button" className="flex ml-auto">
-            <VscKebabVertical
-              className="w-6 h-6 text-gray-900"
-              onClick={handleMenuOpen}
-            />
-          </button>
-        )} */}
+        )}
       </div>
 
-
-      <p className="text-gray-700 px-4 mt-2">{content}</p>
+      {isEditing ? (
+        <div className="px-4 mt-2 flex flex-col gap-2">
+          <textarea
+            value={editContent}
+            onChange={(e) => setEditContent(e.target.value)}
+            className="w-full text-sm text-gray-700 border border-gray-300 rounded p-2 resize-none focus:outline-none"
+            rows={3}
+          />
+          <div className="flex gap-2 justify-end">
+            <button
+              type="button"
+              onClick={() => setIsEditing(false)}
+              className="text-xs text-gray-500"
+            >
+              취소
+            </button>
+            <button
+              type="button"
+              onClick={handleEditSubmit}
+              className="text-xs font-bold text-blue-900"
+            >
+              저장
+            </button>
+          </div>
+        </div>
+      ) : (
+        <p className="text-gray-700 px-4 mt-2">{editContent}</p>
+      )}
 
       <div className="flex flex-row items-center gap-2 mt-2">
         <span className="text-sm text-gray-500 pl-4">{formatKST(createdAt)}</span>
-        <button type="button" className="text-xs text-gray-600">
-          <span>답글 쓰기</span>
-        </button>
       </div>
 
-      {/* 배경 */}
       {isMenuOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300"
-        style={{zIndex: 40}} onClick={handleMenuClose} />
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300"
+          style={{ zIndex: 90 }}
+          onClick={handleMenuClose}
+        />
       )}
 
-
-      {/* 댓글 메뉴 슬라이드 */}
       <div
         className={`fixed bottom-0 left-1/2 w-full transform -translate-x-1/2 bg-white p-4 pt-6 pb-6 border-t rounded-t-2xl transition-transform duration-300 ${
           isMenuOpen ? "translate-y-0" : "translate-y-full"
         }`}
-        style={{
-          zIndex: 50,
-          width: "100%",
-          maxWidth: "48rem",
-          boxShadow: "0 -1px 3px rgba(0, 0, 0, 0.05)",
-        }}
+        style={{ zIndex: 100, width: "100%", maxWidth: "48rem", boxShadow: "0 -1px 3px rgba(0, 0, 0, 0.05)" }}
       >
         <ul>
-          <li className="py-2 text-sm font-bold hover:bg-gray-100 cursor-pointer">
+          <li
+            className="py-2 text-sm font-bold hover:bg-gray-100 cursor-pointer"
+            onClick={() => { setIsEditing(true); setIsMenuOpen(false); }}
+          >
             <div className="flex justify-start items-center gap-1 flex-1">
               <GoPencil className="w-5 h-5 text-gray-900" />
               <p className="text-gray-900">수정하기</p>
             </div>
           </li>
-          <li
-            className="py-2 text-sm font-bold hover:bg-gray-100 cursor-pointer"
-            onClick={() => {}}
-          >
+          <li className="py-2 text-sm font-bold hover:bg-gray-100 cursor-pointer" onClick={handleDelete}>
             <div className="flex justify-start items-center gap-1 flex-1">
               <GoTrash className="w-5 h-5 text-red-500" />
               <p className="text-red-500">삭제하기</p>

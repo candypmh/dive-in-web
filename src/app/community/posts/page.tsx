@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import ArrowLeftIcon from "@/components/icons/ArrowLeftIcon";
 import Link from "next/link";
 import { IoCheckmark } from "react-icons/io5";
@@ -12,7 +13,6 @@ import OpenGraphPreview from "@/app/_components/OpenGraphLinkReview";
 import { createCommunity } from "@/api/server/community";
 import toast from "react-hot-toast";
 
-// const CATEGORIES = ["소통해요", "수영장", "수영물품", "수영대회"];
 const CATEGORIES = [
   { name: "소통해요", key: "COMMUNICATION" },
   { name: "수영장", key: "POOL" },
@@ -24,7 +24,6 @@ export default function CreatePost() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("소통해요");
   const [content, setContent] = useState("");
-  // const [textareaHeight, setTextareaHeight] = useState("500px");
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const [images, setImages] = useState<File[]>([]);
@@ -36,16 +35,7 @@ export default function CreatePost() {
   const [link, setLink] = useState("");
   type OgPreview = { title: string; description: string; image: string | null; url: string };
   const [preview, setPreview] = useState<OgPreview | null>(null); //OG데이터
-  // const [ogContent, setOgContent] = useState("");
   const router = useRouter();
-
-  // useEffect(() => {
-  //   if (isLinkOpen) {
-  //     document.addEventListener("mousedown", handleOutsideClick);
-  //   } else {
-  //     document.removeEventListener("mousedown", handleOutsideClick);
-  //   }
-  // }, [isLinkOpen]);
 
   //textarea하단 공백 조절
   useEffect(() => {
@@ -164,19 +154,7 @@ export default function CreatePost() {
     }
   };
 
-  // const handleOutsideClick = (e: MouseEvent) => {
-  //   if (
-  //     containerRef.current &&
-  //     !containerRef.current.contains(e.target as Node)
-  //   ) {
-  //     setIsLinkOpen(false);
-  //   }
-  // };
-
- 
-
   return (
-    // <div className="flex flex-col pb-10 relative h-full">
     <div className="flex flex-col h-screen pb-[4.5rem]">
       <div className="flex items-center justify-between py-1 px-1">
         <Link href="/community/posts/list?category=none" className="flex p-3">
@@ -184,7 +162,6 @@ export default function CreatePost() {
         </Link>
 
         <h2 className="text-heading_3 font-bold text-center">글쓰기</h2>
-        {/* <Link href={`/communities/${community.id}`} className="flex p-3"> */}
 
         <button type="submit" form="createPostForm" className="flex p-3" disabled={isLoading}>
           <IoCheckmark className={`w-6 h-6 ${isLoading ? "text-gray-200" : "text-gray-400 hover:text-blue-900"}`} />
@@ -284,7 +261,6 @@ export default function CreatePost() {
             className="text-base w-full px-4 py-2 pb-1 resize-none overflow-y-auto border-none border-gray-300 focus:outline-none scrollbar-hide"
             onChange={(e) => setContent(e.target.value)}
             onInput={(e) => {
-              // e.currentTarget.style.height = "auto";
               e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
             }}
           />
@@ -293,10 +269,13 @@ export default function CreatePost() {
           {preview && (
             <div className="p-4 mt-4 border rounded bg-gray-100 flex gap-4 items-start">
               {preview.image && (
-                <img
+                <Image
                   src={preview.image || "/empty/community_thumbnail.png"}
                   alt="미리보기 페이지"
+                  width={80}
+                  height={80}
                   className="w-20 h-20 object-cover rounded border flex-shrink-0"
+                  unoptimized
                 />
               )}
               <div className="flex flex-col justify-center overflow-hidden pt-1.5">

@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { LuSend } from "react-icons/lu";
 import { TiHeartOutline, TiHeartFullOutline } from "react-icons/ti";
@@ -6,13 +7,11 @@ import { RiShare2Line } from "react-icons/ri";
 import WriterProfile from "../../_components/WriterProfile";
 import ArrowLeftIcon from "@/components/icons/ArrowLeftIcon";
 import { VscKebabVertical } from "react-icons/vsc";
-import { GoPencil } from "react-icons/go";
-import { GoTrash } from "react-icons/go";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CommunityProps } from "@/types/community";
 import { CATEGORYNAME_TO_LABEL } from "@/constants/categories";
 import CustomModal from "@/app/_components/CustomModal";
+import PostMenuSlide from "./_components/PostMenuSlide";
 import { getPost, deletePost, toggleLike, addComment } from "@/lib/community/communityRepo.client";
 import toast from "react-hot-toast";
 import { formatKST } from "@/utils";
@@ -41,8 +40,6 @@ export default function ClientCommunity({ postId }: { postId: number }) {
       setChangeLikesCnt(post.likesCnt);
     });
   }, [postId]);
-  // console.warn("코멘트 안오냐?:::::::::::", community.commentList);
-
   //og관련
   type OgPreview = { title: string; description: string; image: string | null; url: string };
   const [preview, setPreview] = useState<OgPreview | null>(null);
@@ -200,18 +197,13 @@ export default function ClientCommunity({ postId }: { postId: number }) {
         </p>
 
         <div className="mt-4 flex justify-center max-w-fit mx-auto gap-4">
-          {/* <div className="mt-4 flex justify-center"> */}
           {community.images.length > 0 ? (
-            // <div key={index} className="overflow-hidden rounded-lg">
-            // <div className="mt-4 flex justify-center">
             <DetailPagePhotoSlider
               imageUrls={community.images.map((image) => image.imageUrl)}
               alt="게시글 이미지"
               sliderType="community"
             />
           ) : (
-            // </div>
-            // 이미지가 없을시
             <p className="text-gray-500"></p>
           )}
         </div>
@@ -225,10 +217,13 @@ export default function ClientCommunity({ postId }: { postId: number }) {
           >
             <div className="flex gap-4">
               {preview.image && (
-                <img
+                <Image
                   src={preview.image}
                   alt="미리보기 이미지"
+                  width={80}
+                  height={80}
                   className="w-20 h-20 object-cover rounded border"
+                  unoptimized
                 />
               )}
               <div className="overflow-hidden">
@@ -269,6 +264,9 @@ export default function ClientCommunity({ postId }: { postId: number }) {
       <CommentList
         commentList={community.commentList}
         postId={community.postId}
+        onCommentChange={(updated) =>
+          setCommunity((prev) => prev ? { ...prev, commentList: updated, cmntCnt: updated.length } : prev)
+        }
       />
 
       {/* 댓글 상자 */}
@@ -314,65 +312,14 @@ export default function ClientCommunity({ postId }: { postId: number }) {
         )}
       </div>
 
-      {/* 배경 */}
-      {isMenuOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300"
-          style={{ zIndex: 40 }}
-          onClick={handleMenuClose}
-        />
-      )}
-
-      {/* 글 메뉴 슬라이드 */}
-      <div
-        className={`fixed bottom-0 left-1/2 w-full transform -translate-x-1/2 bg-white p-4 pt-6 pb-6 border-t rounded-t-2xl transition-transform duration-300 ${
-          isMenuOpen ? "translate-y-0" : "translate-y-full"
-        }`}
-        style={{
-          width: "100%",
-          maxWidth: "48rem",
-          boxShadow: "0 -1px 3px rgba(0, 0, 0, 0.05)",
-          zIndex: 80,
-        }}
-      >
-        <ul>
-          <li
-            className="py-2 text-sm font-bold hover:bg-gray-100 cursor-pointer"
-            onClick={handleCopyLink}
-          >
-            <div className="flex justify-start items-center gap-1 flex-1">
-              <RiShare2Line className="w-5 h-5 text-gray-900" />
-              <p className="text-gray-900">공유하기</p>
-            </div>
-          </li>
-
-          <li
-            className="py-2 text-sm font-bold hover:bg-gray-100 cursor-pointer"
-            onClick={() => {}}
-          >
-            <div
-              className="flex justify-start items-center gap-1 flex-1"
-              onClick={() =>
-                router.push(`/community/posts/${community.postId}/edit`)
-              }
-            >
-              <GoPencil className="w-5 h-5 text-gray-900" />
-              <p className="text-gray-900">수정하기</p>
-            </div>
-          </li>
-          <li
-            className="py-2 text-sm font-bold hover:bg-gray-100 cursor-pointer"
-            onClick={handleDeleteModalOpen}
-          >
-            <div className="flex justify-start items-center gap-1 flex-1">
-              <GoTrash className="w-5 h-5 text-red-500" />
-              <p className="text-red-500">삭제하기</p>
-            </div>
-
-          </li>
-        </ul>
-      </div>
-        <CustomModal
+      <PostMenuSlide
+        isOpen={isMenuOpen}
+        onClose={handleMenuClose}
+        onShare={handleCopyLink}
+        onEdit={() => router.push(`/community/posts/${community.postId}/edit`)}
+        onDeleteClick={handleDeleteModalOpen}
+      />
+      <CustomModal
               isOpen={isModalOpen}
               title="삭제 확인"
               message="정말로 게시글을 삭제하시겠습니까?"

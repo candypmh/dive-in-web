@@ -35,14 +35,6 @@ export default function OpenGraphPreview({
     };
   }, [onClose]);
 
-  // const handleMenuToggle = () => {
-  //   setIsMenuOpen((prev) => !prev);
-  // };
-
-  // const handleMenuClose = () => {
-  //   setIsMenuOpen(false);
-  // };
-
   return (
     //배경
     <div
@@ -50,14 +42,7 @@ export default function OpenGraphPreview({
         isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
       }`}
       style={{ zIndex: 40 }}
-      // onClick={onClose}
     >
-      {/* // <div className="fixed inset-0 bg-black/30 flex items-end justify-center z-50"> */}
-      {/* <div
-        ref={containerRef}
-        className="bg-white w-full max-w-[48rem] rounded-t-2xl p-4 pb-10 transion-transform duration-300 translate-y-0"
-      > */}
-
       {/* 아래에서 슬라이딩 */}
       <div
         ref={containerRef}

@@ -177,6 +177,28 @@ export async function toggleLike(postId: number): Promise<{ isLiked: boolean; li
   return { isLiked: newIsLiked, likesCnt: newLikesCnt };
 }
 
+export async function deleteComment(postId: number, cmntId: number): Promise<CommentProps[]> {
+  const posts = await listPosts();
+  const idx = posts.findIndex((p) => Number(p.postId) === postId);
+  if (idx === -1) throw new Error("Post not found");
+  const updated = posts[idx].commentList.filter((c) => c.cmntId !== cmntId);
+  posts[idx] = { ...posts[idx], commentList: updated, cmntCnt: updated.length };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+  return updated;
+}
+
+export async function updateComment(postId: number, cmntId: number, content: string): Promise<CommentProps[]> {
+  const posts = await listPosts();
+  const idx = posts.findIndex((p) => Number(p.postId) === postId);
+  if (idx === -1) throw new Error("Post not found");
+  const updated = posts[idx].commentList.map((c) =>
+    c.cmntId === cmntId ? { ...c, content } : c
+  );
+  posts[idx] = { ...posts[idx], commentList: updated };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+  return updated;
+}
+
 export async function addComment(postId: number, content: string): Promise<CommentProps[]> {
   const posts = await listPosts();
   const idx = posts.findIndex((p) => Number(p.postId) === postId);

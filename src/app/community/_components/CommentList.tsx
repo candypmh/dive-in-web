@@ -2,15 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { Comment } from "../comments/Comment";
-import { getComments } from "@/api/server/community/mock.server";
+import { getComments } from "@/api/server/community";
 import { CommentProps } from "@/types/community";
 
 export default function CommentList({
   commentList,
   postId,
+  onCommentChange,
 }: {
   commentList: CommentProps[];
   postId: number;
+  onCommentChange: (comments: CommentProps[]) => void;
 }) {
   const [comments, setComments] = useState<CommentProps[]>([]);
   const [loggedUserId, setLoggedUserId] = useState<number | null>(1);
@@ -51,32 +53,14 @@ export default function CommentList({
   }
 
   return (
-    // <div className="bg-white-100 px-4 py-4">
-    //   <h3 className="text-xs text-gray-600 mb-2">댓글 {commentList.length}</h3>
-    //   {commentList.map((comment) => (
-    //     <div key={comment.cmntId} className="py-3">
-    //       <p>{comment.content}</p>
-    //     </div>
-    //   ))}
-    // </div>
-
-    //--------------------
     <div className="bg-white-100 px-4 py-4">
       <h3 className="text-xs text-gray-600 mb-2">댓글 {commentList.length}</h3>
       {commentList.map((comment) => (
         <Comment
           key={comment.cmntId}
-          cmntId={comment.cmntId}
-          content={comment.content}
-          groupName={comment.groupName}
-          orderNumber={comment.orderNumber}
-          cmntClass={comment.cmntClass}
-          writer={comment.writer}
-          writerProfile={comment.writerProfile}
-          likeCnt={comment.likeCnt}
-          createdAt={comment.createdAt}
-          // writerId={comment.writerId}
-          // loggedUserId={comment.loggedUserId}
+          {...comment}
+          postId={postId}
+          onCommentChange={onCommentChange}
         />
       ))}
     </div>

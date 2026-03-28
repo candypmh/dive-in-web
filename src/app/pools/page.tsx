@@ -23,7 +23,6 @@ const PoolsPage = async () => {
       <section className="flex flex-col">
         <div className="flex items-center gap-2 pt-6 px-4 pb-5">
           <h2 className="text-heading_2 text-gray-900">수영장</h2>
-          {/* <p className="text-body_lb text-gray-500">{pools.length}</p> */}
         </div>
 
         <ul className="grid grid-cols-2 gap-4 px-4 pb-10">

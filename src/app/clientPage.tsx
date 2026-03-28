@@ -1,39 +1,19 @@
 "use client";
 
-import Image from "next/image";
 import { CiSearch } from "react-icons/ci";
 import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useSearchStore } from "@/store/searchStore";
-import InstructorProfile from "./_components/InstructorProfile";
-import LessonChip from "@/components/ui/Chip";
-import { LuEye } from "react-icons/lu";
-import { FiMessageSquare } from "react-icons/fi";
-import { TiHeartOutline } from "react-icons/ti";
-import { getHome } from "@/api/server/home";
 import { HomeProps } from "@/types/home";
 import { CATEGORYNAME_TO_LABEL, CategoryName } from "@/constants/categories";
+import { calcDDay } from "@/utils";
+import LessonCard from "./_components/LessonCard";
+import CommunityCard from "./_components/CommunityCard";
 
-function calcDDay(period: string | null): string {
-  if (!period) return "";
-  const startStr = period.split("~")[0].trim().replace(/\./g, "-");
-  const start = new Date(startStr);
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const diff = Math.ceil((start.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-  if (diff > 0) return `D-${diff}`;
-  if (diff === 0) return "D-Day";
-  return `D+${Math.abs(diff)}`;
-}
-
-// export default function Home({content}: {content: string}) {
 export default function HomeClient({ home }: { home: HomeProps }) {
   const router = useRouter();
-  // useEffect(() => {
-  //   router.replace("/lessons");
-  // }, [router]);
   const [homeKeyword, setHomeKeyword] = useState("");
   const { setKeyword } = useSearchStore();
 
@@ -45,16 +25,6 @@ export default function HomeClient({ home }: { home: HomeProps }) {
 
 
   return (
-    // <div className="flex flex-col items-center justify-center h-screen bg-white">
-    //   <Image
-    //     alt="로고"
-    //     src="/image/logo_w.png"
-    //     width={200}
-    //     height={200}
-    //     priority
-    //   />
-    // </div>
-
     <div className="flex flex-col">
       {/* 검색창 */}
       <section className="flex flex-col">
@@ -99,29 +69,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
         {/* 카드리스트 */}
         <div className="grid grid-cols-2 gap-6 px-8 py-1">
           {popularLessons.map((lesson) => (
-            <Link
-              key={lesson.id}
-              href={`/lessons/${lesson.id}`}
-              className="p-6 rounded-lg shadow-sm bg-gray-100 flex flex-col h-full hover:bg-gray-200 transition-colors"
-            >
-              {/* 카드 1*/}
-              <div className="flex flex-wrap gap-2 items-center pb-2">
-                {[...lesson.level.split(","), ...lesson.keyword.split(",")].map(
-                  (tag, index) => (
-                    <LessonChip key={index} label={tag.trim()} />
-                  )
-                )}
-              </div>
-              <h4 className="pb-10 text-base sm:text-xl font-bold text-gray-900 mb-1">
-                {lesson.lessonName}
-              </h4>
-              <div className="mt-auto">
-                <InstructorProfile
-                  avatar={lesson.instructorImgUrl}
-                  name={lesson.instructorName}
-                />
-              </div>
-            </Link>
+            <LessonCard key={lesson.id} lesson={lesson} />
           ))}
         </div>
       </section>
@@ -136,29 +84,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
         {/* 카드리스트 */}
         <div className="grid grid-cols-2 gap-6 px-8 py-1">
           {NewLessons.map((lesson) => (
-            <Link
-              key={lesson.id}
-              href={`/lessons/${lesson.id}`}
-              className="p-6 rounded-lg shadow-sm bg-gray-100 flex flex-col h-full hover:bg-gray-200 transition-colors"
-            >
-              {/* 카드 1*/}
-              <div className="flex flex-wrap gap-2 items-center pb-2">
-                {[...lesson.level.split(","), ...lesson.keyword.split(",")].map(
-                  (tag, index) => (
-                    <LessonChip key={index} label={tag.trim()} />
-                  )
-                )}
-              </div>
-              <h4 className="pb-10 text-base sm:text-xl font-bold text-gray-900 mb-1">
-                {lesson.lessonName}
-              </h4>
-              <div className="mt-auto">
-                <InstructorProfile
-                  avatar={lesson.instructorImgUrl}
-                  name={lesson.instructorName}
-                />
-              </div>
-            </Link>
+            <LessonCard key={lesson.id} lesson={lesson} />
           ))}
         </div>
       </section>
@@ -178,80 +104,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
         {/* 카드리스트 */}
         <div className="flex flex-wrap gap-6 px-8 py-1">
           {topViewPostList.map((community) => (
-            <Link
-              href={"/community/posts/" + community.postId}
-              key={community.postId}
-              className="px-4 py-2 rounded-lg shadow-sm bg-gray-100 w-full"
-            >
-              {/* 카드 1*/}
-              <div className="items-center gap-2 pb-2">
-                {/* <Link
-                  href={`/community/posts/${community.id}`}
-                  className=""
-                > */}
-                {/* 박스 내용물 하나 */}
-                <div className="flex flex-row justify-between items-start w-full rounded-lg px-2 gap-3">
-                  {/* 왼쪽 */}
-                  <div className="flex-1 min-w-0 max-w-[80%] flex flex-col items-start gap-1.5 overflow-hidden">
-                    {/* 여기가 태그/인기 */}
-                    <div
-                      className={`text-label_sb px-1.5 py-1 mt-4 rounded bg-chip-1 text-chip-1-foreground inline-block w-fit`}
-                    >
-                      <p>{community.categoryName ? CATEGORYNAME_TO_LABEL[community.categoryName as CategoryName] : "\u00A0"}</p>
-                    </div>
-                    <div className="flex flex-col gap-0.5">
-                      <h3 className="text-gray-900 text-body_bb line-clamp-1 sm:line-clamp-none">
-                        {community.title}
-                      </h3>
-                    </div>
-                    {/* <p className="text-body_b text-gray-600 block truncate xs:max-w-[100px] sm:max-w-[200px] md:max-w-[300px] lg:max-w-[400px] "> */}
-                    <div className="flex items-center gap-1 overflow-hidden min-w-0">
-                      <p className="text-body_b text-gray-600 w-full line-clamp-2 sm:line-clamp-none">
-                        {community.content}
-                      </p>
-                    </div>
-
-                    {/* <div className="flex items-center gap-1">
-              <WriterProfile
-                avatar={community.writerProfile}
-                name={community.writer}
-              />
-            </div> */}
-
-                    <div className="flex flex-row items-center gap-4">
-                      <div className="flex items-center gap-1">
-                        <LuEye className="w-5 h-5 text-gray-400" />
-                        <p className="text-gray-500"> {community.viewCnt}</p>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <FiMessageSquare className="w-5 h-5 text-gray-400" />
-                        <p className="text-gray-500">{community.cmmtCnt}</p>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <TiHeartOutline className="w-5 h-5 text-gray-400" />
-                        <p className="text-gray-500"> {community.likesCnt}</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* 오른쪽 */}
-                  {/* <div className="flex flex-col items-center w-24 flex-shrink-0"> */}
-                  <div className="mt-6 items-center w-24 flex-shrink-0">
-                    {/* <div className="mt-6 w-24 h-24 overflow-hidden rounded-lg"> */}
-                    <img
-                      src={
-                        community.image?.imageUrl ||
-                        "/empty/community_thumbnail.png"
-                      }
-                      alt="썸네일"
-                      className="w-24 h-24 object-cover rounded-lg"
-                    />
-                    {/* </div> */}
-                  </div>
-                </div>
-                {/* </Link> */}
-              </div>
-            </Link>
+            <CommunityCard key={community.postId} community={community} />
           ))}
         </div>
       </section>
@@ -269,80 +122,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
         {/* 카드리스트 */}
         <div className="flex flex-wrap gap-6 px-8 py-1">
           {NewCommunities.map((community) => (
-            <Link
-              href={"/community/posts/" + community.postId}
-              key={community.postId}
-              className="px-4 py-2 rounded-lg shadow-sm bg-gray-100 w-full"
-            >
-              {/* 카드 1*/}
-              <div className="items-center gap-2 pb-2">
-                {/* <Link
-                  href={`/community/posts/${community.id}`}
-                  className=""
-                > */}
-                {/* 박스 내용물 하나 */}
-                <div className="flex flex-row justify-between items-start w-full rounded-lg px-2 gap-3">
-                  {/* 왼쪽 */}
-                  <div className="flex-1 min-w-0 max-w-[80%] flex flex-col items-start gap-1.5 overflow-hidden">
-                    {/* 여기가 태그/인기 */}
-                    <div
-                      className={`text-label_sb px-1.5 py-1 mt-4 rounded bg-chip-1 text-chip-1-foreground inline-block w-fit`}
-                    >
-                      <p>{community.categoryName ? CATEGORYNAME_TO_LABEL[community.categoryName as CategoryName] : "\u00A0"}</p>
-                    </div>
-                    <div className="flex flex-col gap-0.5">
-                      <h3 className="text-gray-900 text-body_bb line-clamp-1 sm:line-clamp-none">
-                        {community.title}
-                      </h3>
-                    </div>
-                    {/* <p className="text-body_b text-gray-600 block truncate xs:max-w-[100px] sm:max-w-[200px] md:max-w-[300px] lg:max-w-[400px] "> */}
-                    <div className="flex items-center gap-1 overflow-hidden min-w-0">
-                      <p className="text-body_b text-gray-600 w-full line-clamp-2 sm:line-clamp-none">
-                        {community.content}
-                      </p>
-                    </div>
-
-                    {/* <div className="flex items-center gap-1">
-              <WriterProfile
-                avatar={community.writerProfile}
-                name={community.writer}
-              />
-            </div> */}
-
-                    <div className="flex flex-row items-center gap-4">
-                      <div className="flex items-center gap-1">
-                        <LuEye className="w-5 h-5 text-gray-400" />
-                        <p className="text-gray-500"> {community.viewCnt}</p>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <FiMessageSquare className="w-5 h-5 text-gray-400" />
-                        <p className="text-gray-500">{community.cmmtCnt}</p>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <TiHeartOutline className="w-5 h-5 text-gray-400" />
-                        <p className="text-gray-500"> {community.likesCnt}</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* 오른쪽 */}
-                  {/* <div className="flex flex-col items-center w-24 flex-shrink-0"> */}
-                  <div className="mt-6 items-center w-24 flex-shrink-0">
-                    {/* <div className="mt-6 w-24 h-24 overflow-hidden rounded-lg"> */}
-                    <img
-                      src={
-                        community.image?.imageUrl ||
-                        "/empty/community_thumbnail.png"
-                      }
-                      alt="썸네일"
-                      className="w-24 h-24 object-cover rounded-lg"
-                    />
-                    {/* </div> */}
-                  </div>
-                </div>
-                {/* </Link> */}
-              </div>
-            </Link>
+            <CommunityCard key={community.postId} community={community} />
           ))}
         </div>
       </section>
@@ -375,17 +155,10 @@ export default function HomeClient({ home }: { home: HomeProps }) {
                 key={contest.postId}
                 className="px-4 py-2 rounded-lg shadow-sm bg-gray-100 w-full"
               >
-                {/* 카드 1*/}
                 <div className="items-center gap-2 pb-2">
-                  {/* <Link
-                  href={`/community/posts/${community.id}`}
-                  className=""
-                > */}
-                  {/* 박스 내용물 하나 */}
                   <div className="flex flex-row justify-between items-start w-full rounded-lg px-2 gap-3">
                     {/* 왼쪽 */}
                     <div className="flex-1 min-w-0 max-w-[80%] flex flex-col items-start gap-1.5 overflow-hidden">
-                      {/* 여기가 태그/인기 */}
                       <div
                         className={`text-label_sb px-1.5 py-1 mt-4 rounded bg-chip-1 text-chip-1-foreground inline-block w-fit`}
                       >
@@ -393,58 +166,16 @@ export default function HomeClient({ home }: { home: HomeProps }) {
                       </div>
                       <div className="flex flex-col gap-0.5">
                         <h3 className="text-gray-900 text-body_bb">
-                          {/* {community.communityTitle} */}
                           {contest.title}
                         </h3>
                       </div>
-                      {/* <p className="text-body_b text-gray-600 block truncate xs:max-w-[100px] sm:max-w-[200px] md:max-w-[300px] lg:max-w-[400px] "> */}
-                      <div className="flex items-center gap-1 overflow-hidden min-w-0">
-                        <p className="text-body_b text-gray-600 block truncate w-full">
-                          {/* {contest.period.length > maxLength ? `${contest.period.substring(0, maxLength)}...`
-                          : contest.period} */}
-                        </p>
-                      </div>
-
-                      {/* <div className="flex items-center gap-1">
-              <WriterProfile
-                avatar={community.writerProfile}
-                name={community.writer}
-              />
-            </div> */}
-
-                      {/* <div className="flex flex-row items-center gap-4">
-                        <div className="flex items-center gap-1">
-                          <LuEye className="w-5 h-5 text-gray-400" />
-                          <p className="text-gray-500"> {community.viewCnt}</p>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <FiMessageSquare className="w-5 h-5 text-gray-400" />
-                          <p className="text-gray-500">{community.cmntCnt}</p>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <TiHeartOutline className="w-5 h-5 text-gray-400" />
-                          <p className="text-gray-500"> {community.likesCnt}</p>
-                        </div>
-                      </div> */}
                     </div>
 
                     {/* 오른쪽 */}
-                    {/* <div className="flex flex-col items-center w-24 flex-shrink-0"> */}
-                    <div className="mt-6 items-center flex-shrink-0">
-                      {/* <div className="mt-6 w-24 h-24 overflow-hidden rounded-lg"> */}
+                    <div className="mt-7 items-center flex-shrink-0">
                       <p className="mr-2 font-bold">{calcDDay(contest.period)}</p>
-                      {/* <img
-                          src={
-                            community.images?.imageUrl ||
-                            "/empty/community_thumbnail.png"
-                          }
-                          alt="썸네일"
-                          className="w-24 h-24 object-cover rounded-lg"
-                        /> */}
-                      {/* </div> */}
                     </div>
                   </div>
-                  {/* </Link> */}
                 </div>
               </div>
             ))}
@@ -452,121 +183,6 @@ export default function HomeClient({ home }: { home: HomeProps }) {
         )}
       </section>
 
-      {/* <ul className="grid grid-cols-2 gap-4 px-4 pb-10"></ul> */}
     </div>
   );
 }
-
-// const popularLessons = [
-//   {
-//     id: 1,
-//     chips: ["고급", "접영"],
-//     title: "마스터즈 평일 교정 훈련 클래스 20글자",
-//     avatar: "",
-//     instructor: "수달상회",
-//   },
-//   {
-//     id: 2,
-//     chips: ["초급", "접영", "다이빙"],
-//     title: "유소년 선수반",
-//     avatar: "",
-//     instructor: "이지스윔",
-//   },
-// ];
-
-// const NewLessons = [
-//   {
-//     id: 1,
-//     chips: ["중급", "접영"],
-//     title: "마스터즈 평일",
-//     avatar: "",
-//     instructor: "물곰TV",
-//   },
-//   {
-//     id: 2,
-//     chips: ["초급", "접영", "다이빙"],
-//     title: "청소년 선수반",
-//     avatar: "",
-//     instructor: "4레인",
-//   },
-// ];
-
-// const popularCommunities = [
-//   {
-//     id: 1,
-//     categoryName: "커뮤니티",
-//     title: "수영대회 찾는 중",
-//     content:
-//       "안녕하세요, 수영대회에 관심있는 수영장 처돌이입니다. 수영대회 찾아요.",
-//     images: {
-//       repImage: true,
-//       imageUrl:
-//         "https://dive-in-bucket.kr.object.ncloudstorage.com/2ae3190a-97d6-4600-9e27-470920503c26.jpg",
-//     },
-//     likesCnt: 13,
-//     cmntCnt: 5,
-//     viewCnt: 0,
-//   },
-//   {
-//     id: 2,
-//     categoryName: "수영물품",
-//     title: "수영물품 구해요",
-//     content: "수모수모수모",
-//     images: null,
-//     likesCnt: 13,
-//     cmntCnt: 5,
-//     viewCnt: 0,
-//   },
-// ];
-
-// const NewCommunities = [
-//   {
-//     id: 1,
-//     categoryName: "커뮤니티",
-//     title: "수영대회 찾는 중",
-//     content:
-//       "안녕하세요, 수영대회에 관심있는 수영장 처돌이입니다. 수영대회 찾아요.",
-//     images: {
-//       repImage: true,
-//       imageUrl:
-//         "https://dive-in-bucket.kr.object.ncloudstorage.com/2ae3190a-97d6-4600-9e27-470920503c26.jpg",
-//     },
-//     likesCnt: 13,
-//     cmntCnt: 5,
-//     viewCnt: 0,
-//   },
-//   {
-//     id: 2,
-//     categoryName: "커뮤니티",
-//     title: "안녕하세요~~~~~~~~~",
-//     content: "수모수모수모",
-//     images: null,
-//     likesCnt: 13,
-//     cmntCnt: 5,
-//     viewCnt: 0,
-//   },
-// ];
-
-// const swimContests = [
-//   {
-//     id: 1,
-//     categoryName: "수영대회",
-//     title: "2024 MAC배 전국수영대회",
-//     period: "2024.11.16 ~ 2024.11.20",
-//     dDay: "D-7",
-//   },
-//   {
-//     id: 2,
-//     categoryName: "수영대회",
-//     title: "2025년 수구 국가대표 및 국가대표 후보선수 선발대회",
-//     period: "2024.11.16 ~ 2024.11.20",
-//     dDay: "D-71",
-//   },
-//   {
-//     id: 3,
-//     categoryName: "수영대회",
-//     title: "2026년 하계 올림픽 대표팀 최종 선발전",
-//     period: "2026.06.01 ~ 2026.06.05",
-//     dDay: "D-14",
-//   },
-// ];

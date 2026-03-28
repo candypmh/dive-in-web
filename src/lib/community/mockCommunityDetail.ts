@@ -197,7 +197,7 @@ export function buildCommunityDetail(postId: number) {
     ],
     likesCnt: 0,
     viewCnt: 0,
-    cmntCnt: 0,
+    cmntCnt: 1,
     writer: mock.writer,
     writerProfile: null,
     createdAt: new Date(2026, 0, 1 + (postId % 60)).toISOString(),

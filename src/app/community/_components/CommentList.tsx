@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Comment } from "../comments/Comment";
-import { getComments } from "@/api/server/community/mock.server";
+import { getComments } from "@/api/server/community";
 import { CommentProps } from "@/types/community";
 
 export default function CommentList({

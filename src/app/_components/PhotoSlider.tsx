@@ -22,14 +22,6 @@ const DetailPagePhotoSlider = ({ imageUrls, alt, sliderType = "community" }: Pro
   },[]);
 
 
-  // const urls = useMemo(() => {
-  //   if (imageUrls.length === 0) {
-  //     return ["/empty/image.png"];
-  //   }
-    
-  //   return imageUrls;
-  // }, [imageUrls]);
-
   const encodeUrls = useMemo(() => {
 
     if (imageUrls.length === 0) {
@@ -43,7 +35,6 @@ const DetailPagePhotoSlider = ({ imageUrls, alt, sliderType = "community" }: Pro
   const displayUrls = imageUrls.length === 0 ? ["/empty/image.png"] : imageUrls;
 
   
-  // const { sliderRef, imageRefs, visibleImageNumber } = usePhotoSlider(urls);
   const { imageRefs, visibleImageNumber } = usePhotoSlider(encodeUrls);
 
   // 이미지 뷰어 모달을 통해 이미지를 크게 볼 수 있도록 하기
@@ -92,8 +83,6 @@ const DetailPagePhotoSlider = ({ imageUrls, alt, sliderType = "community" }: Pro
 
   //이미지 슬라이드 크기 선택
   const sliderTypeStyles = {
-    // community: "w-96 h-64",
-    // other: "w-full h-[300px] md:h-[500px]",
     community: "w-[400px] h-[300px]",
     other: "w-full h-[300px]",
   };
@@ -172,7 +161,6 @@ const DetailPagePhotoSlider = ({ imageUrls, alt, sliderType = "community" }: Pro
           <div className="absolute bottom-3 right-3 flex items-center gap-0.5 bg-gray-900/70 px-1.5 py-0.5 rounded">
             <span className="text-label_sb text-gray-500">
               {currentIndex + 1} / {displayUrls.length}
-              {/* {visibleImageNumber} / {imageUrls.length} */}
             </span>
           </div>
         )}

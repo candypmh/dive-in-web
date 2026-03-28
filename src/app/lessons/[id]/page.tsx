@@ -3,7 +3,6 @@ import DetailPagePhotoSlider from "@/app/_components/PhotoSlider";
 import ShareButton from "@/app/_components/ShareButton";
 import ArrowLeftIcon from "@/components/icons/ArrowLeftIcon";
 import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
-import InternetIcon from "@/components/icons/InternetIcon";
 import LessonChip from "@/components/ui/Chip";
 import { lessonDetailContentSchema } from "@/schemas/lessons";
 import dynamic from "next/dynamic";
@@ -21,37 +20,13 @@ const LessonPage = async ({ params }: { params: { id: string } }) => {
   const lesson = await getLesson(LessonId);
 
   if (!lesson) {
-    // console.log("lessonDetail::::::::::::::::::값이 없어");
     notFound();
   }
 
-  // const applyChannels = lesson.applyChannels.filter(
-  //   ({ applyUrl }) => !!applyUrl
-  // );
-
-  // console.log("lesson.lessonDetail::::::::::::::::왜에러남??", lesson.lessonDetail);
-  // console.log("lessonDetail::::::::::::::::::타입?", typeof lesson.lessonDetail);
-
-  const lessonDetail = lessonDetailContentSchema.parse(
-    // JSON.parse(lesson.lessonDetail)
-    lesson.lessonDetail
-  );
-
-  // console.log("lessonDetail classTopic::::::::::::::::::", lessonDetail.classTopic);
-  // console.log("lessonDetail eligibilityRequirements::::::::::::::::::", lessonDetail.eligibilityRequirements);
-  // console.log("lessonDetail classIntroduction::::::::::::::::::", lessonDetail.classIntroduction);
-  // console.log("lessonDetail applicationMethod::::::::::::::::::", lessonDetail.applicationMethod);
+  const lessonDetail = lessonDetailContentSchema.parse(lesson.lessonDetail);
 
   const imageUrls = lesson.images.map((image) => image.imageUrl);
   const levels = lesson.level.split(",").map((tag) => tag.trim());
-
-  // console.log("lessonDetail::::::::::::::::::", lesson.images);
-
-  // "classTopic": "스타트 특강",
-  // "eligibilityRequirements": ["조건1", "조건2"],
-  // "classIntroduction": "신식 스타트대 사용",
-  // "applicationMethod": ["DM"],
-  // "refundPolicy": []
 
   return (
     <div className="flex flex-col">
@@ -102,99 +77,6 @@ const LessonPage = async ({ params }: { params: { id: string } }) => {
         )}
       </section>
 
-      {/* <section className="flex flex-col gap-2 px-4 pb-6 border-b border-gray-200">
-        <h2 className="text-body_bb text-gray-700">신청하기</h2>
-
-        <div className="flex gap-2 overflow-x-auto no-scrollbar">
-          {applyChannels.map(({ applyUrl, applyUrlType }) => {
-            if (applyUrlType === "KAKAOTALK") {
-              return (
-                <Link
-                  key={applyUrl}
-                  href={applyUrl}
-                  className={`${
-                    applyChannels.length > 2 ? "flex-none" : "flex-1"
-                  } flex items-center justify-center gap-2 bg-gray-200 rounded-lg py-3 px-4`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Image
-                    src="/icon/kakao.png"
-                    alt="카카오톡"
-                    width={24}
-                    height={24}
-                  />
-                  <p className="text-slate-800 text-body_sm">오픈 카카오톡</p>
-                </Link>
-              );
-            }
-
-            if (applyUrlType === "INSTAGRAM") {
-              return (
-                <Link
-                  key={applyUrl}
-                  href={applyUrl}
-                  className={`${
-                    applyChannels.length > 2 ? "flex-none" : "flex-1"
-                  } flex items-center justify-center gap-2 bg-gray-200 rounded-lg py-3 px-4`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Image
-                    src="/icon/instagram.png"
-                    alt="인스타그램"
-                    width={24}
-                    height={24}
-                  />
-                  <p className="text-slate-800 text-body_sm">인스타그램</p>
-                </Link>
-              );
-            }
-
-            if (applyUrlType === "NAVERCAFE") {
-              return (
-                <Link
-                  key={applyUrl}
-                  href={applyUrl}
-                  className={`${
-                    applyChannels.length > 2 ? "flex-none" : "flex-1"
-                  } flex items-center justify-center gap-2 bg-gray-200 rounded-lg py-3 px-4`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Image
-                    src="/icon/naver-cafe-c.png"
-                    alt="네이버 카페"
-                    width={24}
-                    height={24}
-                  />
-                  <p className="text-slate-800 text-body_sm">네이버 카페</p>
-                </Link>
-              );
-            }
-
-            if (applyUrlType === "SITE") {
-              return (
-                <Link
-                  key={applyUrl}
-                  href={applyUrl}
-                  className={`${
-                    applyChannels.length > 2 ? "flex-none" : "flex-1"
-                  } flex items-center justify-center gap-2 bg-gray-200 rounded-lg py-3 px-4`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <InternetIcon className="w-6 h-6" />
-                  <p className="text-slate-800 text-body_sm">사이트</p>
-                </Link>
-              );
-            }
-
-            return null;
-          })}
-        </div>
-      </section> */}
-
       <section className="flex flex-col gap-4 pt-6 px-4">
         <div className="flex flex-col gap-2 bg-gray-100 rounded-lg">
           <div className="flex items-center pt-4 px-4">
@@ -215,14 +97,6 @@ const LessonPage = async ({ params }: { params: { id: string } }) => {
                 신청자격
               </p>
               <div className="flex flex-col gap-1 text-body_sr text-gray-700">
-                {/* {lessonDetail.eligibilityRequirements.map(
-                  (requirement, index) => (
-                    <span key={requirement}>
-                      {`(${index + 1}) `}
-                      {requirement}
-                    </span>
-                  )
-                )} */}
                 {lessonDetail.eligibilityRequirements}
               </div>
             </div>
@@ -240,9 +114,7 @@ const LessonPage = async ({ params }: { params: { id: string } }) => {
               <p className="flex-none text-body_sb w-[60px] text-gray-700">
                 신청방법
               </p>
-              <span className="text-body_sr text-gray-700">
-                {/* {lessonDetail.applicationMethod.join(", ")} */}
-              </span>
+              <span className="text-body_sr text-gray-700"></span>
 
               <div className="flex flex-col gap-1 text-body_sr text-gray-700">
                 {lessonDetail.applicationMethod.map((item, index) => (

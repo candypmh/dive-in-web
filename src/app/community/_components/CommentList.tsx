@@ -53,16 +53,6 @@ export default function CommentList({
   }
 
   return (
-    // <div className="bg-white-100 px-4 py-4">
-    //   <h3 className="text-xs text-gray-600 mb-2">댓글 {commentList.length}</h3>
-    //   {commentList.map((comment) => (
-    //     <div key={comment.cmntId} className="py-3">
-    //       <p>{comment.content}</p>
-    //     </div>
-    //   ))}
-    // </div>
-
-    //--------------------
     <div className="bg-white-100 px-4 py-4">
       <h3 className="text-xs text-gray-600 mb-2">댓글 {commentList.length}</h3>
       {commentList.map((comment) => (

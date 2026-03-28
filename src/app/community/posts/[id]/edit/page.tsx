@@ -13,7 +13,6 @@ import toast from "react-hot-toast";
 import OpenGraphPreview from "@/app/_components/OpenGraphLinkReview";
 import { getPost, updatePost } from "@/lib/community/communityRepo.client";
 
-// const CATEGORIES = ["소통해요", "수영장", "수영물품", "수영대회"];
 const CATEGORIES = [
   { name: "소통해요", key: "COMMUNICATION" },
   { name: "수영장", key: "POOL" },
@@ -30,7 +29,6 @@ export default function EditPost({ params }: EditPostProps) {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  // const [textareaHeight, setTextareaHeight] = useState("500px");
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   //이미지처리
   const [existImages, setExistImages] = useState<
@@ -44,7 +42,6 @@ export default function EditPost({ params }: EditPostProps) {
   const [link, setLink] = useState("");
   type OgPreview = { title: string; description: string; image: string | null; url: string };
   const [preview, setPreview] = useState<OgPreview | null>(null); //OG데이터
-  // const [ogContent, setOgContent] = useState("");
   const containerRef = useRef<HTMLDivElement | null>(null);
   const router = useRouter();
   const urlRegex = /(https?:\/\/[^\s]+)/g; //OG추출을 위한 정규표현식
@@ -266,7 +263,6 @@ useEffect(() => {
   };
 
   return (
-    // <div className="flex flex-col pb-10 relative h-full">
     <div className="flex flex-col h-screen pb-[4.5rem]">
       <div className="flex items-center justify-between py-1 px-1">
         <Link href={`/community/posts/${postId}`} className="flex p-3">
@@ -274,7 +270,6 @@ useEffect(() => {
         </Link>
 
         <h2 className="text-heading_3 font-bold text-center">글쓰기</h2>
-        {/* <Link href={`/communities/${community.id}`} className="flex p-3"> */}
 
         <button type="submit" form="createPostForm" className="flex p-3">
           <IoCheckmark className="w-6 h-6 text-gray-400 hover:text-blue-900" />
@@ -313,10 +308,6 @@ useEffect(() => {
                   </li>
                 ))}
               </ul>
-              {/* <button 
-                className="mt-4 w-full py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
-                onClick={()=> setIsOpen(false)}>
-              </button> */}
             </div>
           </div>
         )}
@@ -397,10 +388,8 @@ useEffect(() => {
             maxLength={2000}
             value={content}
             className="text-base w-full px-4 py-2 pb-1 resize-none overflow-y-auto border-none border-gray-300 focus:outline-none scrollbar-hide"
-            // style={{ minHeight: "17.2rem" }}
             onChange={(e) => setContent(e.target.value)}
             onInput={(e) => {
-              // e.currentTarget.style.height = "auto";
               e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
             }}
           />
@@ -441,7 +430,6 @@ useEffect(() => {
           </div>
         </form>
       </div>
-      {/* <div className="border-b border-gray-300 my-4"></div> */}
 
       {/* 링크 슬라이드 */}
         <OpenGraphPreview

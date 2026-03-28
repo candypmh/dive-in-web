@@ -9,15 +9,6 @@ import { CommunitiesProps } from "@/types/community";
 import { CATEGORIES } from "@/constants/categories";
 import { formatKST } from "@/utils";
 
-// const CATEGORIES = [
-//   { name: "전체", key: "none" },
-//   { name: "인기글", key: "popular" },
-//   { name: "소통해요", key: "communication" },
-//   { name: "수영장", key: "pool" },
-//   { name: "수영물품", key: "goods" },
-//   { name: "수영대회", key: "competition" },
-// ];
-
 //Mock
 const CATEGORY_LABEL_MAP: Record<string, string> = {
   COMMUNICATION: "소통해요",
@@ -33,12 +24,6 @@ export default function CategoryFilter({
   community: CommunitiesProps;
   selectedCategory: string;
 }) {
-  // const categoryName =
-  //   CATEGORIES.find((category) => category.key === selectedCategory)?.name ||
-  //   "알 수 없음";
-
-  // console.warn(":::::::::::::::::::::::카테고리필터의 postID:", community.postId);
-
   return (
     <li className="border-b border-gray-300 pb-4">
       <Link
@@ -52,33 +37,17 @@ export default function CategoryFilter({
             <div
               className={`text-label_sb px-1.5 py-1 mt-4 rounded bg-chip-1 text-chip-1-foreground inline-block w-fit`}
             >
-              {/* <p>{community.categoryName || "\u00A0"}</p> */}
               <p>{CATEGORY_LABEL_MAP[community.categoryName ?? ""] ?? ""}</p>
             </div>
 
-            {/* {selectedCategory === "none" || selectedCategory === "popular" ? 
-              (
-                <div className={`text-label_sb px-1.5 py-1 mt-3 rounded bg-chip-1 text-chip-1-foreground inline-block w-fit`}>
-                  <p>{community.categoryName || "\u00A0"}</p>
-                </div>
-              ) : (
-                <div className={`text-label_sb px-1.5 py-0.5 w-fit`}>
-                  <p>&nbsp;</p>
-                </div>
-              )
-            } */}
-
             <div className="flex flex-col gap-0.5">
               <h3 className="text-gray-900 text-body_bb">
-                {/* {community.communityTitle} */}
                 {community.title}
               </h3>
             </div>
 
             <div className="flex items-center gap-1">
               <p className="text-body_b text-gray-600">
-                {/* {community.communityContent} */}
-                {/* 게시글 내용입니다. */}
                 {community.content}
               </p>
             </div>
@@ -118,26 +87,6 @@ export default function CategoryFilter({
                 unoptimized
               />
             </div>
-
-            {/* {selectedCategory === "none" || selectedCategory === "popular" ? 
-              (
-                <div className="mt-6 w-24 h-24 overflow-hidden rounded-lg">
-                  <img
-                src={community.image?.imageUrl || "/empty/community_thumbnail.png"}
-                alt="썸네일"
-                className="w-full h-full object-cover"
-              />
-                </div>
-              ) : (
-                <div className="mt-5 w-24 h-24 overflow-hidden rounded-lg">
-                  <img
-                src={community.image?.imageUrl || "/empty/community_thumbnail.png"}
-                alt="썸네일"
-                className="w-full h-full object-cover"
-              />
-                </div>
-              )
-            } */}
 
             <span className="mt-3 text-b text-gray-500 ml-auto">
               {formatKST(community.createdAt)}

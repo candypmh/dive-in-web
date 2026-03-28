@@ -9,8 +9,10 @@ type CategoryKey = keyof typeof KEY_TO_CATEGORYNAME;
 const STORAGE_KEY = "mock_communities_v1";
 const SEEDED_KEY = "mock_communities_seeded_v1";
 
+const SEEDABLE_CATEGORIES = CATEGORY_NAMES.filter((c) => c !== "COMPETITION");
+
 function randomCategory(): CategoryName {
-  return CATEGORY_NAMES[Math.floor(Math.random() * CATEGORY_NAMES.length)];
+  return SEEDABLE_CATEGORIES[Math.floor(Math.random() * SEEDABLE_CATEGORIES.length)];
 }
 
 function randomInt(min: number, max: number) {
@@ -71,7 +73,44 @@ export async function ensureSeeded(category: string = "none") {
     };
   });
 
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(fullPosts));
+  const competitionPosts: CommunityProps[] = [
+    {
+      postId: 101,
+      categoryName: "COMPETITION",
+      title: "2026 MAC배 전국수영대회",
+      content: "전국 아마추어 수영인을 대상으로 하는 MAC배 전국수영대회입니다.\n\n📅 일정: 2026.04.12 ~ 2026.04.13\n📍 장소: 잠실실내수영장\n🏊 종목: 자유형, 배영, 평영, 접영, 개인혼영 (50m / 100m / 200m)\n\n참가 신청은 대한수영연맹 홈페이지를 통해 접수하실 수 있습니다.",
+      writer: "운영진",
+      writerProfile: null,
+      likesCnt: 24,
+      cmntCnt: 8,
+      viewCnt: 312,
+      isPopular: false,
+      isLiked: false,
+      createdAt: "2026-03-01T09:00:00.000Z",
+      updatedAt: "2026-03-01T09:00:00.000Z",
+      images: [],
+      commentList: [],
+    },
+    {
+      postId: 102,
+      categoryName: "COMPETITION",
+      title: "2026 전국 마스터즈 수영대회",
+      content: "마스터즈 등록 선수를 대상으로 하는 전국 마스터즈 수영대회입니다.\n\n📅 일정: 2026.05.02 ~ 2026.05.04\n📍 장소: 올림픽수영장\n🏊 종목: 연령별 부문 (25세 이상, 5세 단위 구분)\n\n참가 자격: 대한마스터즈수영연맹 등록 선수",
+      writer: "운영진",
+      writerProfile: null,
+      likesCnt: 18,
+      cmntCnt: 5,
+      viewCnt: 278,
+      isPopular: false,
+      isLiked: false,
+      createdAt: "2026-03-05T09:00:00.000Z",
+      updatedAt: "2026-03-05T09:00:00.000Z",
+      images: [],
+      commentList: [],
+    },
+  ];
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify([...competitionPosts, ...fullPosts]));
   localStorage.setItem(SEEDED_KEY, "true");
 }
 

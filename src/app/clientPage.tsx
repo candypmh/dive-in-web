@@ -178,7 +178,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
                   className=""
                 > */}
                 {/* 박스 내용물 하나 */}
-                <div className="flex flex-row justify-between items-start w-full rounded-lg px-2">
+                <div className="flex flex-row justify-between items-start w-full rounded-lg px-2 gap-3">
                   {/* 왼쪽 */}
                   <div className="flex-1 min-w-0 max-w-[80%] flex flex-col items-start gap-1.5 overflow-hidden">
                     {/* 여기가 태그/인기 */}
@@ -269,7 +269,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
                   className=""
                 > */}
                 {/* 박스 내용물 하나 */}
-                <div className="flex flex-row justify-between items-start w-full rounded-lg px-2">
+                <div className="flex flex-row justify-between items-start w-full rounded-lg px-2 gap-3">
                   {/* 왼쪽 */}
                   <div className="flex-1 min-w-0 max-w-[80%] flex flex-col items-start gap-1.5 overflow-hidden">
                     {/* 여기가 태그/인기 */}
@@ -370,7 +370,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
                   className=""
                 > */}
                   {/* 박스 내용물 하나 */}
-                  <div className="flex flex-row justify-between items-start w-full rounded-lg px-2">
+                  <div className="flex flex-row justify-between items-start w-full rounded-lg px-2 gap-3">
                     {/* 왼쪽 */}
                     <div className="flex-1 min-w-0 max-w-[80%] flex flex-col items-start gap-1.5 overflow-hidden">
                       {/* 여기가 태그/인기 */}

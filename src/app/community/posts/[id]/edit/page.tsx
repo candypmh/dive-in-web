@@ -95,10 +95,11 @@ useEffect(() => {
 }, [lastOgUrl]);
 
 
-  //textarea하단 공백 조절
+  //textarea 초기 높이 + 하단 공백 조절
   useEffect(() => {
     if (textareaRef.current) {
-      textareaRef.current.scrollTop = textareaRef.current.scrollHeight;
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   }, [content]);
 

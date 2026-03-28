@@ -35,15 +35,14 @@ const mockDetail = (id: number): LessonDetail => ({
     academyInfo: "전문 수영 코치진이 운영하는 수영 클래스입니다.",
     profileImageUrl: "/empty/academy_profile.png",
   },
-  pool: {
-    id,
-    poolName: "올림픽 수영장",
-    poolAddress: "서울 송파구 올림픽로 424",
-    region: "서울",
-    imageUrl: "/empty/image.png",
-    latitude: 37.5197,
-    longitude: 127.1219,
-  },
+  pool: [
+    { id: 1, poolName: "잠실실내수영장", poolAddress: "서울 송파구 올림픽로 240", region: "송파", imageUrl: "", latitude: 37.5126, longitude: 127.0769 },
+    { id: 2, poolName: "올림픽수영장", poolAddress: "서울 송파구 올림픽로 424", region: "송파", imageUrl: "", latitude: 37.5219, longitude: 127.0822 },
+    { id: 3, poolName: "뚝섬한강공원수영장", poolAddress: "서울 광진구 강변북로 139", region: "광진", imageUrl: "", latitude: 37.5295, longitude: 127.0667 },
+    { id: 4, poolName: "노원실내수영장", poolAddress: "서울 노원구 동일로 1321", region: "노원", imageUrl: "", latitude: 37.6556, longitude: 127.0763 },
+    { id: 5, poolName: "마포구민체육센터수영장", poolAddress: "서울 마포구 월드컵북로 400", region: "마포", imageUrl: "", latitude: 37.5683, longitude: 126.9077 },
+    { id: 1, poolName: "잠실실내수영장", poolAddress: "서울 송파구 올림픽로 240", region: "송파", imageUrl: "", latitude: 37.5126, longitude: 127.0769 },
+  ][id - 1],
   images: [],
 });
 

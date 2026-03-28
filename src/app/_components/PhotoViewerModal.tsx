@@ -2,7 +2,6 @@
 
 import usePhotoSlider from "@/hooks/usePhotoSlider";
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
-import { url } from "inspector";
 import { XIcon } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -55,7 +54,6 @@ const PhotoViewerModal = ({ isOpen, onClose, urls, current }: Props) => {
 };
 
 const ImageSlider = ({ urls, currentIndex, setCurrentIndex }: { urls: string[], currentIndex: number, setCurrentIndex: (index: number) => void; }) => {
-  // const imageLength = urls.length;
   const { sliderRef, imageRefs, visibleImageNumber } = usePhotoSlider(urls);
   const [isHover, setIsHover] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);

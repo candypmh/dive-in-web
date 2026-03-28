@@ -42,8 +42,6 @@ export default function ClientCommunity({ postId }: { postId: number }) {
       setChangeLikesCnt(post.likesCnt);
     });
   }, [postId]);
-  // console.warn("코멘트 안오냐?:::::::::::", community.commentList);
-
   //og관련
   type OgPreview = { title: string; description: string; image: string | null; url: string };
   const [preview, setPreview] = useState<OgPreview | null>(null);
@@ -201,18 +199,13 @@ export default function ClientCommunity({ postId }: { postId: number }) {
         </p>
 
         <div className="mt-4 flex justify-center max-w-fit mx-auto gap-4">
-          {/* <div className="mt-4 flex justify-center"> */}
           {community.images.length > 0 ? (
-            // <div key={index} className="overflow-hidden rounded-lg">
-            // <div className="mt-4 flex justify-center">
             <DetailPagePhotoSlider
               imageUrls={community.images.map((image) => image.imageUrl)}
               alt="게시글 이미지"
               sliderType="community"
             />
           ) : (
-            // </div>
-            // 이미지가 없을시
             <p className="text-gray-500"></p>
           )}
         </div>

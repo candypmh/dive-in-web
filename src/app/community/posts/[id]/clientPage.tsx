@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { LuSend } from "react-icons/lu";
 import { TiHeartOutline, TiHeartFullOutline } from "react-icons/ti";
@@ -225,10 +226,13 @@ export default function ClientCommunity({ postId }: { postId: number }) {
           >
             <div className="flex gap-4">
               {preview.image && (
-                <img
+                <Image
                   src={preview.image}
                   alt="미리보기 이미지"
+                  width={80}
+                  height={80}
                   className="w-20 h-20 object-cover rounded border"
+                  unoptimized
                 />
               )}
               <div className="overflow-hidden">
@@ -269,6 +273,9 @@ export default function ClientCommunity({ postId }: { postId: number }) {
       <CommentList
         commentList={community.commentList}
         postId={community.postId}
+        onCommentChange={(updated) =>
+          setCommunity((prev) => prev ? { ...prev, commentList: updated, cmntCnt: updated.length } : prev)
+        }
       />
 
       {/* 댓글 상자 */}

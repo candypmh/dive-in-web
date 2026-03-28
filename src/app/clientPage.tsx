@@ -238,13 +238,13 @@ export default function HomeClient({ home }: { home: HomeProps }) {
                   {/* <div className="flex flex-col items-center w-24 flex-shrink-0"> */}
                   <div className="mt-6 items-center w-24 flex-shrink-0">
                     {/* <div className="mt-6 w-24 h-24 overflow-hidden rounded-lg"> */}
-                    <img
-                      src={
-                        community.image?.imageUrl ||
-                        "/empty/community_thumbnail.png"
-                      }
+                    <Image
+                      src={community.image?.imageUrl || "/empty/community_thumbnail.png"}
                       alt="썸네일"
+                      width={96}
+                      height={96}
                       className="w-24 h-24 object-cover rounded-lg"
+                      unoptimized
                     />
                     {/* </div> */}
                   </div>
@@ -329,13 +329,13 @@ export default function HomeClient({ home }: { home: HomeProps }) {
                   {/* <div className="flex flex-col items-center w-24 flex-shrink-0"> */}
                   <div className="mt-6 items-center w-24 flex-shrink-0">
                     {/* <div className="mt-6 w-24 h-24 overflow-hidden rounded-lg"> */}
-                    <img
-                      src={
-                        community.image?.imageUrl ||
-                        "/empty/community_thumbnail.png"
-                      }
+                    <Image
+                      src={community.image?.imageUrl || "/empty/community_thumbnail.png"}
                       alt="썸네일"
+                      width={96}
+                      height={96}
                       className="w-24 h-24 object-cover rounded-lg"
+                      unoptimized
                     />
                     {/* </div> */}
                   </div>
@@ -430,7 +430,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
 
                     {/* 오른쪽 */}
                     {/* <div className="flex flex-col items-center w-24 flex-shrink-0"> */}
-                    <div className="mt-6 items-center flex-shrink-0">
+                    <div className="mt-7 items-center flex-shrink-0">
                       {/* <div className="mt-6 w-24 h-24 overflow-hidden rounded-lg"> */}
                       <p className="mr-2 font-bold">{calcDDay(contest.period)}</p>
                       {/* <img
@@ -452,121 +452,6 @@ export default function HomeClient({ home }: { home: HomeProps }) {
         )}
       </section>
 
-      {/* <ul className="grid grid-cols-2 gap-4 px-4 pb-10"></ul> */}
     </div>
   );
 }
-
-// const popularLessons = [
-//   {
-//     id: 1,
-//     chips: ["고급", "접영"],
-//     title: "마스터즈 평일 교정 훈련 클래스 20글자",
-//     avatar: "",
-//     instructor: "수달상회",
-//   },
-//   {
-//     id: 2,
-//     chips: ["초급", "접영", "다이빙"],
-//     title: "유소년 선수반",
-//     avatar: "",
-//     instructor: "이지스윔",
-//   },
-// ];
-
-// const NewLessons = [
-//   {
-//     id: 1,
-//     chips: ["중급", "접영"],
-//     title: "마스터즈 평일",
-//     avatar: "",
-//     instructor: "물곰TV",
-//   },
-//   {
-//     id: 2,
-//     chips: ["초급", "접영", "다이빙"],
-//     title: "청소년 선수반",
-//     avatar: "",
-//     instructor: "4레인",
-//   },
-// ];
-
-// const popularCommunities = [
-//   {
-//     id: 1,
-//     categoryName: "커뮤니티",
-//     title: "수영대회 찾는 중",
-//     content:
-//       "안녕하세요, 수영대회에 관심있는 수영장 처돌이입니다. 수영대회 찾아요.",
-//     images: {
-//       repImage: true,
-//       imageUrl:
-//         "https://dive-in-bucket.kr.object.ncloudstorage.com/2ae3190a-97d6-4600-9e27-470920503c26.jpg",
-//     },
-//     likesCnt: 13,
-//     cmntCnt: 5,
-//     viewCnt: 0,
-//   },
-//   {
-//     id: 2,
-//     categoryName: "수영물품",
-//     title: "수영물품 구해요",
-//     content: "수모수모수모",
-//     images: null,
-//     likesCnt: 13,
-//     cmntCnt: 5,
-//     viewCnt: 0,
-//   },
-// ];
-
-// const NewCommunities = [
-//   {
-//     id: 1,
-//     categoryName: "커뮤니티",
-//     title: "수영대회 찾는 중",
-//     content:
-//       "안녕하세요, 수영대회에 관심있는 수영장 처돌이입니다. 수영대회 찾아요.",
-//     images: {
-//       repImage: true,
-//       imageUrl:
-//         "https://dive-in-bucket.kr.object.ncloudstorage.com/2ae3190a-97d6-4600-9e27-470920503c26.jpg",
-//     },
-//     likesCnt: 13,
-//     cmntCnt: 5,
-//     viewCnt: 0,
-//   },
-//   {
-//     id: 2,
-//     categoryName: "커뮤니티",
-//     title: "안녕하세요~~~~~~~~~",
-//     content: "수모수모수모",
-//     images: null,
-//     likesCnt: 13,
-//     cmntCnt: 5,
-//     viewCnt: 0,
-//   },
-// ];
-
-// const swimContests = [
-//   {
-//     id: 1,
-//     categoryName: "수영대회",
-//     title: "2024 MAC배 전국수영대회",
-//     period: "2024.11.16 ~ 2024.11.20",
-//     dDay: "D-7",
-//   },
-//   {
-//     id: 2,
-//     categoryName: "수영대회",
-//     title: "2025년 수구 국가대표 및 국가대표 후보선수 선발대회",
-//     period: "2024.11.16 ~ 2024.11.20",
-//     dDay: "D-71",
-//   },
-//   {
-//     id: 3,
-//     categoryName: "수영대회",
-//     title: "2026년 하계 올림픽 대표팀 최종 선발전",
-//     period: "2026.06.01 ~ 2026.06.05",
-//     dDay: "D-14",
-//   },
-// ];

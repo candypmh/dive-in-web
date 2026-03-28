@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { LuEye } from "react-icons/lu";
 import { FiMessageSquare } from "react-icons/fi";
@@ -108,12 +109,13 @@ export default function CategoryFilter({
           {/* 오른쪽 */}
           <div className="flex flex-col items-center w-24">
             <div className="mt-6 w-24 h-24 overflow-hidden rounded-lg">
-              <img
-                src={
-                  community.image?.imageUrl || "/empty/community_thumbnail.png"
-                }
+              <Image
+                src={community.image?.imageUrl || "/empty/community_thumbnail.png"}
                 alt="썸네일"
+                width={96}
+                height={96}
                 className="w-full h-full object-cover"
+                unoptimized
               />
             </div>
 

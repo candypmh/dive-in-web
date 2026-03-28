@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import ArrowLeftIcon from "@/components/icons/ArrowLeftIcon";
 import Link from "next/link";
 import { IoCheckmark } from "react-icons/io5";
@@ -293,10 +294,13 @@ export default function CreatePost() {
           {preview && (
             <div className="p-4 mt-4 border rounded bg-gray-100 flex gap-4 items-start">
               {preview.image && (
-                <img
+                <Image
                   src={preview.image || "/empty/community_thumbnail.png"}
                   alt="미리보기 페이지"
+                  width={80}
+                  height={80}
                   className="w-20 h-20 object-cover rounded border flex-shrink-0"
+                  unoptimized
                 />
               )}
               <div className="flex flex-col justify-center overflow-hidden pt-1.5">

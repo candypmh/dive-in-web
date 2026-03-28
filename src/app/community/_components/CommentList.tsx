@@ -8,9 +8,11 @@ import { CommentProps } from "@/types/community";
 export default function CommentList({
   commentList,
   postId,
+  onCommentChange,
 }: {
   commentList: CommentProps[];
   postId: number;
+  onCommentChange: (comments: CommentProps[]) => void;
 }) {
   const [comments, setComments] = useState<CommentProps[]>([]);
   const [loggedUserId, setLoggedUserId] = useState<number | null>(1);
@@ -66,17 +68,9 @@ export default function CommentList({
       {commentList.map((comment) => (
         <Comment
           key={comment.cmntId}
-          cmntId={comment.cmntId}
-          content={comment.content}
-          groupName={comment.groupName}
-          orderNumber={comment.orderNumber}
-          cmntClass={comment.cmntClass}
-          writer={comment.writer}
-          writerProfile={comment.writerProfile}
-          likeCnt={comment.likeCnt}
-          createdAt={comment.createdAt}
-          // writerId={comment.writerId}
-          // loggedUserId={comment.loggedUserId}
+          {...comment}
+          postId={postId}
+          onCommentChange={onCommentChange}
         />
       ))}
     </div>

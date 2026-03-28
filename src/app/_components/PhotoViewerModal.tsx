@@ -37,6 +37,7 @@ const PhotoViewerModal = ({ isOpen, onClose, urls, current }: Props) => {
         >
           <div className="flex-none w-full flex justify-end">
             <button
+              aria-label="닫기"
               className="flex items-center justify-center p-3"
               onClick={onClose}
             >
@@ -120,6 +121,7 @@ const ImageSlider = ({ urls, currentIndex, setCurrentIndex }: { urls: string[], 
         {/* 왼쪽 버튼 */}
           {!isTouchDevice && isHover && (
             <button
+              aria-label="이전 이미지"
               className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full"
               onClick={handlePrev}>
               <FaChevronLeft />
@@ -129,6 +131,7 @@ const ImageSlider = ({ urls, currentIndex, setCurrentIndex }: { urls: string[], 
         {/* 오른쪽 버튼 */}
           {!isTouchDevice && isHover && (
             <button
+              aria-label="다음 이미지"
               className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full"
               onClick={handleNext}
             >

@@ -241,6 +241,7 @@ export default function CreatePost() {
                 />
                 <button
                   type="button"
+                  aria-label={`이미지 ${index + 1} 삭제`}
                   onClick={() =>
                     setImages((prev) => prev.filter((_, i) => i !== index))
                   }

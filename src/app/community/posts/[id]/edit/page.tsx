@@ -353,6 +353,7 @@ useEffect(() => {
                 </span>
                 <button
                   type="button"
+                  aria-label={`기존 이미지 ${index + 1} 삭제`}
                   onClick={() => handleExistImageDelete(image.imageUrl)}
                   className="absolute w-5 h-5 top-1 right-1 bg-gray-600 text-white font-semibold text-xs flex justify-center rounded-full"
                 >
@@ -372,6 +373,7 @@ useEffect(() => {
 
                 <button
                   type="button"
+                  aria-label={`새 이미지 ${index + 1} 삭제`}
                   onClick={() => handleNewImageDelete(index)}
                   className="absolute w-5 h-5 top-1 right-1 bg-gray-600 text-white font-semibold text-xs flex justify-center rounded-full"
                 >

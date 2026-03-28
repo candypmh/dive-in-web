@@ -31,7 +31,7 @@ const UserProfileImage = ({
   return (
     <div className="flex-none flex relative">
       <Image
-        alt="profileImage"
+        alt="프로필 이미지"
         src={imageUrl}
         width={96}
         height={96}
@@ -39,6 +39,7 @@ const UserProfileImage = ({
         priority
       />
       <button
+        aria-label="프로필 이미지 변경"
         className="flex p-1 absolute bottom-0 right-0 bg-gray-400 rounded-full"
         onClick={openFileInput}
         type="button"

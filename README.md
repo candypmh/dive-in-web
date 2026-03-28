@@ -38,7 +38,14 @@
 
 ## 📸 데모
 
-> 추후 GIF 추가 예정
+### 메인 서비스 (홈 · 수업 · 수영장)
+> GIF 추가 예정
+
+### 커뮤니티 (목록 · 작성 · 좋아요 · 댓글)
+> GIF 추가 예정
+
+### 통합 검색 · 최근 검색어
+> GIF 추가 예정
 
 ---
 
@@ -47,10 +54,10 @@
 | 버전 | 기능 | 설명 |
 |------|------|------|
 | v1.0 | 수영 클래스 | 흩어져 있던 수영 클래스를 한눈에 확인. 난이도, 강사, 가격, 신청 링크 제공 |
-| v1.0 | 수영장 | 수영장 정보 및 위치 확인, 카카오맵 길찾기 연동 |
+| v1.0 | 수영장 | 수영장 정보 및 위치 확인, 카카오맵 연동, Mock 데이터 연결 |
 | v1.5 | 마이페이지 | 내 정보 확인 및 프로필 관리, 수영코칭팀/강사 등록 |
-| v2.0 | 커뮤니티 | 카테고리별 게시글 작성·조회·댓글, 무한스크롤, OG 링크 미리보기 |
-| v2.5 | 통합검색 | 클래스·수영장·커뮤니티 통합 검색, 디바운싱 + Zustand 전역 상태 관리 |
+| v2.0 | 커뮤니티 | 카테고리별 게시글 작성·조회·수정·삭제, 좋아요·댓글 Mock 연결, 무한스크롤, OG 링크 미리보기 |
+| v2.5 | 통합검색 | 클래스·수영장·커뮤니티 통합 검색, 디바운싱 + Zustand 전역 상태 관리, 최근 검색어 persist |
 
 ---
 
@@ -101,6 +108,49 @@ page.tsx (Server Component)
 |--------------|------|
 | `/api/og?url=` | 외부 URL OG 메타태그 서버사이드 파싱 (CORS 우회) |
 | `/api/search?keyword=` | Mock: 빌더 기반 키워드 필터링 / Real: 외부 API 프록시 |
+| `/api/community/posts/list/[category]/[page]` | 커뮤니티 목록 페이지네이션 |
+| `/api/community/posts/[id]` | 커뮤니티 게시글 단건 조회 |
+| `/api/auth/callback` | Kakao OAuth 콜백 처리, 토큰 쿠키 저장 |
+
+---
+
+## 🔧 트러블슈팅
+
+### 카카오맵 미작동 — 3단계 디버깅
+
+배포 후 수영장 상세 페이지에서 카카오맵이 전혀 표시되지 않는 문제가 발생했습니다.
+
+**1단계 — Script `id` 누락**
+
+```tsx
+// 수정 전
+<Script src={`https://dapi.kakao.com/v2/maps/sdk.js?...`} strategy="afterInteractive" />
+
+// 수정 후
+<Script id="kakao-map-sdk" src={`https://dapi.kakao.com/v2/maps/sdk.js?...`} strategy="afterInteractive" />
+```
+
+Next.js `Script` 컴포넌트는 `id` 속성이 없으면 렌더링하지 않습니다. Network 탭에서 SDK 요청 자체가 없다는 걸 발견해 원인을 파악했습니다.
+
+**2단계 — 스크립트 로딩 타이밍 문제**
+
+`afterInteractive` 전략은 컴포넌트 마운트 이후에 스크립트를 로드합니다. `KakaoMap.tsx`가 마운트될 때 `window.kakao`가 아직 없어 초기화가 건너뛰어지는 타이밍 문제가 있었습니다.
+
+```tsx
+// 수정 후: window.kakao가 없으면 load 이벤트 대기
+if (!window.kakao) {
+  const script = document.querySelector('script[src*="dapi.kakao.com"]');
+  if (script) {
+    script.addEventListener("load", initMap);
+  }
+  return;
+}
+initMap();
+```
+
+**3단계 — 카카오 개발자 콘솔 설정**
+
+스크립트 로드 후에도 지도 타일이 표시되지 않아 카카오 개발자 콘솔을 확인한 결과, **카카오맵 API가 비활성화** 상태였습니다. API 활성화 및 플랫폼 도메인 등록으로 최종 해결했습니다.
 
 ---
 

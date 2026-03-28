@@ -114,11 +114,8 @@ export default function ClientSearch() {
                     {getCategoryIcon(result.categoryName)}
                   </div>
                   <p className="text-md pl-8">{result.title}</p>
-                  <p className="text-sm text-gray-600 pl-8">
+                  <p className="text-sm text-gray-600 pl-8 line-clamp-2">
                     {result.content}
-                  </p>
-                  <p className="text-sm text-gray-600 pl-8">
-                    {result.contentSummary}
                   </p>
                   <p className="text-sm text-gray-600 pl-8">
                     {formatKST(result.createdAt)}

@@ -11,6 +11,8 @@ export const mockLessonList: Lesson[] = [
   { id: 4, academyName: "4레인", academyImageUrl: "/empty/academy_profile.png", lessonName: "청소년 선수반", level: "중급", keyword: "접영,교정", price: "월 130,000원" },
   { id: 5, academyName: "블루웨이브", academyImageUrl: "/empty/academy_profile.png", lessonName: "주말 집중 수영 트레이닝", level: "중급,고급", keyword: "자유형,체력", price: "월 110,000원" },
   { id: 6, academyName: "아쿠아짐", academyImageUrl: "/empty/academy_profile.png", lessonName: "시니어 아쿠아로빅", level: "초급", keyword: "수중운동,건강", price: "월 80,000원" },
+  { id: 7, academyName: "스윔히어로", academyImageUrl: "/empty/academy_profile.png", lessonName: "접영 집중 교정 클래스", level: "중급,고급", keyword: "접영,교정", price: "월 140,000원" },
+  { id: 8, academyName: "오션핏", academyImageUrl: "/empty/academy_profile.png", lessonName: "다이어트 수영 클래스", level: "초급,중급", keyword: "자유형,체력", price: "월 95,000원" },
 ];
 
 const mockDetail = (id: number): LessonDetail => ({
@@ -41,7 +43,9 @@ const mockDetail = (id: number): LessonDetail => ({
     { id: 3, poolName: "뚝섬한강공원수영장", poolAddress: "서울 광진구 강변북로 139", region: "광진", imageUrl: "", latitude: 37.5295, longitude: 127.0667 },
     { id: 4, poolName: "노원실내수영장", poolAddress: "서울 노원구 동일로 1321", region: "노원", imageUrl: "", latitude: 37.6556, longitude: 127.0763 },
     { id: 5, poolName: "마포구민체육센터수영장", poolAddress: "서울 마포구 월드컵북로 400", region: "마포", imageUrl: "", latitude: 37.5683, longitude: 126.9077 },
-    { id: 1, poolName: "잠실실내수영장", poolAddress: "서울 송파구 올림픽로 240", region: "송파", imageUrl: "", latitude: 37.5126, longitude: 127.0769 },
+    { id: 6, poolName: "잠실실내수영장", poolAddress: "서울 송파구 올림픽로 240", region: "송파", imageUrl: "", latitude: 37.5126, longitude: 127.0769 },
+    { id: 7, poolName: "올림픽수영장", poolAddress: "서울 송파구 올림픽로 424", region: "송파", imageUrl: "", latitude: 37.5219, longitude: 127.0822 },
+    { id: 8, poolName: "뚝섬한강공원수영장", poolAddress: "서울 광진구 강변북로 139", region: "광진", imageUrl: "", latitude: 37.5295, longitude: 127.0667 },
   ][id - 1],
   images: [],
 });

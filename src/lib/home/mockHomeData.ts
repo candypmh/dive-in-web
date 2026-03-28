@@ -54,6 +54,17 @@ export const mockHomeData: HomeProps = {
       price: "월 90,000원",
       viewCnt: 185,
     },
+    {
+      id: 7,
+      instructorName: "스윔히어로",
+      instructorImgUrl: "/empty/academy_profile.png",
+      keyword: "접영,교정",
+      lessonName: "접영 집중 교정 클래스",
+      lessonImgUrl: "https://placehold.co/300x200",
+      level: "중급,고급",
+      price: "월 140,000원",
+      viewCnt: 160,
+    },
   ],
 
   newLessonList: [
@@ -90,6 +101,17 @@ export const mockHomeData: HomeProps = {
       price: "월 80,000원",
       viewCnt: 22,
     },
+    {
+      id: 8,
+      instructorName: "오션핏",
+      instructorImgUrl: "/empty/academy_profile.png",
+      keyword: "자유형,체력",
+      lessonName: "다이어트 수영 클래스",
+      lessonImgUrl: "https://placehold.co/300x200",
+      level: "초급,중급",
+      price: "월 95,000원",
+      viewCnt: 18,
+    },
   ],
 
   topViewPostList: [5, 12, 20].map(toPostListItem),
@@ -103,7 +125,7 @@ export const mockHomeData: HomeProps = {
       content: "전국 아마추어 수영인 대상 대회",
       categoryName: "COMPETITION",
       period: "2026.04.12 ~ 2026.04.13",
-      dDay: "D-36",
+      dDay: null,
     },
     {
       postId: 102,
@@ -111,7 +133,7 @@ export const mockHomeData: HomeProps = {
       content: "마스터즈 등록 선수 대상 대회",
       categoryName: "COMPETITION",
       period: "2026.05.02 ~ 2026.05.04",
-      dDay: "D-56",
+      dDay: null,
     },
   ],
 };

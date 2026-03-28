@@ -16,6 +16,18 @@ import { getHome } from "@/api/server/home";
 import { HomeProps } from "@/types/home";
 import { CATEGORYNAME_TO_LABEL, CategoryName } from "@/constants/categories";
 
+function calcDDay(period: string | null): string {
+  if (!period) return "";
+  const startStr = period.split("~")[0].trim().replace(/\./g, "-");
+  const start = new Date(startStr);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const diff = Math.ceil((start.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+  if (diff > 0) return `D-${diff}`;
+  if (diff === 0) return "D-Day";
+  return `D+${Math.abs(diff)}`;
+}
+
 // export default function Home({content}: {content: string}) {
 export default function HomeClient({ home }: { home: HomeProps }) {
   const router = useRouter();
@@ -100,7 +112,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
                   )
                 )}
               </div>
-              <h4 className="pb-10 text-xl font-bold text-gray-900 mb-1">
+              <h4 className="pb-10 text-base sm:text-xl font-bold text-gray-900 mb-1">
                 {lesson.lessonName}
               </h4>
               <div className="mt-auto">
@@ -137,7 +149,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
                   )
                 )}
               </div>
-              <h4 className="pb-10 text-xl font-bold text-gray-900 mb-1">
+              <h4 className="pb-10 text-base sm:text-xl font-bold text-gray-900 mb-1">
                 {lesson.lessonName}
               </h4>
               <div className="mt-auto">
@@ -420,7 +432,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
                     {/* <div className="flex flex-col items-center w-24 flex-shrink-0"> */}
                     <div className="mt-6 items-center flex-shrink-0">
                       {/* <div className="mt-6 w-24 h-24 overflow-hidden rounded-lg"> */}
-                      <p className="mr-2 font-bold">{contest.dDay}</p>
+                      <p className="mr-2 font-bold">{calcDDay(contest.period)}</p>
                       {/* <img
                           src={
                             community.images?.imageUrl ||

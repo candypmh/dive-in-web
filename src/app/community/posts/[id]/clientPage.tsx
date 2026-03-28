@@ -141,9 +141,7 @@ export default function ClientCommunity({ postId }: { postId: number }) {
     }
   };
 
-  if (!community) {
-    return <div className="flex justify-center py-20 text-gray-400 text-sm">로딩중...</div>;
-  }
+  if (!community) return null;
 
   return (
     <div className="flex flex-col pb-10 relative h-full">

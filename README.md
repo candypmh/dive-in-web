@@ -71,6 +71,7 @@
 | Validation | Zod | API 경계에서 런타임 타입 검증 및 transform으로 안전한 데이터 처리 |
 | 상태 관리 | Zustand | 검색 상태를 여러 컴포넌트에서 공유하고 props drilling 없이 접근 |
 | 인증 | Kakao OAuth | 소셜 로그인 UX 제공 |
+| 테스트 | Vitest | 유틸 함수(formatKST, calcDDay) 단위 테스트 작성 |
 
 ---
 
@@ -152,6 +153,29 @@ initMap();
 
 스크립트 로드 후에도 지도 타일이 표시되지 않아 카카오 개발자 콘솔을 확인한 결과, **카카오맵 API가 비활성화** 상태였습니다. API 활성화 및 플랫폼 도메인 등록으로 최종 해결했습니다.
 
+### calcDDay 타임존 버그 — D-Day 계산이 하루 밀리는 문제
+
+수업 목록에서 D-Day 배지가 KST 기준으로 하루씩 밀려 표시되는 문제가 발생했습니다.
+
+**원인 — `new Date()` UTC 파싱**
+
+```ts
+// 수정 전: "2025.03.01" → JavaScript가 UTC 기준으로 파싱
+const date = new Date("2025.03.01"); // UTC 00:00 → KST 09:00, 날짜가 달라짐
+```
+
+날짜 문자열을 `new Date(string)` 에 직접 넘기면 브라우저/Node 환경에 따라 UTC로 해석됩니다. KST(UTC+9)에서는 `2025-03-01T00:00:00Z`가 `2025-03-01 09:00 KST`가 되어 날짜 비교가 어긋납니다.
+
+**해결 — 로컬 시간 파싱**
+
+```ts
+// 수정 후: 연/월/일을 직접 분리해 로컬 시간으로 생성
+const [y, m, d] = "2025.03.01".split(".").map(Number);
+const date = new Date(y, m - 1, d); // 로컬 기준 2025-03-01 00:00
+```
+
+`new Date(year, month, day)` 생성자는 항상 로컬 타임존을 사용합니다. 단위 테스트(Vitest)로 KST 경계값 케이스를 검증해 재발을 방지했습니다.
+
 ---
 
 ## 📁 폴더 구조
@@ -176,6 +200,8 @@ src/
 ```bash
 npm install
 npm run dev
+npm run test                                        # 단위 테스트 전체 실행
+npx vitest run src/utils/formatKST.test.ts          # 단일 테스트 파일 실행
 ```
 
 **환경변수 설정** (`.env.local`):

@@ -60,3 +60,4 @@ next-env.d.ts
 build.sh
 claude.md
 /Claude-Work
+.claude/

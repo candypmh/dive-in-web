@@ -4,7 +4,7 @@
 
 여기저기 흩어져 있던 수영 클래스 정보를 한 눈에 확인할 수 있는 통합 조회 플랫폼입니다.
 
-**배포 링크**: [dive-in-web-vercel-deploy-8vor-amrmsr1u0.vercel.app](https://dive-in-web-vercel-deploy-8vor-amrmsr1u0.vercel.app)
+**배포 링크**: [dive-in-web-vercel-deploy-8vor-7oe0h55kz.vercel.app](https://dive-in-web-vercel-deploy-8vor-7oe0h55kz.vercel.app)
 
 ---
 
@@ -39,13 +39,16 @@
 ## 📸 데모
 
 ### 메인 서비스 (홈 · 수업 · 수영장)
-> GIF 추가 예정
+> ![흐름2](https://github.com/user-attachments/assets/91c4ff73-427e-4ce4-aea8-1ad301974678)
+
 
 ### 커뮤니티 (목록 · 작성 · 좋아요 · 댓글)
-> GIF 추가 예정
+> ![흐름1](https://github.com/user-attachments/assets/07c8024b-e6cc-45e9-ae0b-921fe117e770)
+
 
 ### 통합 검색 · 최근 검색어
-> GIF 추가 예정
+> ![흐름3](https://github.com/user-attachments/assets/23ff756f-4db8-406b-acc1-7226c82aef78)
+
 
 ---
 

@@ -12,7 +12,8 @@ import { CommunityProps } from "@/types/community";
 import { CATEGORYNAME_TO_LABEL } from "@/constants/categories";
 import CustomModal from "@/app/_components/CustomModal";
 import PostMenuSlide from "./_components/PostMenuSlide";
-import { getPost, deletePost, toggleLike, addComment } from "@/lib/community/communityRepo.client";
+import { getCommunity } from "@/api/server/community";
+import { deletePost, toggleLike, addComment } from "@/lib/community/communityRepo.client";
 import toast from "react-hot-toast";
 import { formatKST } from "@/utils";
 import DetailPagePhotoSlider from "@/app/_components/PhotoSlider";
@@ -30,7 +31,7 @@ export default function ClientCommunity({ postId }: { postId: number }) {
   const router = useRouter();
 
   useEffect(() => {
-    getPost(postId).then((post) => {
+    getCommunity(String(postId)).then((post) => {
       if (!post) {
         router.back();
         return;

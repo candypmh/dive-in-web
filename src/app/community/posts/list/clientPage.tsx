@@ -6,7 +6,7 @@ import { useInView } from "react-intersection-observer";
 import FloatingButton from "../../_components/FloatingButton";
 import CategoryFilter from "@/app/community/_components/CategoryFilter";
 import { CATEGORIES, KEY_TO_CATEGORYNAME } from "@/constants/categories";
-import { listPage } from "@/lib/community/communityRepo.client";
+import { getCommunities } from "@/api/server/community";
 import { CommunitiesProps } from "@/types/community";
 
 const PAGE_SIZE = 10;
@@ -37,11 +37,12 @@ export default function CommunitiesClient({
     let cancelled = false;
     setLoading(true);
 
-    listPage({ categoryKey, page, pageSize: PAGE_SIZE })
+    const apiCategory = categoryKey === "none" || categoryKey === "popular" ? undefined : KEY_TO_CATEGORYNAME[categoryKey];
+    getCommunities(apiCategory ?? "", String(page))
       .then((result) => {
         if (cancelled) return;
-        setItems((prev) => (page === 0 ? result.items : [...prev, ...result.items]));
-        setHasNext(result.hasNext);
+        setItems((prev) => (page === 0 ? result.posts : [...prev, ...result.posts]));
+        setHasNext(result.hasMore);
       })
       .catch(() => {
         if (!cancelled) setHasNext(false);

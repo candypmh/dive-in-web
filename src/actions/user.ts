@@ -6,33 +6,37 @@ import { cookies } from "next/headers";
 export const getUser = async () => {
   const cookieStore = cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
-  const refreshToken = cookieStore.get("refreshToken")?.value;
 
-  if (!accessToken || !refreshToken) {
+  if (!accessToken) {
     return null;
   }
 
   try {
-    const userResponse = await fetch("https://api.dive-in.co.kr/user/profile", {
+    const userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/user`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${accessToken}`,
-        "X-Refresh-Token": refreshToken,
+        "Content-Type": "application/json",
       },
-      next: {
-        tags: ["user"],
-      },
+      next: { tags: ["user"] },
     });
 
     if (!userResponse.ok) {
-      const body = await userResponse.json();
-      console.error(body);
+      console.error(await userResponse.json());
       return null;
     }
 
     const body = await userResponse.json();
+    const user = body.user;
 
-    return body.data;
+    return {
+      id: user.id,
+      nickname: user.nickname,
+      profileImageUrl: user.profile_image || "/image/logo_b.png",
+      email: "",
+      role: "user",
+      socialType: "KAKAO",
+    };
   } catch (error) {
     console.error(error);
     return null;
@@ -42,9 +46,8 @@ export const getUser = async () => {
 export const updateUser = async (formData: FormData) => {
   const cookieStore = cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
-  const refreshToken = cookieStore.get("refreshToken")?.value;
 
-  if (!accessToken || !refreshToken) {
+  if (!accessToken) {
     return null;
   }
 
@@ -53,7 +56,6 @@ export const updateUser = async (formData: FormData) => {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${accessToken}`,
-        "X-Refresh-Token": refreshToken,
       },
       body: formData,
     });
@@ -67,6 +69,5 @@ export const updateUser = async (formData: FormData) => {
     revalidateTag("user");
   } catch (error) {
     console.error(error);
-    return null;
   }
 };

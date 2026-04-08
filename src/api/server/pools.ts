@@ -13,14 +13,14 @@ export const getPools = async () => {
     const response = await fetch(`${BASE_URL}/pools`);
 
     if (!response.ok) {
-      return [];
+      return mockPools;
     }
 
     const body = await response.json();
     return poolSchema.array().parse(body.data);
   } catch (error) {
     console.error(error);
-    return [];
+    return mockPools;
   }
 };
 
@@ -31,7 +31,7 @@ export const getPool = async (id: number) => {
     const apiResponse = await fetch(`${BASE_URL}/pools/${id}`);
 
     if (!apiResponse.ok) {
-      return null;
+      return mockPoolDetails.find((p) => p.id === id) ?? null;
     }
 
     const body = await apiResponse.json();
@@ -39,6 +39,6 @@ export const getPool = async (id: number) => {
     return poolDetailSchema.parse(body.data);
   } catch (error) {
     console.error(error);
-    return null;
+    return mockPoolDetails.find((p) => p.id === id) ?? null;
   }
 };

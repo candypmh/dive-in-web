@@ -10,7 +10,7 @@ export const getHome = async () => {
 
   try {
     const response = await fetch("https://api.dive-in.co.kr/home/initial", {
-      next: { revalidate: 0 }, //최신상태 유지를 위해 캐싱 X
+      next: { revalidate: 0 },
     });
 
     const body = await response.json();
@@ -19,12 +19,6 @@ export const getHome = async () => {
     return validateData.data;
   } catch (error) {
     console.error(error);
-    return {
-      topViewLessonList: [],
-      newLessonList: [],
-      topViewPostList: [],
-      newPostList: [],
-      competitionPostList: [],
-    };
+    return mockHomeData;
   }
 };

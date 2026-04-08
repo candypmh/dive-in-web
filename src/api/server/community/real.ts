@@ -6,10 +6,11 @@ import {
 } from "@/schemas/communities";
 import { CommunityProps, communityResponseDetailProps } from "@/types/community";
 
-export const getCommunities = async( category: string = "none", page: string = "0" ): Promise<communityResponseDetailProps>  => {
+export const getCommunities = async( category: string = "", page: string = "0" ): Promise<communityResponseDetailProps>  => {
   try {
-    //기존
-    const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/community/posts/list/${category}/${page}`;
+    const params = new URLSearchParams({ page });
+    if (category) params.set("category", category);
+    const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/community/posts?${params.toString()}`;
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`HTTP에러 상태 코드: ${response.status}`);
@@ -151,7 +152,7 @@ export const deleteCommunity = async (id: string, memberId: string) => {
 export const getComments = async (postId: number) => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/community/comments/${postId}`
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/community/posts/${postId}/comments`
     );
     const body = await response.json();
 

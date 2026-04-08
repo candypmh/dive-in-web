@@ -10,19 +10,17 @@ type Props = {
 const LoginPage = ({ searchParams }: Props) => {
   const next = searchParams.next ?? "/";
 
-  const handleKakaoLogin = async () => {
-    const isInitialized = Kakao.isInitialized();
-
-    if (!isInitialized) {
-      console.error("Kakao SDK is not initialized.");
-      return;
-    }
-
-    Kakao.Auth.authorize({
-      redirectUri: `${window.location.origin}/api/auth/callback`,
-      state: `next=${next}`,
+  const handleKakaoLogin = () => {
+    const restApiKey = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY;
+    const redirectUri = `${window.location.origin}/api/auth/callback`;
+    const params = new URLSearchParams({
+      client_id: restApiKey!,
+      redirect_uri: redirectUri,
+      response_type: "code",
       scope: "openid",
+      state: `next=${next}`,
     });
+    window.location.href = `https://kauth.kakao.com/oauth/authorize?${params.toString()}`;
   };
   
   return (

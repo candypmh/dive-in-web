@@ -12,7 +12,9 @@ import { CommunityProps } from "@/types/community";
 import { CATEGORYNAME_TO_LABEL } from "@/constants/categories";
 import CustomModal from "@/app/_components/CustomModal";
 import PostMenuSlide from "./_components/PostMenuSlide";
-import { getPost, deletePost, toggleLike, addComment } from "@/lib/community/communityRepo.client";
+import { getCommunity } from "@/api/server/community";
+import { deletePost, toggleLike } from "@/lib/community/communityRepo.client";
+import { createComment } from "@/api/server/community/real";
 import toast from "react-hot-toast";
 import { formatKST } from "@/utils";
 import DetailPagePhotoSlider from "@/app/_components/PhotoSlider";
@@ -30,7 +32,7 @@ export default function ClientCommunity({ postId }: { postId: number }) {
   const router = useRouter();
 
   useEffect(() => {
-    getPost(postId).then((post) => {
+    getCommunity(String(postId)).then((post) => {
       if (!post) {
         router.back();
         return;
@@ -121,8 +123,12 @@ export default function ClientCommunity({ postId }: { postId: number }) {
     if (!comment.trim()) return;
 
     try {
-      const updatedComments = await addComment(postId, comment);
-      setCommunity((prev) => prev ? { ...prev, commentList: updatedComments, cmntCnt: updatedComments.length } : prev);
+      const newComment = await createComment(postId, comment);
+      setCommunity((prev) => prev ? {
+        ...prev,
+        commentList: [...(prev.commentList ?? []), newComment],
+        cmntCnt: (prev.cmntCnt ?? 0) + 1,
+      } : prev);
       setComment("");
     } catch (error) {
       console.error("댓글 등록 실패:", error);

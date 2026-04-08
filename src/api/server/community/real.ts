@@ -1,15 +1,17 @@
 "use server";
 
+import { cookies } from "next/headers";
 import {
   communityDetailSchema,
   communityResponseSchema,
 } from "@/schemas/communities";
 import { CommunityProps, communityResponseDetailProps } from "@/types/community";
 
-export const getCommunities = async( category: string = "none", page: string = "0" ): Promise<communityResponseDetailProps>  => {
+export const getCommunities = async( category: string = "", page: string = "0" ): Promise<communityResponseDetailProps>  => {
   try {
-    //기존
-    const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/community/posts/list/${category}/${page}`;
+    const params = new URLSearchParams({ page });
+    if (category) params.set("category", category);
+    const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/community/posts?${params.toString()}`;
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`HTTP에러 상태 코드: ${response.status}`);
@@ -65,21 +67,30 @@ export const getCommunity = async (postId: string): Promise<CommunityProps|null>
 
 export const createCommunity = async (formData: FormData) => {
   try {
+    const accessToken = cookies().get("accessToken")?.value;
+    const body = {
+      category: formData.get("categoryType") as string,
+      title: formData.get("title") as string,
+      content: formData.get("content") as string,
+      images: [],
+    };
+
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/community/posts`, {
       method: "POST",
-      body: formData,
       headers: {
-        Accept: "application/json",
+        "Content-Type": "application/json",
+        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
       },
+      body: JSON.stringify(body),
     });
 
-    if (!response) {
+    if (!response.ok) {
       throw new Error("게시글 작성 실패!");
     }
 
     const result = await response.json();
-    if (result?.success && result?.data?.postId) {
-      return result.data.postId;
+    if (result?.post?.id) {
+      return result.post.id;
     } else {
       throw new Error("postId를 반환하지 않았습니다.");
     }
@@ -151,7 +162,7 @@ export const deleteCommunity = async (id: string, memberId: string) => {
 export const getComments = async (postId: number) => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/community/comments/${postId}`
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/community/posts/${postId}/comments`
     );
     const body = await response.json();
 
@@ -162,28 +173,31 @@ export const getComments = async (postId: number) => {
   }
 };
 
-export const createComment = async (formData: FormData) => {
+export const createComment = async (postId: number, content: string) => {
   try {
+    const accessToken = cookies().get("accessToken")?.value;
+
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/community/comments`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/community/posts/${postId}/comments`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ content }),
       }
     );
 
-    if (!response) {
-      throw new Error("게시글 작성 실패!");
+    if (!response.ok) {
+      throw new Error("댓글 작성 실패!");
     }
 
     const result = await response.json();
-    return result;
+    return result.comment;
   } catch (error) {
     console.error("댓글 작성 실패:", error);
-    return [];
+    throw error;
   }
 };
 

@@ -15,7 +15,7 @@ export const getLessons = async () => {
     return lessonSchema.array().parse(body.data);
   } catch (error) {
     console.error(error);
-    return [];
+    return mockLessonList;
   }
 };
 
@@ -28,6 +28,6 @@ export const getLesson = async (id: number) => {
     return lessonDetailSchema.parse(body.data);
   } catch (error) {
     console.error(error);
-    return null;
+    return getMockLesson(id);
   }
 };

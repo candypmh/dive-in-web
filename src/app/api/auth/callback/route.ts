@@ -20,7 +20,7 @@ export async function GET(request: Request) {
     const res = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code }),
+      body: JSON.stringify({ code, redirectUri: `${origin}/api/auth/callback` }),
     });
 
     if (!res.ok) {

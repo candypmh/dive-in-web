@@ -4,7 +4,7 @@
 
 여기저기 흩어져 있던 수영 클래스 정보를 한 눈에 확인할 수 있는 통합 조회 플랫폼입니다.
 
-**배포 링크**: [dive-in-web-vercel-deploy-8vor-7oe0h55kz.vercel.app](https://dive-in-web-vercel-deploy-8vor-7oe0h55kz.vercel.app)
+**배포 링크**: [dive-in-web-vercel-deploy-8vor.vercel.app](https://dive-in-web-vercel-deploy-8vor.vercel.app)
 
 ---
 

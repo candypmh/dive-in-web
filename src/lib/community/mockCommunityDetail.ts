@@ -210,6 +210,7 @@ export function buildCommunityDetail(postId: number) {
         orderNumber: 1,
         cmntClass: 0,
         writer: "댓글러",
+        writerId: "mock-other-user",
         writerProfile: `https://picsum.photos/seed/commenter${postId}/100/100`,
         likeCnt: 0,
         createdAt: new Date(2026, 0, 2 + (postId % 60)).toISOString(),

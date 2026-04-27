@@ -54,6 +54,7 @@ export type CommentProps = {
   orderNumber: number;
   cmntClass: number;
   writer: string;
+  writerId: string;
   writerProfile: string | null;
   likeCnt: number;
   createdAt: string;

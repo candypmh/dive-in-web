@@ -12,17 +12,15 @@ import { CommunityProps } from "@/types/community";
 import { CATEGORYNAME_TO_LABEL } from "@/constants/categories";
 import CustomModal from "@/app/_components/CustomModal";
 import PostMenuSlide from "./_components/PostMenuSlide";
-import { getCommunity } from "@/api/server/community";
-import { deletePost, toggleLike } from "@/lib/community/communityRepo.client";
-import { createComment } from "@/api/server/community/real";
+import { getCommunity, deleteCommunity, addLikePost, deleteLikePost, createComment } from "@/api/server/community";
 import toast from "react-hot-toast";
 import { formatKST } from "@/utils";
 import DetailPagePhotoSlider from "@/app/_components/PhotoSlider";
 import CommentList from "../../_components/CommentList";
 
-export default function ClientCommunity({ postId }: { postId: number }) {
+export default function ClientCommunity({ postId, currentUserId }: { postId: number; currentUserId: string | null }) {
   const [community, setCommunity] = useState<CommunityProps | null>(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const isLoggedIn = currentUserId !== null;
   const [comment, setComment] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -97,7 +95,7 @@ export default function ClientCommunity({ postId }: { postId: number }) {
 
   const handleDelete = async () => {
     try {
-      await deletePost(postId);
+      await deleteCommunity(String(postId));
       router.replace("/community/posts/list?category=none");
       toast.success("게시글이 삭제되었습니다.");
     } catch (error) {
@@ -108,13 +106,28 @@ export default function ClientCommunity({ postId }: { postId: number }) {
 
   const handleLike = async () => {
     if (!community) return;
+    if (!isLoggedIn) {
+      toast.error("로그인이 필요합니다.");
+      return;
+    }
+
+    // optimistic update
+    const prevLiked = changeLiked;
+    const prevCnt = changeLikesCnt;
+    setChangeLiked(!prevLiked);
+    setChangeLikesCnt(prevLiked ? prevCnt - 1 : prevCnt + 1);
 
     try {
-      const { isLiked, likesCnt } = await toggleLike(postId);
-      setChangeLiked(isLiked);
-      setChangeLikesCnt(likesCnt);
+      const result = prevLiked
+        ? await deleteLikePost(String(postId))
+        : await addLikePost(String(postId));
+      setChangeLiked(result.isLiked);
+      setChangeLikesCnt(result.likesCnt);
     } catch (error) {
       console.error("좋아요 처리 오류:", error);
+      // rollback
+      setChangeLiked(prevLiked);
+      setChangeLikesCnt(prevCnt);
     }
   };
 
@@ -268,6 +281,7 @@ export default function ClientCommunity({ postId }: { postId: number }) {
       <CommentList
         commentList={community.commentList}
         postId={community.postId}
+        currentUserId={currentUserId}
         onCommentChange={(updated) =>
           setCommunity((prev) => prev ? { ...prev, commentList: updated, cmntCnt: updated.length } : prev)
         }
@@ -280,9 +294,7 @@ export default function ClientCommunity({ postId }: { postId: number }) {
             로그인 후 댓글 달기가 가능합니다
             <button
               className="text-left text-sm font-semibold text-blue-900"
-              onClick={() => {
-                setIsLoggedIn(true);
-              }}
+              onClick={() => router.push("/auth/login")}
             >
               로그인
             </button>

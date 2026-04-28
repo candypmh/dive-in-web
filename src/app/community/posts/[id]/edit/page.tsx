@@ -11,7 +11,7 @@ import { CATEGORYNAME_TO_LABEL } from "@/constants/categories";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import OpenGraphPreview from "@/app/_components/OpenGraphLinkReview";
-import { getPost, updatePost } from "@/lib/community/communityRepo.client";
+import { getCommunity, updateCommunity } from "@/api/server/community";
 
 const CATEGORIES = [
   { name: "소통해요", key: "COMMUNICATION" },
@@ -111,9 +111,9 @@ useEffect(() => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const post = await getPost(Number(postId));
+        const post = await getCommunity(postId);
         if (!post) {
-          throw new Error("게시글 수정 실패!");
+          throw new Error("게시글을 불러올 수 없습니다.");
         }
 
         setTitle(post.title);
@@ -159,11 +159,10 @@ useEffect(() => {
     );
 
     try {
-      await updatePost(Number(postId), {
+      await updateCommunity(postId, {
         title,
         content,
-        categoryName: category.key as import("@/constants/categories").CategoryName,
-        images: existImages,
+        images: existImages.map((img) => img.imageUrl),
       });
 
       router.replace(`/community/posts/${postId}`);

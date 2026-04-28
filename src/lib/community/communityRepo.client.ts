@@ -207,6 +207,7 @@ export async function addComment(postId: number, content: string): Promise<Comme
     cmntId: Date.now(),
     content,
     writer: "나",
+    writerId: "mock-user",
     writerProfile: null,
     groupName: 0,
     orderNumber: 0,

@@ -7,12 +7,14 @@ import { useState } from "react";
 import { GoPencil } from "react-icons/go";
 import { GoTrash } from "react-icons/go";
 import { CommentProps } from "@/types/community";
-import { deleteComment, updateComment } from "@/lib/community/communityRepo.client";
+import { updateComment, deleteComment } from "@/api/server/community";
 import toast from "react-hot-toast";
 
 type CommentComponentProps = CommentProps & {
   postId: number;
-  onCommentChange: (comments: CommentProps[]) => void;
+  currentUserId: string | null;
+  onDelete: (cmntId: number) => void;
+  onUpdate: (comment: CommentProps) => void;
 };
 
 export const Comment = ({
@@ -22,24 +24,27 @@ export const Comment = ({
   orderNumber,
   cmntClass,
   writer,
+  writerId,
   writerProfile,
   likeCnt,
   createdAt,
   postId,
-  onCommentChange,
+  currentUserId,
+  onDelete,
+  onUpdate,
 }: CommentComponentProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(content);
-  const isMyComment = writer === "나";
+  const isMyComment = writerId === currentUserId;
 
   const handleMenuToggle = () => setIsMenuOpen((prev) => !prev);
   const handleMenuClose = () => setIsMenuOpen(false);
 
   const handleDelete = async () => {
     try {
-      const updated = await deleteComment(postId, cmntId);
-      onCommentChange(updated);
+      await deleteComment(postId, String(cmntId));
+      onDelete(cmntId);
       toast.success("댓글이 삭제되었습니다.");
     } catch {
       toast.error("댓글 삭제에 실패했습니다.");
@@ -50,8 +55,8 @@ export const Comment = ({
   const handleEditSubmit = async () => {
     if (!editContent.trim()) return;
     try {
-      const updated = await updateComment(postId, cmntId, editContent);
-      onCommentChange(updated);
+      const updatedComment = await updateComment(postId, String(cmntId), editContent);
+      onUpdate(updatedComment);
       setIsEditing(false);
       toast.success("댓글이 수정되었습니다.");
     } catch {

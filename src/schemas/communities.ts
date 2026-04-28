@@ -39,8 +39,8 @@ export const communityDetailCommentSchema = z.object({
   orderNumber: z.number(),
   cmntClass: z.number(),
   writer: z.string(),
+  writerId: z.string().default(""),
   writerProfile: z.string().url().nullable(),
-  // writerProfile: z.string().url().optional(),
   likeCnt: z.number(),
   createdAt: z.string(),
 });

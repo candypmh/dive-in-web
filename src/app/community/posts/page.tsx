@@ -84,7 +84,7 @@ export default function CreatePost() {
           const res = await fetch("/api/community/upload", { method: "POST", body: fd });
           const data = await res.json().catch(() => ({}));
           if (!res.ok) throw new Error(data.error || "이미지 업로드 실패");
-          return data.url as string;
+          return data.imageUrls as string;  //백엔드랑 변수명 같아야 함
         })
       );
       const postId = await createCommunity(formData, imageUrls);

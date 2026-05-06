@@ -129,46 +129,34 @@ useEffect(() => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // const formData = new FormData(e.currentTarget);
-    const formData = new FormData();
-    const category = CATEGORIES.find(
-      (category) => category.name === selectedCategory
-    );
+    const category = CATEGORIES.find((c) => c.name === selectedCategory);
     if (!category) {
       toast.error("카테고리를 선택해주세요!");
       return;
     }
 
-    formData.append("memberId", "1");
-    formData.append("categoryType", category.key);
-    formData.append("title", title);
-    formData.append("content", content);
-
-    newImages.forEach((image) => {
-      formData.append("newImages", image);
-    });
-
-    formData.append(
-      "existingImages",
-      JSON.stringify(
-        existImages.map((img) => ({
-          repImage: img.repImage,
-          imageUrl: img.imageUrl,
-        }))
-      )
-    );
-
     try {
+      const newImageUrls = await Promise.all(
+        newImages.map(async (file) => {
+          const fd = new FormData();
+          fd.append("file", file);
+          const res = await fetch("/api/community/upload", { method: "POST", body: fd });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) throw new Error(data.error || "이미지 업로드 실패");
+          return data.imageUrls as string; //백엔드랑 변수명 같아야 함
+        })
+      );
+
       await updateCommunity(postId, {
         title,
         content,
-        images: existImages.map((img) => img.imageUrl),
+        images: [...existImages.map((img) => img.imageUrl), ...newImageUrls],
       });
 
       router.replace(`/community/posts/${postId}`);
     } catch (err) {
       console.error(err);
-      toast.error("글 수정에 실패했습니다.");
+      toast.error(err instanceof Error ? err.message : "글 수정에 실패했습니다.");
     }
   };
 
@@ -180,13 +168,17 @@ useEffect(() => {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
 
-    const selectedFiles = Array.from(e.target.files); //선택파일 배열변환
-    if (existImages.length + newImages.length >= 5) {
+    const selectedFiles = Array.from(e.target.files);
+    const oversized = selectedFiles.find((f) => f.size > 5 * 1024 * 1024);
+    if (oversized) {
+      toast.error("파일 크기는 5MB 이하여야 합니다.");
+      return;
+    }
+    if (existImages.length + newImages.length + selectedFiles.length > 5) {
       toast.error("이미지는 최대 5장까지 업로드 가능합니다.");
       return;
     }
-
-    setNewImages((prev) => [...prev, ...selectedFiles]); //이미지추가
+    setNewImages((prev) => [...prev, ...selectedFiles]);
   };
 
   const handleNewImageDelete = (index: number) => {

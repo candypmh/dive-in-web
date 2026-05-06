@@ -75,17 +75,23 @@ export default function CreatePost() {
     formData.append("categoryType", selectedCategoryKey);
     formData.append("title", title.value.trim());
     formData.append("content", content);
-    formData.append("memberId", "1");
-    images.forEach((image) => {
-      formData.append("images", image);
-    });
 
     try {
-      const postId = await createCommunity(formData);
+      const imageUrls = await Promise.all(
+        images.map(async (file) => {
+          const fd = new FormData();
+          fd.append("file", file);
+          const res = await fetch("/api/community/upload", { method: "POST", body: fd });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) throw new Error(data.error || "이미지 업로드 실패");
+          return data.imageUrls as string;  //백엔드랑 변수명 같아야 함
+        })
+      );
+      const postId = await createCommunity(formData, imageUrls);
       router.replace(`/community/posts/${postId}`);
     } catch (err) {
       console.error("글 작성 실패", err);
-      toast.error("글 작성에 실패했습니다.");
+      toast.error(err instanceof Error ? err.message : "글 작성에 실패했습니다.");
     } finally {
       isSubmittingRef.current = false;
       setIsLoading(false);
@@ -102,12 +108,17 @@ export default function CreatePost() {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
 
-    const selectedFiles = Array.from(e.target.files); //선택파일 배열변환
+    const selectedFiles = Array.from(e.target.files);
+    const oversized = selectedFiles.find((f) => f.size > 5 * 1024 * 1024);
+    if (oversized) {
+      toast.error("파일 크기는 5MB 이하여야 합니다.");
+      return;
+    }
     if (images.length + selectedFiles.length > 5) {
       toast.error("이미지는 최대 5장까지 업로드 가능합니다.");
       return;
     }
-    setImages((prev) => [...prev, ...selectedFiles]); //이미지추가
+    setImages((prev) => [...prev, ...selectedFiles]);
   };
 
   const handleImageButtonClick = () => {

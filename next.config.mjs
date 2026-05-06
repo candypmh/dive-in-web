@@ -16,6 +16,11 @@ const nextConfig = {
       {
         hostname: "dive-in-bucket.kr.object.ncloudstorage.com",
       },
+      {
+        protocol: "https",
+        hostname: "*.supabase.co",
+        pathname: "/storage/v1/object/public/**",
+      },
     ],
   },
 };

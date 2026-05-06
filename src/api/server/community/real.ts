@@ -66,14 +66,14 @@ export const getCommunity = async (postId: string): Promise<CommunityProps|null>
   }
 };
 
-export const createCommunity = async (formData: FormData) => {
+export const createCommunity = async (formData: FormData, imageUrls: string[] = []) => {
   try {
     const accessToken = cookies().get("accessToken")?.value;
     const body = {
       category: formData.get("categoryType") as string,
       title: formData.get("title") as string,
       content: formData.get("content") as string,
-      images: [],
+      images: imageUrls,
     };
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/community/posts`, {

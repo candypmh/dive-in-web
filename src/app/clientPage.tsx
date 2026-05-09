@@ -38,7 +38,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
               router.push("/search");
             }}
           >
-            <div className="relative w-full">
+            <div className="px-2 relative w-full">
               <input
                 type="text"
                 value={homeKeyword}
@@ -68,7 +68,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
           </Link>
         </div>
         {/* 카드리스트 */}
-        <div className="grid grid-cols-2 gap-6 px-8 py-1">
+        <div className="xl:grid-cols-3 grid grid-cols-2 gap-6 px-8 py-1">
           {popularLessons.map((lesson) => (
             <LessonCard key={lesson.id} lesson={lesson} />
           ))}
@@ -83,7 +83,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
           </Link>
         </div>
         {/* 카드리스트 */}
-        <div className="grid grid-cols-2 gap-6 px-8 py-1">
+        <div className="xl:grid-cols-3 grid grid-cols-2 gap-6 px-8 py-1">
           {NewLessons.map((lesson) => (
             <LessonCard key={lesson.id} lesson={lesson} />
           ))}

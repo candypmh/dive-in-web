@@ -21,7 +21,7 @@ export default function PostMenuSlide({ isOpen, onClose, onShare, onEdit, onDele
       )}
 
       <div
-        className={`fixed bottom-0 left-1/2 w-full transform -translate-x-1/2 bg-white p-4 pt-6 pb-6 border-t rounded-t-2xl transition-transform duration-300 ${
+        className={`fixed bottom-0 left-1/2 w-full transform -translate-x-1/2 bg-white py-4 px-6 border-t rounded-t-2xl transition-transform duration-300 ${
           isOpen ? "translate-y-0" : "translate-y-full"
         }`}
         style={{

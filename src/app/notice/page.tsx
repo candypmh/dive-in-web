@@ -9,7 +9,7 @@ const Page = async () => {
         width={120}
         height={120}
         priority
-        className="w-[120px] h-[120px]"
+        className="xl:hidden w-[120px] h-[120px]"
       />
       <span className="text-body_bm text-gray-600">
         이 페이지는 준비중입니다.

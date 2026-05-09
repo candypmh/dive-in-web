@@ -163,7 +163,7 @@ export default function ClientCommunity({ postId, currentUserId }: { postId: num
   if (!community) return null;
 
   return (
-    <div className="flex flex-col pb-10 relative h-full">
+    <div className="flex flex-col xl:px-6 pb-10 relative h-full">
       {/* 상단Nav */}
       <div className="flex items-center justify-between py-1 px-1">
         <button type="button" aria-label="뒤로 가기" className="flex p-3" onClick={() => router.back()}>
@@ -207,7 +207,7 @@ export default function ClientCommunity({ postId, currentUserId }: { postId: num
         </div>
       </div>
 
-      <div className="px-4 py-6">
+      <div className="px-6 py-6">
         <h1 className="text-2xl font-bold">{community.title}</h1>
         <p className="text-gray-700 mt-4 whitespace-pre-line">
           {community.content}

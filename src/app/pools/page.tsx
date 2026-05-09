@@ -1,4 +1,6 @@
 import { getPools } from "@/api/server/pools";
+
+export const dynamic = 'force-dynamic';
 import LessonChip from "@/components/ui/Chip";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,8 +9,8 @@ const PoolsPage = async () => {
   const pools = await getPools();
 
   return (
-    <div className="flex flex-col">
-      <header className="flex gap-2 pt-4 px-4">
+    <div className="flex flex-col xl:px-6">
+      <header className="flex gap-2 pt-4 px-4 xl:hidden">
         <div className="flex items-center gap-2">
           <Image
             alt="로고"
@@ -25,7 +27,7 @@ const PoolsPage = async () => {
           <h2 className="text-heading_2 text-gray-900">수영장</h2>
         </div>
 
-        <ul className="grid grid-cols-2 gap-4 px-4 pb-10">
+        <ul className="xl:grid-cols-3 grid grid-cols-2 gap-6 px-6 pb-10">
           {pools.map((pool, index) => (
             <li key={pool.id}>
               <Link

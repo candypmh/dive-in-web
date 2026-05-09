@@ -1,4 +1,6 @@
 import { getLessons } from "@/api/server/lessons";
+
+export const dynamic = 'force-dynamic';
 import LessonChip from "@/components/ui/Chip";
 import Link from "next/link";
 import InstructorProfile from "../_components/InstructorProfile";
@@ -22,8 +24,8 @@ export default async function LessonsPage() {
   const lessons = await getLessons();
 
   return (
-    <div className="flex flex-col">
-      <header className="flex gap-2 pt-4 px-4">
+    <div className="flex flex-col xl:px-6">
+      <header className="flex gap-2 pt-4 px-4 xl:hidden">
         <div className="flex items-center gap-2">
           <Image
             alt="로고"
@@ -39,7 +41,7 @@ export default async function LessonsPage() {
           <h2 className="text-heading_2">수영 클래스</h2>
         </div>
 
-        <ul className="flex flex-col gap-6 px-4 pb-10">
+        <ul className="xl:grid xl:grid-cols-2 flex flex-col gap-6 px-6 pb-10">
           {lessons.map((lesson) => (
             <li key={lesson.id}>
               <Link

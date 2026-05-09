@@ -1,7 +1,7 @@
 "use client";
 
 import {usePathname} from "next/navigation";
-import BottomNav from "./_components/BottomNav";
+import BottomNav from "./BottomNav";
 import { Suspense } from "react";
 
 export default function BottomNavWrapper() {

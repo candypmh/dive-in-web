@@ -13,7 +13,7 @@ const MyPage = async () => {
   const isLogin = !!user;
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col xl:px-6">
       <div className="flex pt-10 px-4 pb-5">
         <h1 className="text-heading_2">마이 페이지</h1>
       </div>

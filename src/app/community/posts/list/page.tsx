@@ -12,7 +12,7 @@ export default async function CommunityPage({
     CATEGORIES.find((cate) => cate.key === category)?.name || "전체";
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col xl:px-6">
       <header className="flex gap-2 pt-4 px-4 xl:hidden">
         <div className="flex items-center gap-2">
           <Image

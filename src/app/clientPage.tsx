@@ -38,7 +38,7 @@ export default function HomeClient({ home }: { home: HomeProps }) {
               router.push("/search");
             }}
           >
-            <div className="relative w-full">
+            <div className="px-2 relative w-full">
               <input
                 type="text"
                 value={homeKeyword}

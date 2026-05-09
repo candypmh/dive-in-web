@@ -22,7 +22,7 @@ export default async function LessonsPage() {
   const lessons = await getLessons();
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col xl:px-6">
       <header className="flex gap-2 pt-4 px-4 xl:hidden">
         <div className="flex items-center gap-2">
           <Image

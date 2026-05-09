@@ -6,7 +6,7 @@ import PoolIcon from "@/components/icons/PoolIcon";
 import SwimHatIcon from "@/components/icons/SwimHatIcon";
 import { useEffect } from "react";
 import { getSearch } from "@/api/server/search";
-import BackButton from "../_components/BackButton";
+import BackButton from "@/app/_components/BackButton";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useSearchStore } from "@/store/searchStore";
 import { IoCloseOutline } from "react-icons/io5";

@@ -46,7 +46,7 @@ export default function OpenGraphPreview({
       {/* 아래에서 슬라이딩 */}
       <div
         ref={containerRef}
-        className={`fixed bottom-0 left-1/2 transform -translate-x-1/2 bg-white p-4 pt-6 pb-10 border-t rounded-t-2xl transition-transform duration-300 ${
+        className={`fixed bottom-0 left-1/2 transform -translate-x-1/2 bg-white px-6 py-6 border-t rounded-t-2xl transition-transform duration-300 ${
           isOpen ? "translate-y-0" : "translate-y-full"
         }`}
         style={{

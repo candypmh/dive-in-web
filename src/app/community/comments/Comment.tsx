@@ -117,7 +117,7 @@ export const Comment = ({
       )}
 
       <div
-        className={`fixed bottom-0 left-1/2 w-full transform -translate-x-1/2 bg-white p-4 pt-6 pb-6 border-t rounded-t-2xl transition-transform duration-300 ${
+        className={`fixed bottom-0 left-1/2 w-full transform -translate-x-1/2 bg-white py-4 px-6 border-t rounded-t-2xl transition-transform duration-300 ${
           isMenuOpen ? "translate-y-0" : "translate-y-full"
         }`}
         style={{ zIndex: 100, width: "100%", maxWidth: "48rem", boxShadow: "0 -1px 3px rgba(0, 0, 0, 0.05)" }}

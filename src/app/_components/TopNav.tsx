@@ -48,7 +48,7 @@ const TopNav = () => {
         className="object-contain"
       />
 
-      <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2 text-body_bb">
+      <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2 text-body_bb overflow-hidden">
         <Link
           href={routes.home}
           className={`flex items-center gap-3 px-3 py-2 rounded-lg ${isHome ? "text-gray-900" : "text-gray-500"}`}

@@ -65,7 +65,7 @@ export default function CommunitiesClient({
 
   return (
     <div>
-      <div className="mb-4 px-4 grid grid-cols-3 gap-2 md:flex md:flex-nowrap md:gap-2">
+      <div className="mb-4 px-6 grid grid-cols-3 gap-2 md:flex md:flex-nowrap md:gap-2">
         {CATEGORIES.map((c) => (
           <button
             key={c.key}
@@ -82,7 +82,7 @@ export default function CommunitiesClient({
         ))}
       </div>
 
-      <ul className="flex flex-col gap-1 px-4 pb-10">
+      <ul className="flex flex-col gap-1 px-8 pb-10">
         {items.length > 0 ? (
           items.map((community) => (
             <CategoryFilter

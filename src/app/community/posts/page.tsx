@@ -33,7 +33,12 @@ export default function CreatePost() {
   const isSubmittingRef = useRef(false);
   const [isLinkOpen, setIsLinkOpen] = useState(false);
   const [link, setLink] = useState("");
-  type OgPreview = { title: string; description: string; image: string | null; url: string };
+  type OgPreview = {
+    title: string;
+    description: string;
+    image: string | null;
+    url: string;
+  };
   const [preview, setPreview] = useState<OgPreview | null>(null); //OG데이터
   const router = useRouter();
 
@@ -50,7 +55,7 @@ export default function CreatePost() {
 
     // validation 먼저 — 실패 시 isLoading 건드리지 않음
     const selectedCategoryKey = CATEGORIES.find(
-      (category) => category.name === selectedCategory
+      (category) => category.name === selectedCategory,
     )?.key;
     if (!selectedCategoryKey) {
       toast.error("카테고리를 선택해주세요!");
@@ -81,17 +86,22 @@ export default function CreatePost() {
         images.map(async (file) => {
           const fd = new FormData();
           fd.append("file", file);
-          const res = await fetch("/api/community/upload", { method: "POST", body: fd });
+          const res = await fetch("/api/community/upload", {
+            method: "POST",
+            body: fd,
+          });
           const data = await res.json().catch(() => ({}));
           if (!res.ok) throw new Error(data.error || "이미지 업로드 실패");
-          return data.imageUrls as string;  //백엔드랑 변수명 같아야 함
-        })
+          return data.imageUrls as string; //백엔드랑 변수명 같아야 함
+        }),
       );
       const postId = await createCommunity(formData, imageUrls);
       router.replace(`/community/posts/${postId}`);
     } catch (err) {
       console.error("글 작성 실패", err);
-      toast.error(err instanceof Error ? err.message : "글 작성에 실패했습니다.");
+      toast.error(
+        err instanceof Error ? err.message : "글 작성에 실패했습니다.",
+      );
     } finally {
       isSubmittingRef.current = false;
       setIsLoading(false);
@@ -166,21 +176,31 @@ export default function CreatePost() {
   };
 
   return (
-    <div className="flex flex-col h-screen pb-[4.5rem]">
-      <div className="flex items-center justify-between py-1 px-1">
-        <Link href="/community/posts/list?category=none" className="flex p-3">
+    <div className="flex flex-col h-screen pb-[4.5rem] xl:pb-0 px-6">
+      <div className="flex items-center justify-between py-1 xl:justify-end">
+        <Link
+          href="/community/posts/list?category=none"
+          className="xl:hidden flex p-3"
+        >
           <ArrowLeftIcon className="w-6 h-6 text-gray-900" />
         </Link>
 
-        <h2 className="text-heading_3 font-bold text-center">글쓰기</h2>
+        <h2 className="xl:hidden text-body_bb font-bold text-center">글쓰기</h2>
 
-        <button type="submit" form="createPostForm" className="flex p-3" disabled={isLoading}>
-          <IoCheckmark className={`w-6 h-6 ${isLoading ? "text-gray-200" : "text-gray-400 hover:text-blue-900"}`} />
+        <button
+          type="submit"
+          form="createPostForm"
+          className="flex p-3 xl:pr-6"
+          disabled={isLoading}
+        >
+          <IoCheckmark
+            className={`w-6 h-6 ${isLoading ? "text-gray-200" : "text-gray-400 hover:text-blue-900"}`}
+          />
         </button>
       </div>
 
       {/* 카테고리 */}
-      <div className="relative px-4 py-4">
+      <div className="relative xl:px-4 py-4">
         <button
           className="flex items-center justify-between w-full px-4 py-3 text-left text-sm font-bold border bg-gray-100 border-gray-300 rounded-xl text-gray-700 focus:outline-none"
           onClick={() => setIsOpen((prev) => !prev)}
@@ -211,13 +231,12 @@ export default function CreatePost() {
                   </li>
                 ))}
               </ul>
-
             </div>
           </div>
         )}
       </div>
 
-      <div className="flex-1 overflow-y-auto scrollbar-hide px-4">
+      <div className="flex-1 overflow-y-auto scrollbar-hide px-2">
         <form
           id="createPostForm"
           onSubmit={handleSubmit}
@@ -304,30 +323,30 @@ export default function CreatePost() {
           <button type="submit" className="hidden"></button>
 
           {/* 이미지 및 링크 삽입 버튼 */}
-          <div className="fixed w-full bottom-14 p-4 pt-4 max-w-[48rem] bg-white border-t border-gray-300">
-            <div className="flex justify-start items-center jusfity-center gap-8 px-3 text-gray-500">
-              <button type="button" onClick={handleImageButtonClick}>
-                <MdOutlineBrokenImage className="w-5 h-5 hover:text-blue-900" />
-              </button>
-              <button type="button" onClick={toggleSlide}>
-                <AiOutlineLink className="w-5 h-5 hover:text-blue-900" />
-              </button>
+          <div className="fixed left-0 w-full bottom-14 xl:bottom-0 bg-white">
+            <div className="mx-8 border-t border-gray-300">
+              <div className="max-w-7xl mx-auto px-4 py-4 flex items-center gap-8 text-gray-500">
+                <button type="button" onClick={handleImageButtonClick}>
+                  <MdOutlineBrokenImage className="w-5 h-5 hover:text-blue-900" />
+                </button>
+                <button type="button" onClick={toggleSlide}>
+                  <AiOutlineLink className="w-5 h-5 hover:text-blue-900" />
+                </button>
+              </div>
             </div>
           </div>
-
         </form>
       </div>
 
       {/* 링크 슬라이드 */}
-      
-        <OpenGraphPreview
-          url={link}
-          setUrl={setLink}
-          onConfirm={handleSubmitLink}
-          onClose={() => setIsLinkOpen(false)}
-          isOpen={isLinkOpen}
-        />
-     
+
+      <OpenGraphPreview
+        url={link}
+        setUrl={setLink}
+        onConfirm={handleSubmitLink}
+        onClose={() => setIsLinkOpen(false)}
+        isOpen={isLinkOpen}
+      />
     </div>
   );
 }

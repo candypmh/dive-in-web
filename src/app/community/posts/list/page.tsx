@@ -13,7 +13,7 @@ export default async function CommunityPage({
 
   return (
     <div className="flex flex-col">
-      <header className="flex gap-2 pt-4 px-4">
+      <header className="flex gap-2 pt-4 px-4 xl:hidden">
         <div className="flex items-center gap-2">
           <Image
             alt="로고"

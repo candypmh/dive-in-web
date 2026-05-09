@@ -32,7 +32,7 @@ const BottomNav = () => {
   //   setPage(searchParams.get("page"));
   // }, []);
 
-  const isHome = pathname === "/"; //홈일때만 활성화
+  const isHome = pathname === routes.home;
   const isLessons = pathname.startsWith(routes.lessons);
   const isPools = pathname.startsWith(routes.pools);
   const isCommunity =
@@ -47,7 +47,7 @@ const BottomNav = () => {
   }
 
   return (
-    <nav className="flex-none h-14 flex items-center px-4 bg-gray-100 border-t border-slate-200">
+    <nav className="flex-none h-14 flex items-center px-4 bg-gray-100 border-t border-slate-200 xl:hidden">
       <Link
         href={routes.home}
         className={`flex-1 h-full flex flex-col gap-0.5 items-center justify-center ${
@@ -93,7 +93,7 @@ const BottomNav = () => {
         }`}
       >
         <PersonIcon className={`h-6 w-6`} />
-        <span className="text-label_sb">마이</span>
+        <span className="text-label_sb">마이페이지</span>
       </Link>
     </nav>
   );

@@ -5,8 +5,9 @@ import Script from "next/script";
 import KakaoSdkScript from "./_scripts/KakaoSdkScript";
 import { GoogleTagManager } from "@next/third-parties/google";
 import "./globals.css";
-import BottomNavWrapper from "./BottomNavWrapper";
+import BottomNavWrapper from "./_components/BottomNavWrapper";
 import TopNav from "./_components/TopNav";
+import ContentWrapper from "./_components/ContentWrapper";
 
 const KAKAO_APP_KEY = process.env.NEXT_PUBLIC_KAKAO_APP_KEY!;
 
@@ -35,15 +36,13 @@ export default async function RootLayout({
       <body
         className={`${pretendard.variable} antialiased flex flex-col items-center h-dvh`}
       >
-          <div className="xl:pt-20 w-full flex-1 flex flex-col overflow-hidden">
-            <main className="flex-1 overflow-y-auto no-scrollbar">
-              <div className="lg:max-w-6xl xl:max-w-7xl mx-auto">
-                {children}
-              </div>
-            </main>
-            <BottomNavWrapper />
-          </div>
-          <TopNav />
+        <ContentWrapper>
+          <main className="flex-1 overflow-y-auto no-scrollbar">
+            <div className="lg:max-w-6xl xl:max-w-7xl mx-auto">{children}</div>
+          </main>
+          <BottomNavWrapper />
+        </ContentWrapper>
+        <TopNav />
 
         <Script
           id="kakao-map-sdk"

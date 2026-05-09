@@ -1,4 +1,6 @@
 import { getLessons } from "@/api/server/lessons";
+
+export const dynamic = 'force-dynamic';
 import LessonChip from "@/components/ui/Chip";
 import Link from "next/link";
 import InstructorProfile from "../_components/InstructorProfile";

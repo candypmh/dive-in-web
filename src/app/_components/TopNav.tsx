@@ -6,7 +6,7 @@ import PoolIcon from "@/components/icons/PoolIcon";
 import SwimHatIcon from "@/components/icons/SwimHatIcon";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { GoHome } from "react-icons/go";
 
 const routes = {
@@ -20,17 +20,10 @@ const routes = {
 
 const TopNav = () => {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const category = searchParams.get("category") || "none";
-  const page = searchParams.get("page") || "0";
-
   const isHome = pathname === routes.home;
   const isLessons = pathname.startsWith(routes.lessons);
   const isPools = pathname.startsWith(routes.pools);
-  const isCommunity =
-    pathname.startsWith(routes.community) &&
-    category === "none" &&
-    page === "0";
+  const isCommunity = pathname.startsWith(routes.community);
   const isMypage = pathname.startsWith(routes.mypage);
   const isLogin = pathname.startsWith(routes.login);
 

@@ -1,4 +1,6 @@
 import { getPools } from "@/api/server/pools";
+
+export const dynamic = 'force-dynamic';
 import LessonChip from "@/components/ui/Chip";
 import Image from "next/image";
 import Link from "next/link";

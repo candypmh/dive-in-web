@@ -1,4 +1,6 @@
 import { getHome } from "@/api/server/home";
+
+export const dynamic = 'force-dynamic';
 import Image from "next/image";
 import HomeClient from "./clientPage";
 

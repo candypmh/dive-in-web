@@ -43,14 +43,31 @@ export async function GET(req: NextRequest) {
 
   try {
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-    const response = await fetch(`${baseUrl}/home/search?keyword=${encodeURIComponent(keyword)}`);
+    const response = await fetch(`${baseUrl}/community/posts/search?keyword=${encodeURIComponent(keyword)}`);
 
     if (!response.ok) {
       return NextResponse.json([], { status: response.status });
     }
 
     const body = await response.json();
-    return NextResponse.json(body.data ?? []);
+    const posts = body.data ?? [];
+
+    const results = posts.map((p: {
+      postId: number;
+      title: string;
+      content: string;
+      categoryName: string;
+      createdAt: string;
+    }) => ({
+      title: p.title,
+      content: p.content,
+      categoryName: CATEGORYNAME_TO_LABEL[p.categoryName as (typeof CATEGORY_NAMES)[number]] ?? p.categoryName,
+      contentSummary: p.content.slice(0, 60),
+      dataUrl: `/community/posts/${p.postId}`,
+      createdAt: p.createdAt,
+    }));
+
+    return NextResponse.json(results);
   } catch {
     return NextResponse.json([], { status: 500 });
   }

@@ -43,7 +43,7 @@ export const poolDetailSchema = z.object({
       keyword: z.string().default(""),
       lessonName: z.string().default(""),
       level: z.string().default(""),
-      price: z.string().default(""),
+      price: z.string().nullable().default(""),
     })
   ),
 });

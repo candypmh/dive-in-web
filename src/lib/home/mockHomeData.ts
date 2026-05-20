@@ -10,7 +10,7 @@ function toPostListItem(postId: number) {
     content: detail.content,
     image: detail.images?.[0] ?? null,
     likesCnt: detail.likesCnt,
-    cmmtCnt: detail.cmntCnt,
+    cmntCnt: detail.cmntCnt,
     viewCnt: detail.viewCnt,
     writer: detail.writer,
     writerProfile: detail.writerProfile,

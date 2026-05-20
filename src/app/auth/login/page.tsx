@@ -24,7 +24,7 @@ const LoginPage = ({ searchParams }: Props) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-primary -z-10">
+    <div className="fixed inset-0 bg-primary z-50">
       <div className="min-h-screen flex flex-col xl:items-center xl:justify-center">
         <div className="flex-1 flex items-center justify-center">
           <Image alt="로고" src="/image/logo_b.png" width={160} height={160} />

@@ -106,7 +106,7 @@ const DetailPagePhotoSlider = ({ imageUrls, alt, sliderType = "community" }: Pro
         >
           {displayUrls.map((url, index) => (
             <div
-              key={url}
+              key={`${url}-${index}`}
               className={`snap-start shrink-0 ${sliderTypeStyles[sliderType]} verflow-hidden ${
 
                 index === currentIndex ? "" : "hidden"

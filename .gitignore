@@ -58,6 +58,9 @@ next-env.d.ts
 *.sln
 *.sw?
 build.sh
+
+# ai관련
 claude.md
 /Claude-Work
 .claude/
+AGENTS.md

@@ -1,6 +1,6 @@
 import { getLessons } from "@/api/server/lessons";
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 import LessonChip from "@/components/ui/Chip";
 import Link from "next/link";
 import InstructorProfile from "../_components/InstructorProfile";

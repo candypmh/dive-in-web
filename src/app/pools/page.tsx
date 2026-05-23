@@ -1,4 +1,4 @@
-import { getPools } from "@/api/server/pools";
+import { getPools } from "@/services/pools";
 
 export const revalidate = 3600;
 import LessonChip from "@/components/ui/Chip";

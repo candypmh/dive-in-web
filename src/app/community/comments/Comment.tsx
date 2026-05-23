@@ -7,7 +7,7 @@ import { useState } from "react";
 import { GoPencil } from "react-icons/go";
 import { GoTrash } from "react-icons/go";
 import { CommentProps } from "@/types/community";
-import { updateComment, deleteComment } from "@/api/server/community";
+import { updateComment, deleteComment } from "@/services/community";
 import toast from "react-hot-toast";
 
 type CommentComponentProps = CommentProps & {

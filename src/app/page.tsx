@@ -1,4 +1,4 @@
-import { getHome } from "@/api/server/home";
+import { getHome } from "@/services/home";
 
 export const revalidate = 3600;
 import Image from "next/image";

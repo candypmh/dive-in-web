@@ -6,7 +6,7 @@ import { useInView } from "react-intersection-observer";
 import FloatingButton from "../../_components/FloatingButton";
 import CategoryFilter from "@/app/community/_components/CategoryFilter";
 import { CATEGORIES, KEY_TO_CATEGORYNAME } from "@/constants/categories";
-import { getCommunities } from "@/api/server/community";
+import { getCommunities } from "@/services/community";
 import { CommunitiesProps } from "@/types/community";
 
 const PAGE_SIZE = 10;

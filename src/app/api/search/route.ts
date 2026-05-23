@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { buildCommunityDetail } from "@/lib/community/mockCommunityDetail";
-import { CATEGORY_NAMES, CATEGORYNAME_TO_LABEL } from "@/constants/categories";
+import { CATEGORYNAME_TO_LABEL } from "@/constants/categories";
+import type { CategoryName } from "@/constants/categories";
 import { Search } from "@/types/search";
+import { backendPostSchema, searchSchema } from "@/schemas/search";
 
 const MOCK_POST_COUNT = 35;
 
@@ -20,7 +22,7 @@ function buildMockSearchResults(keyword: string): Search[] {
     .map((post) => ({
       title: post.title,
       content: post.content,
-      categoryName: CATEGORYNAME_TO_LABEL[post.categoryName as (typeof CATEGORY_NAMES)[number]] ?? post.categoryName,
+      categoryName: CATEGORYNAME_TO_LABEL[post.categoryName as CategoryName] ?? post.categoryName,
       contentSummary: post.content.slice(0, 60),
       dataUrl: `/community/posts/${post.postId}`,
       createdAt: post.createdAt,
@@ -37,7 +39,7 @@ export async function GET(req: NextRequest) {
   const useMock = process.env.NEXT_PUBLIC_USE_MOCK === "true";
 
   if (useMock) {
-    const results = buildMockSearchResults(keyword);
+    const results = searchSchema.array().parse(buildMockSearchResults(keyword));
     return NextResponse.json(results);
   }
 
@@ -50,22 +52,18 @@ export async function GET(req: NextRequest) {
     }
 
     const body = await response.json();
-    const posts = body.data ?? [];
+    const rawPosts = backendPostSchema.array().parse(body.data ?? []);
 
-    const results = posts.map((p: {
-      postId: number;
-      title: string;
-      content: string;
-      categoryName: string;
-      createdAt: string;
-    }) => ({
-      title: p.title,
-      content: p.content,
-      categoryName: CATEGORYNAME_TO_LABEL[p.categoryName as (typeof CATEGORY_NAMES)[number]] ?? p.categoryName,
-      contentSummary: p.content.slice(0, 60),
-      dataUrl: `/community/posts/${p.postId}`,
-      createdAt: p.createdAt,
-    }));
+    const results = searchSchema.array().parse(
+      rawPosts.map((p) => ({
+        title: p.title,
+        content: p.content,
+        categoryName: CATEGORYNAME_TO_LABEL[p.categoryName as CategoryName] ?? p.categoryName,
+        contentSummary: p.content.slice(0, 60),
+        dataUrl: `/community/posts/${p.postId}`,
+        createdAt: p.createdAt,
+      }))
+    );
 
     return NextResponse.json(results);
   } catch {

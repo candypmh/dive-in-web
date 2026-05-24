@@ -51,17 +51,8 @@ const EditProfileForm = ({
           return;
         }
 
-        const formData = new FormData();
-        formData.append("nickname", nickname);
-        if (profileImage) {
-          formData.append("profileImage", profileImage);
-        }
-        await updateUser(formData);
-
-        revalidateTagAction("user");
-
-        toast.success("프로필 수정이 완료되었습니다");
-        router.push("/mypage");
+        toast.error("프로필 수정 기능은 현재 준비 중입니다.");
+        return;
       }}
     >
       <div className="flex items-center gap-6">

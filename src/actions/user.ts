@@ -52,7 +52,7 @@ export const updateUser = async (formData: FormData) => {
   }
 
   try {
-    const userResponse = await fetch("https://api.dive-in.co.kr/user/profile", {
+    const userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/user`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${accessToken}`,

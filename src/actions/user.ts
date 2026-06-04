@@ -48,11 +48,11 @@ export const updateUser = async (formData: FormData) => {
   const accessToken = cookieStore.get("accessToken")?.value;
 
   if (!accessToken) {
-    return null;
+    return false;
   }
 
   try {
-    const userResponse = await fetch("https://api.dive-in.co.kr/user/profile", {
+    const userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/user`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -63,11 +63,13 @@ export const updateUser = async (formData: FormData) => {
     if (!userResponse.ok) {
       const body = await userResponse.json();
       console.error(body);
-      return null;
+      return false;
     }
 
     revalidateTag("user");
+    return true;
   } catch (error) {
     console.error(error);
+    return false;
   }
 };

@@ -12,7 +12,7 @@ import { CommunityProps } from "@/types/community";
 import { CATEGORYNAME_TO_LABEL } from "@/constants/categories";
 import CustomModal from "@/app/_components/CustomModal";
 import PostMenuSlide from "./_components/PostMenuSlide";
-import { getCommunity, deleteCommunity, addLikePost, deleteLikePost, createComment } from "@/api/server/community";
+import { getCommunity, deleteCommunity, addLikePost, deleteLikePost, createComment } from "@/services/community";
 import toast from "react-hot-toast";
 import { formatKST } from "@/utils";
 import DetailPagePhotoSlider from "@/app/_components/PhotoSlider";

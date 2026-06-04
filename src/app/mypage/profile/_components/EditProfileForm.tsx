@@ -54,13 +54,17 @@ const EditProfileForm = ({
         const formData = new FormData();
         formData.append("nickname", nickname);
         if (profileImage) {
-          formData.append("profileImage", profileImage);
+          formData.append("profile_image", profileImage);
         }
-        await updateUser(formData);
 
-        revalidateTagAction("user");
+        const isUpdated = await updateUser(formData);
+        if (!isUpdated) {
+          toast.error("프로필 수정에 실패했습니다. 잠시 후 다시 시도해주세요.");
+          return;
+        }
 
-        toast.success("프로필 수정이 완료되었습니다");
+        await revalidateTagAction("user");
+        toast.success("프로필이 수정됐습니다.");
         router.push("/mypage");
       }}
     >

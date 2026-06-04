@@ -10,7 +10,7 @@ import { IoIosArrowDown } from "react-icons/io";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import OpenGraphPreview from "@/app/_components/OpenGraphLinkReview";
-import { createCommunity } from "@/api/server/community";
+import { createCommunity } from "@/services/community";
 import toast from "react-hot-toast";
 
 const CATEGORIES = [

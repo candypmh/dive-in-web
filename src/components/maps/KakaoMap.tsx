@@ -21,6 +21,18 @@ const KakaoMap = ({
   const [kakaoMap, setKakaoMap] = useState<kakao.maps.Map | null>(null);
 
   useEffect(() => {
+    if (!kakaoMap || !mapContainerRef.current) return;
+
+    const el = mapContainerRef.current;
+    const observer = new ResizeObserver(() => {
+      kakaoMap.relayout();
+    });
+
+    observer.observe(el);
+    return () => observer.unobserve(el);
+  }, [kakaoMap]);
+
+  useEffect(() => {
     const mapElement = mapContainerRef.current;
     const isKakaoScriptLoaded = isKakaoScriptLoadedRef.current;
 

@@ -5,7 +5,7 @@ import ChatIcon from "@/components/icons/ChatIcon";
 import PoolIcon from "@/components/icons/PoolIcon";
 import SwimHatIcon from "@/components/icons/SwimHatIcon";
 import { useEffect } from "react";
-import { getSearch } from "@/api/server/search";
+import { getSearch } from "@/services/search";
 import BackButton from "@/app/_components/BackButton";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useSearchStore } from "@/store/searchStore";

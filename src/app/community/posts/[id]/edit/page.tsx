@@ -11,7 +11,7 @@ import { CATEGORYNAME_TO_LABEL } from "@/constants/categories";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import OpenGraphPreview from "@/app/_components/OpenGraphLinkReview";
-import { getCommunity, updateCommunity } from "@/api/server/community";
+import { getCommunity, updateCommunity } from "@/services/community";
 
 const CATEGORIES = [
   { name: "소통해요", key: "COMMUNICATION" },

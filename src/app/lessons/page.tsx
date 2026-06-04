@@ -1,4 +1,4 @@
-import { getLessons } from "@/api/server/lessons";
+import { getLessons } from "@/services/lessons";
 
 export const revalidate = 3600;
 import LessonChip from "@/components/ui/Chip";

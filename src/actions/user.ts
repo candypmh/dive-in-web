@@ -48,7 +48,7 @@ export const updateUser = async (formData: FormData) => {
   const accessToken = cookieStore.get("accessToken")?.value;
 
   if (!accessToken) {
-    return null;
+    return false;
   }
 
   try {
@@ -63,11 +63,13 @@ export const updateUser = async (formData: FormData) => {
     if (!userResponse.ok) {
       const body = await userResponse.json();
       console.error(body);
-      return null;
+      return false;
     }
 
     revalidateTag("user");
+    return true;
   } catch (error) {
     console.error(error);
+    return false;
   }
 };

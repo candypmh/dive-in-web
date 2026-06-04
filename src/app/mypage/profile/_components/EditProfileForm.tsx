@@ -57,7 +57,12 @@ const EditProfileForm = ({
           formData.append("profile_image", profileImage);
         }
 
-        await updateUser(formData);
+        const isUpdated = await updateUser(formData);
+        if (!isUpdated) {
+          toast.error("프로필 수정에 실패했습니다. 잠시 후 다시 시도해주세요.");
+          return;
+        }
+
         await revalidateTagAction("user");
         toast.success("프로필이 수정됐습니다.");
         router.push("/mypage");

@@ -35,8 +35,8 @@ export const getCommunity = async (postId: string): Promise<CommunityProps|null>
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/community/posts/${postId}`,
       {
         method: "GET",
+        cache: "no-store", //캐싱 방지
         headers: {
-          "Cache-Control": "no-cache", //캐싱 방지
           "Content-Type": "application/json",
         },
       }
@@ -62,6 +62,33 @@ export const getCommunity = async (postId: string): Promise<CommunityProps|null>
     return transformedData;
   } catch (error) {
     console.error("[getCommunity] error::", error);
+    return null;
+  }
+};
+
+export const getCommunityForEdit = async (postId: string): Promise<CommunityProps|null> => {
+  try {
+    const accessToken = cookies().get("accessToken")?.value;
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/community/posts/${postId}/edit`,
+      {
+        method: "GET",
+        cache: "no-store",
+        headers: {
+          "Content-Type": "application/json",
+          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP에러 상태 코드: ${response.status}`);
+    }
+
+    const body = await response.json();
+    return communityDetailSchema.parse(body.data);
+  } catch (error) {
+    console.error("[getCommunityForEdit] error::", error);
     return null;
   }
 };

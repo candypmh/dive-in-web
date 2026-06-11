@@ -11,7 +11,7 @@ import { CATEGORYNAME_TO_LABEL } from "@/constants/categories";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import OpenGraphPreview from "@/app/_components/OpenGraphLinkReview";
-import { getCommunity, updateCommunity } from "@/services/community";
+import { getCommunityForEdit, updateCommunity } from "@/services/community";
 
 const CATEGORIES = [
   { name: "소통해요", key: "COMMUNICATION" },
@@ -117,7 +117,7 @@ useEffect(() => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const post = await getCommunity(postId);
+        const post = await getCommunityForEdit(postId);
         if (!post) {
           throw new Error("게시글을 불러올 수 없습니다.");
         }

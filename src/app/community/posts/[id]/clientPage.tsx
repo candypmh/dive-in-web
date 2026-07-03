@@ -28,8 +28,12 @@ export default function ClientCommunity({ postId, currentUserId }: { postId: num
   const [changeLiked, setChangeLiked] = useState(false);
   const [changeLikesCnt, setChangeLikesCnt] = useState(0);
   const router = useRouter();
+  const fetchedPostIdRef = useRef<number | null>(null);
 
   useEffect(() => {
+    if (fetchedPostIdRef.current === postId) return;
+    fetchedPostIdRef.current = postId;
+
     getCommunity(String(postId)).then((post) => {
       if (!post) {
         router.back();
